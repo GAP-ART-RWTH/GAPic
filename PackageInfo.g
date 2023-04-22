@@ -35,11 +35,10 @@ Persons := [
   rec(
     FirstNames := "Lukas",
     LastName := "Schnelle",
-    WWWHome := "lukasschnelle.de",
+    WWWHome := "https://lukasschnelle.de",
     Email := "lukas.schnelle1@rwth-aachen.de",
     IsAuthor := true,
     IsMaintainer := true,
-    PostalAddress := "Lehrstuhl fuer Algebra und Darstellungstheorie, RWTH Aachen, Pontdriesch 10/16 52062 Aachen, GERMANY",
     Place := "Aachen",
     Institution := "Chair of Algebra and Representation Theory",
   ),

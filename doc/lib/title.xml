@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<TitlePage>
+  <Title>
+    GAPic
+  </Title>
+  <Subtitle>
+    &GAP; image creator, for visualizing structures
+  </Subtitle>
+  <Version>
+    0.1
+  </Version>
+  <Author>
+    Alice Niemeyer<Alt Only="LaTeX"><Br/></Alt>
+<Address>
+Alice Niemeyer<Br/>
+Lehrstuhl für Algebra und Darstellungstheorie<Br/>
+RWTH Aachen<Br/>
+Pontdriesch 10/16<Br/>
+52062 Aachen<Br/>
+GERMANY<Br/>
+</Address>
+<Email>alice.niemeyer@art.rwth-aachen.de</Email>
+<Homepage>http://www.math.rwth-aachen.de/~Alice.Niemeyer/</Homepage>
+
+  </Author>
+  <Author>
+    Lukas Schnelle<Alt Only="LaTeX"><Br/></Alt>
+<Address>
+Lehrstuhl fuer Algebra und Darstellungstheorie, RWTH Aachen, Pontdriesch 10/16 52062 Aachen, GERMANY<Br/>
+</Address>
+<Email>lukas.schnelle1@rwth-aachen.de</Email>
+<Homepage>lukasschnelle.de</Homepage>
+
+  </Author>
+  <Date>
+    22 April 2023
+  </Date>
+  </TitlePage>

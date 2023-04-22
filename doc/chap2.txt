@@ -1,0 +1,14 @@
+  
+  [1X2 [33X[0;0YFunctionality[133X[101X
+  
+  
+  [1X2.1 [33X[0;0YExample Methods[133X[101X
+  
+  [33X[0;0YThis section will describe the example methods of GAPic[133X
+  
+  [1X2.1-1 GAPic_Example[101X
+  
+  [33X[1;0Y[29X[2XGAPic_Example[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YInsert documentation for your function here[133X
+  

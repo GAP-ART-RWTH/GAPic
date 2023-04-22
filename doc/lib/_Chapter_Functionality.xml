@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Functionality">
+<Heading>Functionality</Heading>
+
+<P/>
+<Section Label="Chapter_Functionality_Section_Example_Methods">
+<Heading>Example Methods</Heading>
+
+<P/>
+ This section will describe the example
+ methods of GAPic
+<ManSection>
+  <Func Arg="arg" Name="GAPic_Example" />
+ <Description>
+   Insert documentation for your function here
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+

@@ -1,0 +1,51 @@
+  
+  
+                                    [1X GAPic [101X
+  
+  
+                [1X [5XGAP[105X image creator, for visualizing structures [101X
+  
+  
+                                      0.1
+  
+  
+                                 22 April 2023
+  
+  
+                                 Alice Niemeyer
+  
+                                 Lukas Schnelle
+  
+  
+  
+  Alice Niemeyer
+      Email:    [7Xmailto:alice.niemeyer@art.rwth-aachen.de[107X
+      Homepage: [7Xhttp://www.math.rwth-aachen.de/~Alice.Niemeyer/[107X
+      Address:  [33X[0;14YAlice Niemeyer[133X
+                [33X[0;14YLehrstuhl für Algebra und Darstellungstheorie[133X
+                [33X[0;14YRWTH Aachen[133X
+                [33X[0;14YPontdriesch 10/16[133X
+                [33X[0;14Y52062 Aachen[133X
+                [33X[0;14YGERMANY[133X
+  
+  
+  Lukas Schnelle
+      Email:    [7Xmailto:lukas.schnelle1@rwth-aachen.de[107X
+      Homepage: [7Xlukasschnelle.de[107X
+      Address:  [33X[0;14YLehrstuhl  fuer  Algebra und Darstellungstheorie, RWTH Aachen,
+                Pontdriesch 10/16 52062 Aachen, GERMANY[133X
+  
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (GAPic)[101X
+  
+  1 [33X[0;0YIntroduction[133X
+  2 [33X[0;0YFunctionality[133X
+    2.1 [33X[0;0YExample Methods[133X
+      2.1-1 GAPic_Example
+  
+  
+  [32X
