@@ -1,13 +1,20 @@
-# The GAP package GAPic
+# The package
 
-TODO: add a description of your package; perhaps also instructions how how to
-install and use it, resp. where to find out more
+GAP image creator, GAPic for short, is a package to visualize mathematical structures which can be generated using the GAP language. It does not function alone, but rather extends other packages functionalities as to be independent of them.
 
+## History
+While developing the [SimplicialSurfaces](https://github.com/gap-packages/SimplicialSurfaces) package we wrote a functionality that visualizes simplicial surfaces. As the function grew and was improved we also managed to visualize more general triagonal complexes. To give all these functions a home, this package was then developed. 
+
+## Stage of the project
+The package is currently under development and will as a first step gain the functionality of the ```DrawSurfaceToJavascript``` function from the before mentioned package. There are plans to incorporate other functionalities, when that happens we will update this readme.
+
+### ToDos
+- [ ] Prototype for checking if necessary packages are installed
+- [ ] Add DrawSurfaceToJavascript functionality
 
 ## Contact
 
-TODO: add info on how to contact you and/or how to report issues with your
-package
+Feel free to contact us via the given contacts in the ```PackageInfo.g``` or write an Issue in that tab
 
 ## License
 
