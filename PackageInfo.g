@@ -44,9 +44,9 @@ Persons := [
   ),
 ],
 
-#SourceRepository := rec( Type := "TODO", URL := "URL" ),
-#IssueTrackerURL := "TODO",
-PackageWWWHome := "https://tbd",
+SourceRepository := rec( Type := "git", URL := "https://github.com/GAP-ART-RWTH/GAPic" ),
+IssueTrackerURL := "https://github.com/GAP-ART-RWTH/GAPic/issues",
+PackageWWWHome := "https://github.com/GAP-ART-RWTH/GAPic",
 PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
 ArchiveURL     := Concatenation( ~.PackageWWWHome,
