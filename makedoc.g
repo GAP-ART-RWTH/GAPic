@@ -16,9 +16,6 @@ MakeGAPDocDoc(path, main, files, bookname);
 Exec("mkdir -p doc/build");
 
 # copy a version of the relevant files to the doc directory
-# Exec("rm doc/manual.pdf");
-# Exec("rm doc/chap*.html");
-# Exec("rm doc/chap*.txt");
 
 Exec("cp doc/lib/manual.pdf doc/");
 Exec("cp doc/lib/chap*.html doc/");

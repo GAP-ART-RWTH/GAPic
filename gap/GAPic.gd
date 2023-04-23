@@ -3,17 +3,21 @@
 #
 #! @Chapter Introduction
 #!
-#! GAPic is a package which does some
-#! interesting and cool things
+#! GAPic is a package which soon will visualize objects from &GAP;
 #!
 #! @Chapter Functionality
-#!
-#!
-#! @Section Example Methods
-#!
-#! This section will describe the example
-#! methods of GAPic
 
+
+#! @Section Package checking
+#! @SectionLabel PackageChecking
 #! @Description
-#!   Insert documentation for your function here
-DeclareGlobalFunction( "GAPic_Example" );
+#! The folloing function does check if the required packages for the functionality given as a string 
+#! are available, can be loaded and loads them if possible. If not it returns false.
+#! @Returns boolean
+#! @Arguments a string
+DeclareGlobalFunction("RequiredPackagesAvailable");
+
+#! This function is just a quick check for the above function with the parameter "simplicial" already applied.
+#! It prints the result to the terminal.
+#! @Returns nothing
+DeclareGlobalFunction("TestRequiredSimplicial");
