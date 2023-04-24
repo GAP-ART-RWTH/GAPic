@@ -6,6 +6,10 @@
     [<#Include SYSTEM "_entities.xml">
 ]
 >
+
+<!-- stolen from https://github.com/gap-packages/FinInG/blob/master/doc/fining.xml -->
+<?LaTeX ExtraPreamble="\usepackage{graphicx,amsfonts,tipa,makecell}"?>
+
 <Book Name="GAPic">
 <#Include SYSTEM "title.xml">
 <TableOfContents/>

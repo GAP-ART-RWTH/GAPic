@@ -18,8 +18,8 @@ Exec("mkdir -p doc/build");
 # copy a version of the relevant files to the doc directory
 
 Exec("cp doc/lib/manual.pdf doc/");
-Exec("cp doc/lib/chap*.html doc/");
-Exec("cp doc/lib/chap*.txt doc/");
+Exec("cp doc/lib/chap*.html doc/html-version");
+# Exec("cp doc/lib/chap*.txt doc/");
 
 # move the created files to the build folder
 Exec("mv doc/lib/chap* doc/build");

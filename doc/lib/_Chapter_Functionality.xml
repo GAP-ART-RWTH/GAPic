@@ -14,11 +14,12 @@
 <ManSection>
   <Func Arg="arg" Name="GAPic_Example" />
  <Description>
-   Insert documentation for your function here
+    Here comes an image test:
  </Description>
 </ManSection>
 
-
+<Alt Only="HTML">&lt;img src="../images/ico.png">&lt;/img></Alt>
+<Alt Only="LaTeX">\includegraphics{../images/ico.png}</Alt>
 </Section>
 
 
