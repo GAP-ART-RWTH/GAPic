@@ -18,8 +18,27 @@
  </Description>
 </ManSection>
 
-<Alt Only="HTML">&lt;img src="../images/ico.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/ico.png}</Alt>
+<ManSection>
+  <Func Arg="functionality" Name="RequiredPackagesAvailable" />
+ <Description>
+    The following function does check if the required packages for the functionality given as a string 
+    are available, can be loaded and loads them if possible. If not it returns false.
+ </Description>
+</ManSection>
+
+<#Include Label="TestRequiredSimplicial">
+
+<!-- <ManSection>
+  <Func Arg="none" Name="TestRequiredSimplicial" />
+ <Description>
+    This function is just a quick check for the above function with the parameter "simplicial" already applied.
+    It prints the result to the terminal.
+
+    
+ </Description>
+</ManSection> -->
+
+
 </Section>
 
 

@@ -17,7 +17,18 @@
 #! @Arguments a string
 DeclareGlobalFunction("RequiredPackagesAvailable");
 
-#! This function is just a quick check for the above function with the parameter "simplicial" already applied.
-#! It prints the result to the terminal.
-#! @Returns nothing
+##  <#GAPDoc Label="TestRequiredSimplicial">
+##  <ManSection>
+##  <Func Name="TestRequiredSimplicial" Arg="none"/>
+##
+##  <Description>
+##  This function is just a quick check for the above function with the parameter "simplicial" already applied.
+##  It prints the result to the terminal.
+
+##  <Alt Only="HTML">&lt;img src="../images/ico.png">&lt;/img></Alt>
+##  <Alt Only="LaTeX">\includegraphics{../images/ico.png}</Alt>
+##  <Alt Only="Text">[Image omitted in text manual. Check doc/images/ico.png]</Alt>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 DeclareGlobalFunction("TestRequiredSimplicial");
