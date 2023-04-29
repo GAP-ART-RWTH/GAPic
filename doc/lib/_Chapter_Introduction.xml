@@ -5,8 +5,8 @@
 <Heading>Introduction</Heading>
 
 <P/>
- GAPic is a package which does some
- interesting and cool things
+ GAP image creator, GAPic for short, is a package to visualize mathematical structures which can be generated using the GAP language. 
+ It does not function alone, but rather extends other packages functionalities as to be independent of them.
 <P/>
 </Chapter>
 
