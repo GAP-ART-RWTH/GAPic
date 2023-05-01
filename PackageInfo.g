@@ -71,7 +71,7 @@ PackageDoc := rec(
   ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/html-version/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
-  SixFile   := "doc/manual.six",
+  SixFile   := "doc/build/manual.six",
   LongTitle := "GAP image creator, for visualizing structures",
 ),
 
