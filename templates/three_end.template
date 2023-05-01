@@ -1,5 +1,5 @@
 
-			camera.position.z = -2;
+			camera.position.z = -5;
             camera.lookAt(0,0,-1);
 
             scene.background = new THREE.Color( 'white' );
@@ -159,3 +159,6 @@
                 labelRenderer.setSize( window.innerWidth, window.innerHeight );
             }
 </script>
+
+	</body>
+</html>

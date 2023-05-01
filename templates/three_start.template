@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>SimplicialSurface</title>
+		<style>
+			body { margin: 0; }
+		</style>
+
+
+	</head>
+	<body>
+
 <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 
 
@@ -53,7 +66,7 @@
                 this.speedX = 0.0; 
                 this.speedY = 0.0; 
                 this.speedZ = 0.0;
-                this.transparency = 0.1;
+                this.transparency = 1;
                 this.edgeVisibility = false;
 				this.vertexVisibility = true;
 				this.vertexlabelVisibility = true;

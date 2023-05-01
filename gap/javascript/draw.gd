@@ -175,9 +175,7 @@ DeclareOperation( "GetVertexCoordinates3DNC", [IsTriangularComplex, IsPosInt, Is
 #! and normals of inner circles (<Ref Subsect="Section_LabelNormalsInnerCirclesAnimating"/>).
 #! @Returns the updated print record
 #! @Arguments surface, filename, printRecord
-DeclareOperation( "DrawSurfaceToJavaScript", [IsTriangularComplex, IsString, IsRecord] );
-#! @Arguments surface, filename, printRecord, calculate
-DeclareOperation( "DrawSurfaceToJavaScriptCalculate", [IsTriangularComplex, IsString, IsRecord, IsBool] );
+DeclareOperation( "DrawComplexToJavaScript", [IsTriangularComplex, IsString, IsRecord] );
 #! @EndGroup
 
 #! @BeginGroup CalculateParametersOfEdges
@@ -186,7 +184,6 @@ DeclareOperation( "DrawSurfaceToJavaScriptCalculate", [IsTriangularComplex, IsSt
 #! coordinates of the vertices and saves those to the print record.
 #! @Returns the updated print record
 #! @Arguments surface, printRecord
-DeclareOperation( "CalculateParametersOfEdges", [IsSimplicialSurface, IsRecord] );
 #! @EndGroup
 
 #! @Section Visibility

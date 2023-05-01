@@ -1,4 +1,4 @@
-BindGlobal( "__SIMPLICIAL_IsCoordinates3D",
+BindGlobal( "__GAPIC__IsCoordinates3D",
     function(surface, coordinates)
         local coord,i;
         if Filtered([1..Length(coordinates)],i->IsBound(coordinates[i])) <> Vertices(surface) then
@@ -22,7 +22,7 @@ InstallMethod( SetVertexCoordinates3D,
     "for a simplicial surface, a list of coordinates and a record",
     [IsTriangularComplex, IsList, IsRecord],
     function(surface, coordinates, printRecord)
-	if not __SIMPLICIAL_IsCoordinates3D(surface, coordinates) then
+	if not __GAPIC__IsCoordinates3D(surface, coordinates) then
 	    Error( " invalid coordinate format " );
 	fi;
 	return SetVertexCoordinates3DNC(surface, coordinates, printRecord);
@@ -69,7 +69,7 @@ InstallMethod( GetVertexCoordinates3D,
     "for a simplicial surface, a vertex and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, vertex, printRecord)
-	if not __SIMPLICIAL_IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
+	if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
 	    Error( " invalid coordinate format " );
         fi;
 	return GetVertexCoordinates3DNC(surface, vertex, printRecord);
@@ -86,85 +86,7 @@ InstallMethod( GetVertexCoordinates3DNC,
     end
 );
 RedispatchOnCondition(GetVertexCoordinates3DNC, true, [IsTwistedPolygonalComplex, IsPosInt, IsRecord],
-    [IsTriangularComplex], 0);
-
-
-InstallMethod( CalculateParametersOfInnerCircle,
-    "for a simplicial surface and a record",
-    [IsTriangularComplex, IsRecord],
-    function(surface, printRecord)
-				local norm, distance, normalize, crossProd, Atan2, res, vertOfFace, P1, P2, P3, d1, d2, d3, incenter, s,face,
-					radius, x, y, z, alpha, beta, gamma, normalVector, lengthNormalVector, normalVector_beta, normalVector_gamma;
-				if not __SIMPLICIAL_IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
-					Error( " invalid coordinate format " );
-				fi;
-				norm:=function(v) return Sqrt( v[1]*v[1] + v[2]*v[2] + v[3]*v[3] ); end;
-				distance:=function(p,q) return norm(p-q); end;
-				normalize:=function(v) return v/norm(v); end;
-				crossProd:=function(v,w) return [ v[2]*w[3]-v[3]*w[2], v[3]*w[1]-v[1]*w[3], v[1]*w[2]-v[2]*w[1] ]; end;
-				Atan2:=function(y,x)
-					if x > 0. then
-						return Atan(y/x);
-					fi;
-					if x < 0. then
-						if y > 0. then
-							return Atan(y/x)+4*Atan(1.0);
-						fi;
-						if y = 0. then
-							return 4*Atan(1.0);
-						fi;
-						return Atan(y/x)-4*Atan(1.0);
-					fi;
-					if y > 0. then
-						return 2*Atan(1.0);
-					fi;
-					if y < 0. then
-						return -2*Atan(1.0);
-					fi;
-					return 0.;
-				end;
-				res := [];
-				for face in Faces(surface) do
-					vertOfFace:=VerticesOfFaces(surface)[face];
-					if Length(vertOfFace) <> 3 then
-						Append(res, [[]]);
-						continue;
-					fi;
-					P1 := GetVertexCoordinates3DNC(surface, vertOfFace[1], printRecord);
-					P2 := GetVertexCoordinates3DNC(surface, vertOfFace[2], printRecord);
-					P3 := GetVertexCoordinates3DNC(surface, vertOfFace[3], printRecord);
-					# calculate distances
-					d1 := distance(P2,P3);
-					d2 := distance(P1,P3);
-					d3 := distance(P1,P2);
-					# calculate coordinates of incenter
-					incenter := ( d1*P1 + d2*P2 + d3*P3 ) / ( d1 + d2 + d3 );
-					# calculate radius
-					s := ( d1 + d2 + d3 ) / 2;
-					radius := Sqrt( s * ( s - d1 ) * ( s - d2 ) * ( s - d3 ) ) / s;
-					# calculate rotation angles (from x-y-plane)
-					z := normalize(crossProd( P2-P1, P3-P1 ));
-					x := normalize((P1+P2)/2 - P3);
-					y := crossProd(z, x);
-					alpha := Atan2(-z[2], z[3]);
-					beta := Asin(z[1]);
-					gamma := Atan2(-y[1], x[1]);
-					# calculat rotation angles and length of normal vector
-					normalVector := crossProd( P1-P2, P1-P3 );
-					lengthNormalVector := 4*radius;
-					normalVector_beta := Atan2(-1.0*normalVector[3], 1.0*normalVector[1]);
-					normalVector_gamma := -Acos(1.0*normalVector[2]/norm(normalVector));
-					res[face]:=[incenter, radius, [ alpha, beta, gamma ], [ 0., normalVector_beta, normalVector_gamma], lengthNormalVector ];
-				od;
-				printRecord.innerCircles := res;
-				return printRecord;
-    end
-);
-RedispatchOnCondition(CalculateParametersOfInnerCircle, true, 
-    [IsTwistedPolygonalComplex, IsRecord],
-    [IsTriangularComplex], 0);
-
-	
+    [IsTriangularComplex], 0);	
 
 InstallMethod( ActivateInnerCircles,
     "for a simplicial surface and a record",
@@ -307,56 +229,6 @@ InstallMethod( IsNormalOfInnerCircleActive,
     end
 );
 
-InstallMethod( CalculateParametersOfEdges,
-    "for a simplicial surface and a record",
-    [IsSimplicialSurface, IsRecord],
-    function(surface, printRecord)
-				local norm, distance, Atan2, res, vertOfEdge, P1, P2, d, mid, beta, gamma,edge;
-				if not __SIMPLICIAL_IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
-					Error( " invalid coordinate format " );
-				fi;
-				norm:=function(v) return Sqrt( v[1]*v[1] + v[2]*v[2] + v[3]*v[3] ); end;
-				distance:=function(p,q) return norm(p-q); end;
-				Atan2:=function(y,x)
-					if x > 0. then
-						return Atan(y/x);
-					fi;
-					if x < 0. then
-						if y > 0. then
-							return Atan(y/x)+4*Atan(1.0);
-						fi;
-						if y = 0. then
-							return 4*Atan(1.0);
-						fi;
-						return Atan(y/x)-4*Atan(1.0);
-					fi;
-					if y > 0. then
-						return 2*Atan(1.0);
-					fi;
-					if y < 0. then
-						return -2*Atan(1.0);
-					fi;
-					return 0.;
-				end;
-				res := [];
-				for edge in Edges(surface) do
-					vertOfEdge:=VerticesOfEdges(surface)[edge];
-					P1 := GetVertexCoordinates3DNC(surface, vertOfEdge[1], printRecord);
-					P2 := GetVertexCoordinates3DNC(surface, vertOfEdge[2], printRecord);
-					# calculate distance
-					d := distance(P1,P2);
-					# calculate coordinates of mid of edge
-					mid := ( P1 + P2 ) / 2;
-					# calculate rotation angles (from y-direction)
-					beta := Atan2(-1.0*(P2[3]-P1[3]), 1.0*(P2[1]-P1[1]));
-					gamma := -Acos(1.0*(P2[2]-P1[2])/d);
-					res[edge]:=[mid, d, [ 0., beta, gamma ] ];
-				od;
-				printRecord.edges := res;
-				return printRecord;
-    end
-);
-
 InstallMethod( ActivateEdges,
     "for a simplicial surface and a record",
     [IsTriangularComplex, IsRecord],
@@ -489,47 +361,6 @@ InstallMethod( IsFaceActive,
 					return true;
 				fi;
 				return printRecord.drawFaces[face] = true;
-    end
-);
-
-InstallMethod( SetTransparencyJava,
-    "for a simplicial surface, a face and a record",
-    [IsTriangularComplex, IsPosInt, IsFloat, IsRecord],
-    function(surface, face, value, printRecord)
-            if not IsBound(printRecord.FaceTransparency) then
-                printRecord.FaceTransparency := [];
-            fi;
-            printRecord.FaceTransparency[face] := value;
-            return printRecord;
-    end
-);
-
-InstallMethod( RemoveTransparencyJava,
-    "for a simplicial surface, a face and a record",
-    [IsTriangularComplex, IsPosInt, IsRecord],
-    function(surface, face, printRecord)
-            if IsBound(printRecord.FaceTransparency[face]) then
-                Unbind(printRecord.FaceTransparency[face]);
-                return printRecord;
-            fi;
-            return printRecord;
-    end
-);
-
-InstallMethod( GetTransparencyJava,
-    "for a simplicial surface, a face and a record",
-    [IsTriangularComplex, IsPosInt, IsRecord],
-    function(surface, face, printRecord)
-                if not IsBound(printRecord.FaceTransparency) then
-                    return 1;
-                fi;
-                if (face <= 0) then
-                    return 0;
-                fi;
-                if not IsBound(printRecord.FaceTransparency[face]) then
-                    return 1;
-                fi;
-                return printRecord.FaceTransparency[face];
     end
 );
 
@@ -811,7 +642,7 @@ InstallMethod( GetCircleColours,
 );
 
 # set neccessary values for the printrecord
-BindGlobal( "__SIMPLICIAL_InitializePrintRecordDrawSurfaceToJavascript",
+BindGlobal( "__GAPIC__InitializePrintRecordDrawSurfaceToJavascript",
     function(surface,printRecord)
 	local edgeThickness;
 	if not IsBound(printRecord.edgeThickness) then
@@ -825,7 +656,7 @@ BindGlobal( "__SIMPLICIAL_InitializePrintRecordDrawSurfaceToJavascript",
 
 # function to calculate the incenter of a triangle/face. Used for inner circles
 # we follow the math and variable names from here: https://math.stackexchange.com/questions/740111/incenter-of-triangle-in-3d
-BindGlobal( "__SIMPLICIAL_CalculateIncenter",
+BindGlobal( "__GAPIC__CalculateIncenter",
     function(surface,printRecord,face)
 	local a, b, c, A, B, C, atemp, btemp, ctemp, incenter;
 
@@ -850,7 +681,7 @@ BindGlobal( "__SIMPLICIAL_CalculateIncenter",
 
 # function to calculate the inradius of a triangle/face. Used for inner circles
 # we follow the math and variable names from here: https://en.wikipedia.org/wiki/Incircle_and_excircles_of_a_triangle#Radius
-BindGlobal( "__SIMPLICIAL_CalculateInradius",
+BindGlobal( "__GAPIC__CalculateInradius",
     function(surface,printRecord,face)
 	local a, b, c, A, B, C, atemp, btemp, ctemp, s, inradius;
 
@@ -876,7 +707,7 @@ BindGlobal( "__SIMPLICIAL_CalculateInradius",
 
 # function to calculate the normalvector of a triangle/face. Used for normals of inner circles
 # we use just the cross product of two of the defining edges, generated by the vertices
-BindGlobal( "__SIMPLICIAL__CalculateNormalvector",
+BindGlobal( "__GAPIC___CalculateNormalvector",
     function(surface,printRecord,face)
 	local A, B, C, atemp, btemp, normal;
 
@@ -899,11 +730,10 @@ BindGlobal( "__SIMPLICIAL__CalculateNormalvector",
 );
 
 # general method
-# TODO: change name to drawcomplex... ?
-InstallMethod( DrawSurfaceToJavaScriptCalculate,
+InstallMethod( DrawComplexToJavaScript,
     "for a simplicial surface, a filename and a record",
-    [IsTriangularComplex, IsString, IsRecord, IsBool],
-    function(surface, fileName, printRecord, calculate)
+    [IsTriangularComplex, IsString, IsRecord],
+    function(surface, fileName, printRecord)
                 local file, output, template, coords, i, j, colour,
 		      vertOfFace, vertOfEdge, parametersOfCircle, 
 		      parametersOfEdge, temp, vertex, edge ,face,vertices,edges,
@@ -911,7 +741,7 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
 		      faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
               incenter,inradius, normal, atemp, btemp, material;	
     # make sure the defaults are set
-    printRecord := __SIMPLICIAL_InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
+    printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
     
     #predefine some lists
 	vertices:=Vertices(surface);
@@ -931,12 +761,11 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
     fi;
     SetPrintFormattingStatus( output, false );
 
-    AppendTo( output, __SIMPLICIAL_ReadTemplateFromFile("three_header.template") );
-    AppendTo( output, __SIMPLICIAL_ReadTemplateFromFile("three_start.template") );
+    AppendTo( output, __GAPIC__ReadTemplateFromFile("three_start.template") );
 
     # Check if surface is in 3d coords
     # TODO neccessary?
-    if not __SIMPLICIAL_IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
+    if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
         Error( " invalid coordinate format " );
     fi;
 
@@ -1100,7 +929,7 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
             # add spheres with radius edgeThickness around the active vertices
             AppendTo(output, "const sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
             AppendTo(output, "\t \t \tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
-            AppendTo(output, "\t \t \tsphereRoot.add(sphere",vertex,");\n");
+            AppendTo(output, "\t \t \tvertexRoot.add(sphere",vertex,");\n");
             AppendTo(output, "\t \t \tsphere",vertex,".position.set(",coordinateString,");\n");
 
             
@@ -1113,7 +942,7 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
 
             const vertexLabel""",vertex,""" = new CSS2DObject( lableDiv""",vertex,""" );
             vertexLabel""",vertex,""".position.set(""",coordinateString,""");
-            sphereRoot.add( vertexLabel""",vertex,""" );
+            vertexlabelRoot.add( vertexLabel""",vertex,""" );
 
             """);
         fi;
@@ -1123,8 +952,8 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
             #TODO calculate right radius and apply
-            incenter := __SIMPLICIAL_CalculateIncenter(surface, printRecord, face);
-            inradius := __SIMPLICIAL_CalculateInradius(surface, printRecord, face);
+            incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
+            inradius := __GAPIC__CalculateInradius(surface, printRecord, face);
             AppendTo(output, "const ringGeometry",face," = new THREE.RingGeometry(",(inradius-0.005),",",inradius,", 32);\n");
             AppendTo(output, "const ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
             AppendTo(output, "const ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
@@ -1183,8 +1012,8 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
     coordinateString := "";
     for face in Faces(surface) do
         if IsNormalOfInnerCircleActive(surface, face, printRecord) then
-            normal := __SIMPLICIAL__CalculateNormalvector(surface, printRecord, face);
-            incenter := __SIMPLICIAL_CalculateIncenter(surface, printRecord, face);
+            normal := __GAPIC___CalculateNormalvector(surface, printRecord, face);
+            incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
 
             # set the two points as incenter plus normal and incenter minus normal
             # TODO: check if the non-normalized normals generated from the face have a good length, otherwise automate
@@ -1230,20 +1059,9 @@ InstallMethod( DrawSurfaceToJavaScriptCalculate,
     fi;
         
 
-    AppendTo( output, __SIMPLICIAL_ReadTemplateFromFile("three_end.template") );
-    AppendTo( output, __SIMPLICIAL_ReadTemplateFromFile("three_footer.template") );
+    AppendTo( output, __GAPIC__ReadTemplateFromFile("three_end.template") );
 
     CloseStream(output);
     return printRecord;
-    end
-);
-
-
-
-InstallMethod( DrawSurfaceToJavaScript,
-    "for a simplicial surface, a filename and a record",
-    [IsTriangularComplex, IsString, IsRecord],
-    function(surface, fileName, printRecord)
-        return DrawSurfaceToJavaScriptCalculate(surface,fileName,printRecord,true);
     end
 );
