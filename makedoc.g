@@ -6,7 +6,8 @@
 
 path := Directory("doc/lib/");;
 main := "GAPic.xml";;
-files := ["../../gap/GAPic.gd", "../../gap/GAPic.gi"];;
+files := ["../../gap/GAPic.gd", "../../gap/GAPic.gi", 
+            "../../gap/javascript/draw.gi", "../../gap/javascript/draw.gd"];;
 bookname := "GAPic Manual";;
 # doc := ComposedDocument("GAPDoc", path, main, files, true);;
 

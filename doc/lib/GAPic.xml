@@ -16,6 +16,7 @@
 <Body>
 <#Include SYSTEM "_Chapter_Introduction.xml">
 <#Include SYSTEM "_Chapter_Functionality.xml">
+<#Include SYSTEM "_Chapter_Javascript.xml">
 </Body>
 <TheIndex/>
 </Book>

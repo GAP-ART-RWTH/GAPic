@@ -10,7 +10,7 @@ The package is currently under development and will as a first step gain the fun
 
 ### ToDos
 - [ ] Prototype for checking if necessary packages are installed
-- [ ] Add DrawSurfaceToJavascript functionality
+- [x] Add DrawSurfaceToJavascript functionality (now called DrawComplexToJavascript)
 
 ## Contact
 
