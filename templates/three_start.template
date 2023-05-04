@@ -121,7 +121,6 @@
             planeFolder.add(guiParameters, 'planeY', -1.5, 1.5);
             planeFolder.add(guiParameters, 'planeZactive');
             planeFolder.add(guiParameters, 'planeZ', -1.5, 1.5);
-            planeFolder.open();
 
             //generate a sphere geometry for the vertices
             const sphereGeometry = new THREE.SphereGeometry( 0.02, 32, 16 );
