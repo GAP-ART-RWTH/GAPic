@@ -82,7 +82,7 @@ InstallMethod( GetVertexCoordinates3DNC,
     "for a simplicial surface, a vertex and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, vertex, printRecord)
-	return 1.0*printRecord.vertexCoordinates3D[vertex];
+	return printRecord.vertexCoordinates3D[vertex];
     end
 );
 RedispatchOnCondition(GetVertexCoordinates3DNC, true, [IsTwistedPolygonalComplex, IsPosInt, IsRecord],
@@ -729,6 +729,68 @@ BindGlobal( "__GAPIC___CalculateNormalvector",
     end
 );
 
+
+InstallMethod( ActivateParameterizedVertices,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.parameterVertices := true;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( DeactivateParameterizedVertices,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.parameterVertices := false;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( IsParameterizedVertices,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    if not IsBound(printRecord.parameterVertices) then
+        return false;
+    fi;
+ 
+	return printRecord.parameterVertices;
+    end
+);
+
+
+InstallMethod( SetVertexCoordinatesParameterized,
+    "for a simplicial surface, a list of coordinates and a record",
+    [IsTriangularComplex, IsList, IsRecord],
+    function(surface, coordinates, printRecord)
+
+    printRecord := ActivateParameterizedVertices(surface, printRecord);
+	
+	return SetVertexCoordinates3DNC(surface, coordinates, printRecord);
+    end
+);
+
+InstallMethod( SetVertexParameters,
+    [IsTriangularComplex, IsList, IsRecord],
+    function(surface, parameters, printRecord)
+    
+    #TODO: check if sensible list is given
+    printRecord.vertexParameters := parameters;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( GetVertexParameters,
+    [IsTriangularComplex, IsRecord],
+    function(surface, printRecord)
+ 
+    #TODO: check if set
+	return printRecord.vertexParameters;
+    end
+);
+
 # general method
 InstallMethod( DrawComplexToJavaScript,
     "for a simplicial surface, a filename and a record",
@@ -789,30 +851,96 @@ InstallMethod( DrawComplexToJavaScript,
             colour := Concatenation("\"", color, "\"");
         fi;
 
-        # generate a geometry with all vertices of the faces belonging to the current face
-        AppendTo(output, "\t \t \tconst geometry",i," = new THREE.BufferGeometry();\n");
-        AppendTo(output, "\t \t \tconst vertices",i," = new Float32Array( [\n \t \t \t \t");
+        AppendTo(output, "\t\t\tconst numberOfFaceGeometries = ",Length(uniqueFaceColors),";\n\n");
 
-        colorPositions := Positions(faceColors, color);
-        for face in colorPositions do
-            if IsFaceActive(surface, face, printRecord) then
-                # we assume there is always at least one active face               
-                # as we can assume that all faces of a simplicial surface have exactly 3 vertices we add them to the geometry individually
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3], ",\n \t \t \t \t");
+        if not IsParameterizedVertices(surface, printRecord) then
+            # generate a geometry with all vertices of the faces belonging to the current face
+            AppendTo(output, "\t \t \tconst geometry",i," = new THREE.BufferGeometry();\n");
+            AppendTo(output, "\t \t \tconst vertices",i," = new Float32Array( [\n \t \t \t \t");
 
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3], ",\n\t \t \t \t");
+            colorPositions := Positions(faceColors, color);
+            for face in colorPositions do
+                if IsFaceActive(surface, face, printRecord) then
+                    # we assume there is always at least one active face               
+                    # as we can assume that all faces of a simplicial surface have exactly 3 vertices we add them to the geometry individually
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3], ",\n \t \t \t \t");
 
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3], ",\n\n\t \t \t \t");
-            fi;
-        od;
-        AppendTo(output, "] ); \n\n");
-        AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( vertices",i,", 3 ) );\n\n");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3], ",\n\t \t \t \t");
+
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3], ",\n\n\t \t \t \t");
+                fi;
+            od;
+            AppendTo(output, "] ); \n\n");
+            AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( vertices",i,", 3 ) );\n\n");
+        else
+            # generate a geometry with all vertices of the faces belonging to the current face
+            vertexParameters := GetVertexParameters(surface, printRecord);
+
+            AppendTo(output, "\t\t\tvar vParams = new function(){\n");
+            for p in vertexParameters do
+                AppendTo(output, "\t\t\t\tthis.",p[1],"=",p[2],";\n");
+            od;
+            AppendTo(output, "\t\t\t}\n\n");
+
+            vertexParameterString := "";
+            for p in vertexParameters do
+                Append(vertexParameterString, "vParams.");
+                Append(vertexParameterString, String(p[1]));
+                Append(vertexParameterString, ",");
+            od;
+            # Append(vertexParameterString, "]");
+
+            vertexParameterNames := "";
+            for p in vertexParameters do
+                Append(vertexParameterNames, String(p[1]));
+                Append(vertexParameterNames, ",");
+            od;
+
+            AppendTo(output, "\t \t \tconst geometry",i," = new THREE.BufferGeometry();\n");
+            AppendTo(output, "function setVertices",i,"(",vertexParameterNames,"){\n");
+            AppendTo(output, "\t \t \var vertices",i," = new Float32Array( [\n \t \t \t \t");
+
+            colorPositions := Positions(faceColors, color);
+            for face in colorPositions do
+                if IsFaceActive(surface, face, printRecord) then
+                    # we assume there is always at least one active face               
+                    # as we can assume that all faces of a simplicial surface have exactly 3 vertices we add them to the geometry individually
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3], ",\n \t \t \t \t");
+
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3], ",\n\t \t \t \t");
+
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2], ",");
+                    AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3], ",\n\n\t \t \t \t");
+                fi;
+            od;
+            AppendTo(output, "] ); \n\n");
+            AppendTo(output, "\t\t\t\treturn vertices",i,"; \n }\n\n");
+
+            AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
+
+            AppendTo(output, """
+                function updateVertexCoordinates(){
+                    geometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( setVertices""",i,"""(""",vertexParameterString,"""), 3 ) );
+                }
+            """);
+
+            AppendTo(output, "const parameterFolder = gui.addFolder(\"Parameters\");\n");
+            for p in vertexParameters do
+                AppendTo(output, "\t\t\tparameterFolder.add(vParams, '",p[1],"', ",p[3][1],",",p[3][2],");\n");
+            od;
+            AppendTo(output, "parameterFolder.open();\n\n");
+        fi;
 
         # generate a material with the corresponding color
         Print("color: ",color);
@@ -856,6 +984,9 @@ InstallMethod( DrawComplexToJavaScript,
             Add(uniqueEdgeColors, color);
         fi; 
     od;
+
+    #TODO: apply parameters to everything else
+    if not IsParameterizedVertices(surface, printRecord) then
 
     # for each of the unique colors add the edges to a gemeometry and generate a mesh with corresponding color from it
     # also generate a wireframe from the edges which can be made visible via the gui
@@ -947,6 +1078,8 @@ InstallMethod( DrawComplexToJavaScript,
             """);
         fi;
     od;
+
+    fi;
 
     # generate innercircle for all (active) innercircle faces
     for face in Faces(surface) do

@@ -648,6 +648,18 @@ DeclareOperation( "DeactivateNormalOfInnerCircle", [IsTriangularComplex, IsPosIn
 #TODO: activate as soon as it works again
 # @InsertChunk Example_OctahedronThickEdges
 
+DeclareOperation( "ActivateParameterizedVertices", [IsTriangularComplex, IsRecord]);
+
+DeclareOperation( "DeactivateParameterizedVertices", [IsTriangularComplex, IsRecord]);
+
+DeclareOperation( "IsParameterizedVertices", [IsTriangularComplex, IsRecord]);
+
+DeclareOperation( "SetVertexCoordinatesParameterized", [IsTriangularComplex, IsList, IsRecord]);
+
+DeclareOperation( "SetVertexParameters", [IsTriangularComplex, IsList, IsRecord]);
+
+DeclareOperation( "GetVertexParameters", [IsTriangularComplex, IsRecord]);
+
 #! @Section Deprecated functions
 #! @SectionLabel Deprecated functions
 #! @BeginGroup Deprecated functions
