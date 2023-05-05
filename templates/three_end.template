@@ -65,6 +65,7 @@
 
                 if(vertexParametriziation){
                     updateVertexCoordinates();
+                    updateEdgeCoordinates();
                 }                
 
                 //update stuff that changes from the gui

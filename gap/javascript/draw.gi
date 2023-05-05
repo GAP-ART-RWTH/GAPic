@@ -887,7 +887,7 @@ InstallMethod( DrawComplexToJavaScript,
         if not StartsWith(color, "0x") then
             colour := Concatenation("\"", color, "\"");
         fi;
-        
+
         # generate a geometry with all vertices of the faces belonging to the current face
         AppendTo(output, "\t \t \tconst geometry",i," = new THREE.BufferGeometry();\n");
         AppendTo(output, "\t\t\tfunction setVertices",i,"(",vertexParameterNames,"){\n");
@@ -966,8 +966,7 @@ InstallMethod( DrawComplexToJavaScript,
         fi; 
     od;
 
-    #TODO: apply parameters to everything else
-    if not IsParameterizedVertices(surface, printRecord) then
+    
 
     # for each of the unique colors add the edges to a gemeometry and generate a mesh with corresponding color from it
     # also generate a wireframe from the edges which can be made visible via the gui
@@ -985,6 +984,7 @@ InstallMethod( DrawComplexToJavaScript,
             } );        
         """);
 
+        AppendTo(output, "\t\t\tfunction setEdges",i,"(",vertexParameterNames,"){\n");
         AppendTo(output, "\tconst edges",i," = new Float32Array( [\n");
 
         colorPositions := Positions(edgeColors, color);
@@ -1015,15 +1015,30 @@ InstallMethod( DrawComplexToJavaScript,
         od;
 
         AppendTo(output, "\t \t \t]);");
+
+        AppendTo(output, "\t\t\t\treturn edges",i,"; \n \t\t\t}\n\n");
+
+        AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
+
         AppendTo(output, """
             const edgeGeometry""",i,""" = new THREE.BufferGeometry();
-            edgeGeometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( edges""",i,""", 3 ) );
+            edgeGeometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( setEdges""",i,"""(""",vertexParameterString,"""), 3 ) );
 
             const edgeLine""",i,""" = new THREE.LineSegments( edgeGeometry""",i,""", edgeMaterial""",i,""" );
             edgeRoot.add(edgeLine""",i,""");
         """);
-        
+
+        if IsParameterizedVertices(surface, printRecord) then
+            AppendTo(output, "function updateEdgeCoordinates(){\n");
+            for i in [1..Length(uniqueFaceColors)] do
+                AppendTo(output, "\t\t\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setEdges",i,"(",vertexParameterString,"), 3 ) );\n");
+            od;
+            AppendTo(output, "\t\t\t}\n\n");
+        fi; 
     od;
+
+    #TODO: apply parameters to everything else
+    if not IsParameterizedVertices(surface, printRecord) then
 
     # add spheres and lables on all vertices if they are active
     AppendTo(output, "\n\n\t//add the vertices with lables\n \t \t \t");
