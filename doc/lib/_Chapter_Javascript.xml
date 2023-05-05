@@ -152,7 +152,6 @@ rec( edgeThickness := 0.03,
 
 <ManSection Label="DrawComplexToJavascript">
   <Oper Arg="surface, filename, printRecord" Name="DrawComplexToJavascript" Label="for IsTriangularComplex, IsString, IsRecord"/>
-  <Oper Arg="surface, filename, printRecord, calculate" Name="DrawComplexToJavascriptCalculate" Label="for IsTriangularComplex, IsString, IsRecord, IsBool"/>
  <Returns>the updated print record
 </Returns>
  <Description>

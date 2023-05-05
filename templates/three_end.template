@@ -63,7 +63,9 @@
                     localPlanes.push(planeZ);
                 }
 
-                updateVertexCoordinates();
+                if(vertexParametriziation){
+                    updateVertexCoordinates();
+                }                
 
                 //update stuff that changes from the gui
                 meshRoot.traverse( function( node ) {
