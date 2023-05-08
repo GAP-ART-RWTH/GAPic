@@ -947,7 +947,7 @@ InstallMethod( DrawComplexToJavaScript,
     od;
 
     if IsParameterizedVertices(surface, printRecord) then
-        AppendTo(output, "function updateVertexCoordinates(){\n");
+        AppendTo(output, "function updateVerticesCoordinates(){\n");
         for i in [1..Length(uniqueFaceColors)] do
             AppendTo(output, "\t\t\t\tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n");
         od;
@@ -1037,11 +1037,8 @@ InstallMethod( DrawComplexToJavaScript,
         fi; 
     od;
 
-    #TODO: apply parameters to everything else
-    if not IsParameterizedVertices(surface, printRecord) then
-
     # add spheres and lables on all vertices if they are active
-    AppendTo(output, "\n\n\t//add the vertices with lables\n \t \t \t");
+    AppendTo(output, "\n\n\t//add the vertices with lables\n");
     for vertex in Vertices(surface) do
         if IsVertexActive(surface, vertex, printRecord) then                
             # generate a string with the coordinates for later use
@@ -1053,11 +1050,16 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
             Append(coordinateString, ",");
 
+            AppendTo(output, "\n\n\t\t\tfunction setVertex",vertex,"(",vertexParameterNames,"){\n");
+            AppendTo(output, "\t\t\t\treturn [",coordinateString,"];\n\t\t\t}\n");
+
             # add spheres with radius edgeThickness around the active vertices
-            AppendTo(output, "const sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
+            AppendTo(output, "\t\t\tconst sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
             AppendTo(output, "\t \t \tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
             AppendTo(output, "\t \t \tvertexRoot.add(sphere",vertex,");\n");
-            AppendTo(output, "\t \t \tsphere",vertex,".position.set(",coordinateString,");\n");
+            AppendTo(output, "\t\t\tsphere",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],"); 
+            AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
+            AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
 
             
             # generate the lable for the given vertex
@@ -1068,14 +1070,31 @@ InstallMethod( DrawComplexToJavaScript,
             lableDiv""",vertex,""".style.marginTop = '-1em';
 
             const vertexLabel""",vertex,""" = new CSS2DObject( lableDiv""",vertex,""" );
-            vertexLabel""",vertex,""".position.set(""",coordinateString,""");
-            vertexlabelRoot.add( vertexLabel""",vertex,""" );
-
-            """);
+            vertexLabel""",vertex,""".position.set(setVertex""",vertex,"""(""",vertexParameterString,""")[0],setVertex""",vertex,"""(""",vertexParameterString,""")[1],setVertex""",vertex,"""(""",vertexParameterString,""")[2]);
+            vertexlabelRoot.add( vertexLabel""",vertex,""" );""");
         fi;
     od;
 
-    fi;
+    AppendTo(output, "function updateVertexCoordinates(){\n");
+    for vertex in Vertices(surface) do
+        if IsVertexActive(surface, vertex, printRecord) then 
+            if IsParameterizedVertices(surface, printRecord) then
+                #in three steps as return is an array
+                AppendTo(output, "\t\t\t\tsphere",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],"); 
+                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
+                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
+                AppendTo(output, "\t\t\t\tvertexLabel",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],");
+                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
+                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
+            fi; 
+        fi;
+    od;
+    AppendTo(output, "\t\t\t}\n\n");
+
+    #TODO: apply parameters to everything else
+    # if not IsParameterizedVertices(surface, printRecord) then
+
+    # fi;
 
     # generate innercircle for all (active) innercircle faces
     for face in Faces(surface) do
