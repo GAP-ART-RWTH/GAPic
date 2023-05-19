@@ -72,10 +72,13 @@
 				this.vertexlabelVisibility = true;
 				this.vertexSize = 1;
 				this.planeX = 0.0;
+				this.maxX = 1.5;
                 this.planeXactive = false;
                 this.planeY = 0.0;
+				this.maxY = 1.5;
                 this.planeYactive = false;
                 this.planeZ = 0.0;
+				this.maxZ = 1.5;
                 this.planeZactive = false;
 				this.normalsMaterial = false;
             } ;
@@ -113,14 +116,6 @@
             controlFolder.add(guiParameters, "vertexSize", 0.1, 3);
             controlFolder.add(guiParameters, "normalsMaterial");
             controlFolder.open();
-
-            const planeFolder = gui.addFolder("Intersection Planes");
-            planeFolder.add(guiParameters, 'planeXactive');
-            planeFolder.add(guiParameters, 'planeX', -1.5, 1.5);
-            planeFolder.add(guiParameters, 'planeYactive');
-            planeFolder.add(guiParameters, 'planeY', -1.5, 1.5);
-            planeFolder.add(guiParameters, 'planeZactive');
-            planeFolder.add(guiParameters, 'planeZ', -1.5, 1.5);
 
             //generate a sphere geometry for the vertices
             const sphereGeometry = new THREE.SphereGeometry( 0.02, 32, 16 );

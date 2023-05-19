@@ -482,12 +482,12 @@ InstallMethod( GetFaceColours,
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
     local res, i;
-                res := [];
-                for i in Faces(surface) do
-                    res[i]:= GetFaceColour(surface, i, printRecord);
-                od;
+        res := [];
+        for i in Faces(surface) do
+            res[i]:= GetFaceColour(surface, i, printRecord);
+        od;
 
-                return res;
+        return res;
     end
 );
 
@@ -801,7 +801,8 @@ InstallMethod( DrawComplexToJavaScript,
 		      parametersOfEdge, temp, vertex, edge ,face,vertices,edges,
               faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
 		      faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
-              incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString;	
+              incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
+              maxXcoord, maxYcoord, maxZcoord, x, y, z;	
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
     
@@ -1209,7 +1210,30 @@ InstallMethod( DrawComplexToJavaScript,
             normalsRoot.add(normalsLine);
         """);
     fi;
-        
+
+    # calculate maximal values in all directions for intersection plane slider 
+    maxXcoord := 0.0;
+    maxYcoord := 0.0;
+    maxZcoord := 0.0;
+    for vertex in Vertices(surface) do
+        x := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]));
+        y := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]));
+        z := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
+
+        if x >= maxXcoord then
+            maxXcoord := x;
+        fi;
+        if y >= maxYcoord then
+            maxYcoord := y;
+        fi;
+        if z >= maxZcoord then
+            maxZcoord := z;
+        fi;
+    od;
+
+    AppendTo(output, "\t\t\tguiParameters.maxX = ",maxXcoord,";\n");
+    AppendTo(output, "\t\t\tguiParameters.maxY = ",maxYcoord,";\n");
+    AppendTo(output, "\t\t\tguiParameters.maxZ = ",maxZcoord,";\n");
 
     AppendTo( output, __GAPIC__ReadTemplateFromFile("three_end.template") );
 
