@@ -796,13 +796,14 @@ InstallMethod( DrawComplexToJavaScript,
     "for a simplicial surface, a filename and a record",
     [IsTriangularComplex, IsString, IsRecord],
     function(surface, fileName, printRecord)
-                local file, output, template, coords, i, j, colour,
-		      vertOfFace, vertOfEdge, parametersOfCircle, 
-		      parametersOfEdge, temp, vertex, edge ,face,vertices,edges,
-              faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
-		      faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
-              incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
-              maxXcoord, maxYcoord, maxZcoord, x, y, z;	
+        local file, output, template, coords, i, j, colour,
+        vertOfFace, vertOfEdge, parametersOfCircle, 
+        parametersOfEdge, temp, vertex, edge ,face,vertices,edges,
+        faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
+        faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
+        incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
+        maxXcoord, maxYcoord, maxZcoord, x, y, z;
+
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
     
@@ -1097,9 +1098,6 @@ InstallMethod( DrawComplexToJavaScript,
     AppendTo(output, "\t\t\t}\n\n");
 
     #TODO: apply parameters to everything else
-    # if not IsParameterizedVertices(surface, printRecord) then
-
-    # fi;
 
     # generate innercircle for all (active) innercircle faces
     for face in Faces(surface) do
