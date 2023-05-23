@@ -10,7 +10,7 @@ The package is currently under development and will as a first step gain the fun
 
 ### ToDos
 - [ ] Prototype for checking if necessary packages are installed
-    Will be done with the new function from GAP 4.13 which checks if a Package is Loaded, ee https://github.com/GAP-ART-RWTH/GAPic/issues/15
+    Will be done with the new function from GAP 4.13 which checks if a Package is Loaded, see https://github.com/GAP-ART-RWTH/GAPic/issues/15
 - [x] Add DrawSurfaceToJavascript functionality (now called DrawComplexToJavascript)
 
 ## Contact
