@@ -72,12 +72,15 @@
 				this.vertexlabelVisibility = true;
 				this.vertexSize = 1;
 				this.planeX = 0.0;
+				this.minX = -1.5;
 				this.maxX = 1.5;
                 this.planeXactive = false;
                 this.planeY = 0.0;
+				this.minY = -1.5;
 				this.maxY = 1.5;
                 this.planeYactive = false;
                 this.planeZ = 0.0;
+				this.minZ = -1.5;
 				this.maxZ = 1.5;
                 this.planeZactive = false;
 				this.normalsMaterial = false;

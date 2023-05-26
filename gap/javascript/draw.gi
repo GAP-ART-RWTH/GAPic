@@ -802,7 +802,7 @@ InstallMethod( DrawComplexToJavaScript,
         faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
         faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
         incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
-        maxXcoord, maxYcoord, maxZcoord, x, y, z;
+        maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z;
 
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
@@ -1213,10 +1213,13 @@ InstallMethod( DrawComplexToJavaScript,
     maxXcoord := 0.0;
     maxYcoord := 0.0;
     maxZcoord := 0.0;
+    minXcoord := 0.0;
+    minYcoord := 0.0;
+    minZcoord := 0.0;
     for vertex in Vertices(surface) do
-        x := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]));
-        y := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]));
-        z := AbsoluteValue(Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
+        x := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]);
+        y := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]);
+        z := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]);
 
         if x >= maxXcoord then
             maxXcoord := x;
@@ -1227,11 +1230,27 @@ InstallMethod( DrawComplexToJavaScript,
         if z >= maxZcoord then
             maxZcoord := z;
         fi;
+        if x <= minXcoord then
+            minXcoord := x;
+        fi;
+        if y <= minYcoord then
+            minYcoord := y;
+        fi;
+        if z <= minZcoord then
+            minZcoord := z;
+        fi;
     od;
 
     AppendTo(output, "\t\t\tguiParameters.maxX = ",maxXcoord,";\n");
     AppendTo(output, "\t\t\tguiParameters.maxY = ",maxYcoord,";\n");
     AppendTo(output, "\t\t\tguiParameters.maxZ = ",maxZcoord,";\n");
+    AppendTo(output, "\t\t\tguiParameters.minX = ",minXcoord,";\n");
+    AppendTo(output, "\t\t\tguiParameters.minY = ",minYcoord,";\n");
+    AppendTo(output, "\t\t\tguiParameters.minZ = ",minZcoord,";\n\n");
+
+    AppendTo(output, "\t\t\tguiParameters.planeX = ",(minXcoord+maxXcoord)/2,";\n");
+    AppendTo(output, "\t\t\tguiParameters.planeY = ",(minYcoord+maxYcoord)/2,";\n");
+    AppendTo(output, "\t\t\tguiParameters.planeZ = ",(minZcoord+maxZcoord)/2,";\n");
 
     AppendTo( output, __GAPIC__ReadTemplateFromFile("three_end.template") );
 
