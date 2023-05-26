@@ -86,9 +86,9 @@
 				this.normalsMaterial = false;
             } ;
 
-			const planeX = new THREE.Plane( new THREE.Vector3( 1, 0, 0 ), guiParameters.planeX );
-            const planeY = new THREE.Plane( new THREE.Vector3( 0, 1, 0 ), guiParameters.planeY );
-            const planeZ = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ), guiParameters.planeZ );
+			const planeX = new THREE.Plane( new THREE.Vector3( -1, 0, 0 ), guiParameters.planeX );
+            const planeY = new THREE.Plane( new THREE.Vector3( 0, -1, 0 ), guiParameters.planeY );
+            const planeZ = new THREE.Plane( new THREE.Vector3( 0, 0, -1 ), guiParameters.planeZ );
 
             var localPlanes = [];
 
