@@ -786,7 +786,7 @@ InstallMethod( GetVertexParameters,
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
  
-    if not IsParameterizedVertices(surface, printRecord) then
+    if IsParameterizedVertices(surface, printRecord) then
         return printRecord.vertexParameters;
     fi;
     end
