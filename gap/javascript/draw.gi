@@ -755,7 +755,7 @@ InstallMethod( IsParameterizedVertices,
         return false;
     fi;
  
-	return printRecord.parameterVertices;
+	return true;
     end
 );
 
@@ -786,8 +786,9 @@ InstallMethod( GetVertexParameters,
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
  
-    #TODO: check if set
-	return printRecord.vertexParameters;
+    if not IsParameterizedVertices(surface, printRecord) then
+        return printRecord.vertexParameters;
+    fi;
     end
 );
 
@@ -1208,6 +1209,8 @@ InstallMethod( DrawComplexToJavaScript,
             normalsRoot.add(normalsLine);
         """);
     fi;
+
+    if 
 
     # calculate maximal values in all directions for intersection plane slider 
     maxXcoord := 0.0;
