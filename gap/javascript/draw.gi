@@ -794,6 +794,29 @@ InstallMethod( GetVertexParameters,
     end
 );
 
+InstallMethod( SetPlaneRange,
+    [IsTriangularComplex, IsList, IsRecord],
+    function(surface, range, printRecord)
+    
+    #TODO: check if sensible list is given
+    printRecord.planeRange := range;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( GetPlaneRange,
+    [IsTriangularComplex, IsRecord],
+    function(surface, printRecord)
+ 
+    if IsBound(printRecord.planeRange) then
+        return printRecord.planeRange;
+    else
+        return fail;
+    fi;
+    end
+);
+
 # general method
 InstallMethod( DrawComplexToJavaScript,
     "for a simplicial surface, a filename and a record",
@@ -1213,49 +1236,59 @@ InstallMethod( DrawComplexToJavaScript,
     fi;
 
     # only try automatic vertices if not parameterized, otherwise to complicated
-    if not IsParameterizedVertices(surface, printRecord) then
-        # calculate maximal values in all directions for intersection plane slider 
-        maxXcoord := 0.0;
-        maxYcoord := 0.0;
-        maxZcoord := 0.0;
-        minXcoord := 0.0;
-        minYcoord := 0.0;
-        minZcoord := 0.0;
-        for vertex in Vertices(surface) do
-            x := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]);
-            y := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]);
-            z := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]);
+    if not GetPlaneRange(surface, printRecord) = fail then
+        range := GetPlaneRange(surface, printRecord);
+        AppendTo(output, "\t\t\tguiParameters.maxX = ",range[1][1],";\n");
+        AppendTo(output, "\t\t\tguiParameters.maxY = ",range[2][1],";\n");
+        AppendTo(output, "\t\t\tguiParameters.maxZ = ",range[3][1],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minX = ",range[1][2],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minY = ",range[2][2],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minZ = ",range[3][2],";\n\n");
+    else
+        if not IsParameterizedVertices(surface, printRecord) then
+            # calculate maximal values in all directions for intersection plane slider 
+            maxXcoord := 0.0;
+            maxYcoord := 0.0;
+            maxZcoord := 0.0;
+            minXcoord := 0.0;
+            minYcoord := 0.0;
+            minZcoord := 0.0;
+            for vertex in Vertices(surface) do
+                x := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]);
+                y := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]);
+                z := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]);
 
-            if x >= maxXcoord then
-                maxXcoord := x;
-            fi;
-            if y >= maxYcoord then
-                maxYcoord := y;
-            fi;
-            if z >= maxZcoord then
-                maxZcoord := z;
-            fi;
-            if x <= minXcoord then
-                minXcoord := x;
-            fi;
-            if y <= minYcoord then
-                minYcoord := y;
-            fi;
-            if z <= minZcoord then
-                minZcoord := z;
-            fi;
-        od;
+                if x >= maxXcoord then
+                    maxXcoord := x;
+                fi;
+                if y >= maxYcoord then
+                    maxYcoord := y;
+                fi;
+                if z >= maxZcoord then
+                    maxZcoord := z;
+                fi;
+                if x <= minXcoord then
+                    minXcoord := x;
+                fi;
+                if y <= minYcoord then
+                    minYcoord := y;
+                fi;
+                if z <= minZcoord then
+                    minZcoord := z;
+                fi;
+            od;
 
-        AppendTo(output, "\t\t\tguiParameters.maxX = ",maxXcoord,";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxY = ",maxYcoord,";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxZ = ",maxZcoord,";\n");
-        AppendTo(output, "\t\t\tguiParameters.minX = ",minXcoord,";\n");
-        AppendTo(output, "\t\t\tguiParameters.minY = ",minYcoord,";\n");
-        AppendTo(output, "\t\t\tguiParameters.minZ = ",minZcoord,";\n\n");
+            AppendTo(output, "\t\t\tguiParameters.maxX = ",maxXcoord,";\n");
+            AppendTo(output, "\t\t\tguiParameters.maxY = ",maxYcoord,";\n");
+            AppendTo(output, "\t\t\tguiParameters.maxZ = ",maxZcoord,";\n");
+            AppendTo(output, "\t\t\tguiParameters.minX = ",minXcoord,";\n");
+            AppendTo(output, "\t\t\tguiParameters.minY = ",minYcoord,";\n");
+            AppendTo(output, "\t\t\tguiParameters.minZ = ",minZcoord,";\n\n");
 
-        AppendTo(output, "\t\t\tguiParameters.planeX = ",(minXcoord+maxXcoord)/2,";\n");
-        AppendTo(output, "\t\t\tguiParameters.planeY = ",(minYcoord+maxYcoord)/2,";\n");
-        AppendTo(output, "\t\t\tguiParameters.planeZ = ",(minZcoord+maxZcoord)/2,";\n");
+            AppendTo(output, "\t\t\tguiParameters.planeX = ",(minXcoord+maxXcoord)/2,";\n");
+            AppendTo(output, "\t\t\tguiParameters.planeY = ",(minYcoord+maxYcoord)/2,";\n");
+            AppendTo(output, "\t\t\tguiParameters.planeZ = ",(minZcoord+maxZcoord)/2,";\n");
+        fi;
     fi;
 
     AppendTo( output, __GAPIC__ReadTemplateFromFile("three_end.template") );
