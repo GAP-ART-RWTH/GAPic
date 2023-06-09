@@ -660,6 +660,11 @@ DeclareOperation( "SetVertexParameters", [IsTriangularComplex, IsList, IsRecord]
 
 DeclareOperation( "GetVertexParameters", [IsTriangularComplex, IsRecord]);
 
+DeclareOperation( "SetPlaneRange", [IsTriangularComplex, IsList, IsRecord]);
+
+DeclareOperation( "GetPlaneRange", [IsTriangularComplex, IsRecord]);
+
+
 #! @Section Deprecated functions
 #! @SectionLabel Deprecated functions
 #! @BeginGroup Deprecated functions

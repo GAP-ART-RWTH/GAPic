@@ -828,7 +828,7 @@ InstallMethod( DrawComplexToJavaScript,
         faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
         faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
         incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
-        maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z;
+        maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z, range;
 
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
