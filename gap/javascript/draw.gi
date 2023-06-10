@@ -233,11 +233,11 @@ InstallMethod( ActivateEdges,
     "for a simplicial surface and a record",
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
-			if not IsBound(printRecord.edges) then
-				printRecord := CalculateParametersOfEdges(surface, printRecord);
-			fi;
-			printRecord.drawEdges := [];
-			return printRecord;
+        local edge;
+        for edge in Edges(surface) do
+            printRecord := ActivateEdge(surface, edge, printRecord);
+        od;
+        return printRecord;
     end
 );
 
@@ -245,11 +245,11 @@ InstallMethod( DeactivateEdges,
     "for a simplicial surface and a record",
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
-			local edge;
-			for edge in Edges(surface) do
-				printRecord := DeactivateEdge(surface, edge, printRecord);
-			od;
-			return printRecord;
+        local edge;
+        for edge in Edges(surface) do
+            printRecord := DeactivateEdge(surface, edge, printRecord);
+        od;
+        return printRecord;
     end
 );
 
@@ -257,15 +257,11 @@ InstallMethod( ActivateEdge,
     "for a simplicial surface, an edge and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, edge, printRecord)
-			if not IsBound(printRecord.edges) then
-				printRecord := CalculateParametersOfEdges(surface, printRecord);
-			fi;
-			if not IsBound(printRecord.drawEdges) then
-				printRecord.drawEdges := [];
-				return printRecord;
-			fi;
-			printRecord.drawEdges[edge] := true;
-			return printRecord;
+        if not IsBound(printRecord.drawEdges) then
+            printRecord.drawEdges := [];
+        fi;
+        printRecord.drawEdges[edge] := true;
+        return printRecord;
     end
 );
 
@@ -273,11 +269,11 @@ InstallMethod( DeactivateEdge,
     "for a simplicial surface, an edge and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, edge, printRecord)
-			if not IsBound(printRecord.drawEdges) then
-				printRecord.drawEdges := [];
-			fi;
-			printRecord.drawEdges[edge] := false;
-			return printRecord;
+        if not IsBound(printRecord.drawEdges) then
+            printRecord.drawEdges := [];
+        fi;
+        printRecord.drawEdges[edge] := false;
+        return printRecord;
     end
 );
 
@@ -285,19 +281,16 @@ InstallMethod( IsEdgeActive,
     "for a simplicial surface, an edge and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, edge, printRecord)
-			if not IsBound(printRecord.edges) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawEdges) then
-					return true;
-				fi;
-				if (edge <= 0) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawEdges[edge]) then
-					return true;
-				fi;
-				return printRecord.drawEdges[edge] = true;
+        if not IsBound(printRecord.drawEdges) then
+            return true;
+        fi;
+        if (edge <= 0) then
+            return false;
+        fi;
+        if not IsBound(printRecord.drawEdges[edge]) then
+            return true;
+        fi;
+        return printRecord.drawEdges[edge] = true;
     end
 );
 
@@ -1022,7 +1015,7 @@ InstallMethod( DrawComplexToJavaScript,
         colorPositions := Positions(edgeColors, color);
         for j in colorPositions do
             edge := Edges(surface)[j];
-            # if IsEdgeActive(surface, edge, printRecord) then
+            if IsEdgeActive(surface, edge, printRecord) then
                 # generate a string with the coordinates for later use
                 edgeVertexA := VerticesOfEdge(surface, edge)[1];
                 edgeVertexB := VerticesOfEdge(surface, edge)[2];
@@ -1043,14 +1036,14 @@ InstallMethod( DrawComplexToJavaScript,
                 Append(coordinateStringB, ",");
 
                 AppendTo(output, "\t \t \t",coordinateStringA,"\n \t \t \t",coordinateStringB,"\n \n");
-            # fi;
+            fi;
         od;
 
         AppendTo(output, "\t \t \t]);");
 
         AppendTo(output, "\t\t\t\treturn edges",i,"; \n \t\t\t}\n\n");
 
-        AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
+        # AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
 
         AppendTo(output, """
             const edgeGeometry""",i,""" = new THREE.BufferGeometry();
