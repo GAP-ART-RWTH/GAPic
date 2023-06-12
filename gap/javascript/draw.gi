@@ -1121,7 +1121,6 @@ InstallMethod( DrawComplexToJavaScript,
     # generate innercircle for all (active) innercircle faces
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            #TODO calculate right radius and apply
             incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
             inradius := __GAPIC__CalculateInradius(surface, printRecord, face);
             AppendTo(output, "const ringGeometry",face," = new THREE.RingGeometry(",(inradius-0.005),",",inradius,", 32);\n");
@@ -1231,12 +1230,12 @@ InstallMethod( DrawComplexToJavaScript,
     # only try automatic vertices if not parameterized, otherwise to complicated
     if not GetPlaneRange(surface, printRecord) = fail then
         range := GetPlaneRange(surface, printRecord);
-        AppendTo(output, "\t\t\tguiParameters.maxX = ",range[1][1],";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxY = ",range[2][1],";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxZ = ",range[3][1],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minX = ",range[1][2],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minY = ",range[2][2],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minZ = ",range[3][2],";\n\n");
+        AppendTo(output, "\t\t\tguiParameters.maxX = ",range[1][2],";\n");
+        AppendTo(output, "\t\t\tguiParameters.maxY = ",range[2][2],";\n");
+        AppendTo(output, "\t\t\tguiParameters.maxZ = ",range[3][2],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minX = ",range[1][1],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minY = ",range[2][1],";\n");
+        AppendTo(output, "\t\t\tguiParameters.minZ = ",range[3][1],";\n\n");
     else
         if not IsParameterizedVertices(surface, printRecord) then
             # calculate maximal values in all directions for intersection plane slider 
