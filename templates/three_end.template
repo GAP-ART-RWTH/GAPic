@@ -52,6 +52,10 @@
                 normalsRoot.rotation.y += guiParameters.speedY/100;
                 normalsRoot.rotation.z += guiParameters.speedZ/100;
 
+                normalsMeshRoot.rotation.x += guiParameters.speedX/100;
+                normalsMeshRoot.rotation.y += guiParameters.speedY/100;
+                normalsMeshRoot.rotation.z += guiParameters.speedZ/100;
+
                 //update the light when the camera moves (with orbitcontrols)
                 light.position.set(camera.position.x, camera.position.y, camera.position.z);
 
