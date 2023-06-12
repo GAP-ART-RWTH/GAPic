@@ -26,9 +26,9 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
 
- Now, your working directory should contain a file "octahedron.html". Here is an image of the animation:
+ Now, your working directory should contain a file "octahedron.html". Here is an image of the animation:<Br/>
 
-<Alt Only="HTML">&lt;img src="../images/Octahedron_animated.png">&lt;/img></Alt>
+<Alt Only="HTML">&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\includegraphics{../images/Octahedron_animated.png}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animated.png]</Alt><Br/>
 
@@ -74,12 +74,14 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
    <Item>Intersection Planes. More in <Ref Subsect="Subsection_IntersectionPlanes"/></Item>
  </Enum>
  This GUI is implemented using the dat.GUI package from three.js.  
- <Subsect Label="Subsection_IntersectionPlanes">
+ <Subsection Label="Subsection_IntersectionPlanes">
+ <Heading>Intersection Planes</Heading>
   In the GUI there is the option for so called intersection planes. These are three axis aligned planes, that intersect the complete animation and only show one of the sides. <Br/>
   This allows to look into the animation and can be very helpful for example if there are selfintersections or a complex gets very big.<Br/>
   To activate any plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. <Br/>
   If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging in the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
   If there are coordinates which are parameterized or you want to change the range of the planes for another reason, it is possible to set them manually:
+  </Subsection>
   <ManSection Label="SetPlaneRange">
   <Oper Arg="surface, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
@@ -100,7 +102,6 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  </Description>
 </ManSection>
 
- </Subsect>
 </Section>
 
 
