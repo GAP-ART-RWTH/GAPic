@@ -123,3 +123,31 @@
             //generate a sphere geometry for the vertices
             const sphereGeometry = new THREE.SphereGeometry( 0.02, 32, 16 );
 			sphereGeometry.transparent = guiParameters.vertexVisibility;
+			
+
+			//functions for later calculations
+
+			//we follow the math and variable names from here: https://math.stackexchange.com/questions/740111/incenter-of-triangle-in-3d
+			function calulateIncenter(A, B, C){
+				var a = Math.sqrt((B[0]-C[0])**2 + (B[1]-C[1])**2 + (B[2]-C[2])**2);
+				var b = Math.sqrt((C[0]-A[0])**2 + (C[1]-A[1])**2 + (C[2]-A[2])**2);
+				var c = Math.sqrt((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2);
+
+				var res = [];
+				res[0] = a/(a+b+c)*A[0] + b/(a+b+c)*B[0] + c/(a+b+c)*C[0];
+				res[1] = a/(a+b+c)*A[1] + b/(a+b+c)*B[1] + c/(a+b+c)*C[1];
+				res[2] = a/(a+b+c)*A[2] + b/(a+b+c)*B[2] + c/(a+b+c)*C[2];
+
+				return res;
+			}
+
+			function calulateInradius(A, B, C){
+				var a = Math.sqrt((B[0]-C[0])**2 + (B[1]-C[1])**2 + (B[2]-C[2])**2);
+				var b = Math.sqrt((C[0]-A[0])**2 + (C[1]-A[1])**2 + (C[2]-A[2])**2);
+				var c = Math.sqrt((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2);
+
+				var s = (a+b+c)/2;
+    			var inradius = Math.sqrt(((s-a)*(s-b)*(s-c)) / s );
+
+				return inradius;
+			}
