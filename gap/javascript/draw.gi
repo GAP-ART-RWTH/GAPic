@@ -93,9 +93,6 @@ InstallMethod( ActivateInnerCircles,
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
 	local face;
-	if not IsBound(printRecord.innerCircles) then
-	    printRecord := CalculateParametersOfInnerCircle(surface, printRecord);
-	fi;
 	for face in Faces(surface) do
 	    printRecord := ActivateInnerCircle(surface, face, printRecord);
 	od;
@@ -121,9 +118,6 @@ InstallMethod( ActivateInnerCircle,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-			if not IsBound(printRecord.innerCircles) then
-				printRecord := CalculateParametersOfInnerCircle(surface, printRecord);
-			fi;
 			if not IsBound(printRecord.drawInnerCircles) then
 				printRecord.drawInnerCircles := [];
 			fi;
@@ -148,16 +142,13 @@ InstallMethod( IsInnerCircleActive,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-			if not IsBound(printRecord.innerCircles) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawInnerCircles) or (face <= 0) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawInnerCircles[face]) then
-					return false;
-				fi;
-				return printRecord.drawInnerCircles[face] = true;
+        if not IsBound(printRecord.drawInnerCircles) or (face <= 0) then
+            return false;
+        fi;
+        if not IsBound(printRecord.drawInnerCircles[face]) then
+            return false;
+        fi;
+        return printRecord.drawInnerCircles[face] = true;
     end
 );
 
@@ -1121,12 +1112,6 @@ InstallMethod( DrawComplexToJavaScript,
     # generate innercircle for all (active) innercircle faces
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
-            inradius := __GAPIC__CalculateInradius(surface, printRecord, face);
-            AppendTo(output, "const ringGeometry",face," = new THREE.RingGeometry(",(inradius-0.005),",",inradius,", 32);\n");
-            AppendTo(output, "const ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
-            AppendTo(output, "const ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
-
             # generate the right strings of the coordinates
             coordinateStringA := "";
             Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1]));
@@ -1148,6 +1133,19 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2]));
             Append(coordinateStringC, ",");
             Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
+
+            AppendTo(output, "\t\t\tvar inradius",face," = calulateInradius([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);\n");
+
+            AppendTo(output, "\t\t\tconst ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
+            AppendTo(output, "\t\t\tconst ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
+            AppendTo(output, "\t\t\tconst ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
+        
+            AppendTo(output, "\t\t\tfunction setCircleRotation",face,"(",vertexParameterNames,"){\n");
+            
+            # incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
+            # inradius := __GAPIC__CalculateInradius(surface, printRecord, face);
+
+            
 
             AppendTo(output, """
                 //translate ring to incenter
@@ -1172,11 +1170,53 @@ InstallMethod( DrawComplexToJavaScript,
                 quaternionRotation""",face,""".setFromUnitVectors(initialNormal""",face,""", normalVec""",face,""");
 
                 ringMesh""",face,""".setRotationFromQuaternion(quaternionRotation""",face,""");
+                
+                return quaternionRotation""",face,""";
+            }
 
                 ringRoot.add(ringMesh""",face,""");
             """);
         fi;
     od;
+
+    # make single function to calculate circles 
+    AppendTo(output, "function updateCircles(){\n");
+    for face in Faces(surface) do
+        if(IsInnerCircleActive(surface, face, printRecord)) then
+            coordinateStringA := "[";
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1]));
+            Append(coordinateStringA, ",");
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2]));
+            Append(coordinateStringA, ",");
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3]));
+            Append(coordinateStringA, "]");
+
+            coordinateStringB := "[";
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1]));
+            Append(coordinateStringB, ",");
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2]));
+            Append(coordinateStringB, ",");
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3]));
+            Append(coordinateStringB, "]");
+
+            coordinateStringC := "[";
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1]));
+            Append(coordinateStringC, ",");
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2]));
+            Append(coordinateStringC, ",");
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
+            Append(coordinateStringC, "]");
+
+            # AppendTo(output, "\t\t\tringMesh",face,".translateX(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[0]);\n");
+            # AppendTo(output, "\t\t\tringMesh",face,".translateY(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[1]);\n");
+            # AppendTo(output, "\t\t\tringMesh",face,".translateZ(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[2]);\n");
+
+            AppendTo(output, "\t\t\t\tsetCircleRotation",face,"();\n");
+        fi;
+    od;
+    AppendTo(output, "\t\t\t}\n\n");
+    AppendTo(output, "\t\t\tupdateCircles();\n\n");
+
 
     coordinateString := "";
     for face in Faces(surface) do
