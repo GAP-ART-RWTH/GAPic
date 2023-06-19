@@ -121,6 +121,9 @@
                     }
                 } );
 
+                // update the circle width
+                updateCircleWidth();
+
                 controls.update();
 
                 renderer.localClippingEnabled = true;

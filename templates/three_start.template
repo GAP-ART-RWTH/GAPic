@@ -84,6 +84,7 @@
 				this.maxZ = 1.5;
                 this.planeZactive = false;
 				this.normalsMaterial = false;
+				this.circleWidth = 0.005;
             } ;
 
 			const planeX = new THREE.Plane( new THREE.Vector3( -1, 0, 0 ), guiParameters.planeX );
@@ -118,6 +119,7 @@
             controlFolder.add(guiParameters, "vertexlabelVisibility");
             controlFolder.add(guiParameters, "vertexSize", 0.1, 3);
             controlFolder.add(guiParameters, "normalsMaterial");
+			controlFolder.add(guiParameters, "circleWidth", 0.0001, 0.1);
             controlFolder.open();
 
             //generate a sphere geometry for the vertices

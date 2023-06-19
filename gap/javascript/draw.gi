@@ -1143,7 +1143,7 @@ InstallMethod( DrawComplexToJavaScript,
             AppendTo(output, "\t\t\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
             AppendTo(output, "\t\t\tvar incenter",face," = calulateIncenter(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
 
-            AppendTo(output, "\t\t\tconst ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
+            AppendTo(output, "\t\t\var ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
             AppendTo(output, "\t\t\tconst ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
             AppendTo(output, "\t\t\tconst ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
         
@@ -1198,40 +1198,22 @@ InstallMethod( DrawComplexToJavaScript,
     AppendTo(output, "function updateCircles(){\n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            coordinateStringA := "[";
-            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1]));
-            Append(coordinateStringA, ",");
-            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2]));
-            Append(coordinateStringA, ",");
-            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3]));
-            Append(coordinateStringA, "]");
-
-            coordinateStringB := "[";
-            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1]));
-            Append(coordinateStringB, ",");
-            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2]));
-            Append(coordinateStringB, ",");
-            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3]));
-            Append(coordinateStringB, "]");
-
-            coordinateStringC := "[";
-            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1]));
-            Append(coordinateStringC, ",");
-            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2]));
-            Append(coordinateStringC, ",");
-            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
-            Append(coordinateStringC, "]");
-
-            # AppendTo(output, "\t\t\tringMesh",face,".translateX(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[0]);\n");
-            # AppendTo(output, "\t\t\tringMesh",face,".translateY(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[1]);\n");
-            # AppendTo(output, "\t\t\tringMesh",face,".translateZ(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[2]);\n");
-
             AppendTo(output, "\t\t\t\tsetCircleRotation",face,"(",vertexParameterString,");\n");
         fi;
     od;
     AppendTo(output, "\t\t\t}\n\n");
     AppendTo(output, "\t\t\tupdateCircles();\n\n");
 
+    # set circle width from the gui
+    AppendTo(output, "function updateCircleWidth(){\n");
+    for face in Faces(surface) do
+        if(IsInnerCircleActive(surface, face, printRecord)) then
+            AppendTo(output, "\t\t\t ringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
+            AppendTo(output, "\t\t\t ringMesh",face,".geometry = ringGeometry",face,"; \n");
+        fi;
+    od;
+    AppendTo(output, "\t\t\t}\n\n");
+    AppendTo(output, "\t\t\tupdateCircleWidth();\n\n");
 
     coordinateString := "";
     for face in Faces(surface) do
