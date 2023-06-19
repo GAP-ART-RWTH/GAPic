@@ -812,7 +812,7 @@ InstallMethod( DrawComplexToJavaScript,
         faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
         faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
         incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
-        maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z, range;
+        maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z, range, vertexA, vertexB, vertexC;
 
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
@@ -1066,16 +1066,16 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
             Append(coordinateString, ",");
 
-            AppendTo(output, "\n\n\t\t\tfunction setVertex",vertex,"(",vertexParameterNames,"){\n");
+            AppendTo(output, "\n\n\t\t\tfunction getVertex",vertex,"(",vertexParameterNames,"){\n");
             AppendTo(output, "\t\t\t\treturn [",coordinateString,"];\n\t\t\t}\n");
 
             # add spheres with radius edgeThickness around the active vertices
             AppendTo(output, "\t\t\tconst sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
             AppendTo(output, "\t \t \tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
             AppendTo(output, "\t \t \tvertexRoot.add(sphere",vertex,");\n");
-            AppendTo(output, "\t\t\tsphere",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],"); 
-            AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
-            AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
+            AppendTo(output, "\t\t\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
+            AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
+            AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
 
             
             # generate the lable for the given vertex
@@ -1086,8 +1086,10 @@ InstallMethod( DrawComplexToJavaScript,
             lableDiv""",vertex,""".style.marginTop = '-1em';
 
             const vertexLabel""",vertex,""" = new CSS2DObject( lableDiv""",vertex,""" );
-            vertexLabel""",vertex,""".position.set(setVertex""",vertex,"""(""",vertexParameterString,""")[0],setVertex""",vertex,"""(""",vertexParameterString,""")[1],setVertex""",vertex,"""(""",vertexParameterString,""")[2]);
-            vertexlabelRoot.add( vertexLabel""",vertex,""" );""");
+            vertexLabel""",vertex,""".position.set(getVertex""",vertex,"""(""",vertexParameterString,""")[0],getVertex""",vertex,"""(""",vertexParameterString,""")[1],getVertex""",vertex,"""(""",vertexParameterString,""")[2]);
+            vertexlabelRoot.add( vertexLabel""",vertex,""" );
+            
+            """);
         fi;
     od;
 
@@ -1096,12 +1098,12 @@ InstallMethod( DrawComplexToJavaScript,
         if IsVertexActive(surface, vertex, printRecord) then 
             if IsParameterizedVertices(surface, printRecord) then
                 #in three steps as return is an array
-                AppendTo(output, "\t\t\t\tsphere",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],"); 
-                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
-                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
-                AppendTo(output, "\t\t\t\tvertexLabel",vertex,".position.set(setVertex",vertex,"(",vertexParameterString,")[0],");
-                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[1],");
-                AppendTo(output, "setVertex",vertex,"(",vertexParameterString,")[2]);\n");
+                AppendTo(output, "\t\t\t\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
+                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
+                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
+                AppendTo(output, "\t\t\t\tvertexLabel",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],");
+                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
+                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
             fi; 
         fi;
     od;
@@ -1134,7 +1136,12 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateStringC, ",");
             Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
 
-            AppendTo(output, "\t\t\tvar inradius",face," = calulateInradius([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);\n");
+            vertexA := VerticesOfFace(surface, face)[1];
+            vertexB := VerticesOfFace(surface, face)[2];
+            vertexC := VerticesOfFace(surface, face)[3];
+
+            AppendTo(output, "\t\t\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
+            AppendTo(output, "\t\t\tvar incenter",face," = calulateIncenter(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
 
             AppendTo(output, "\t\t\tconst ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
             AppendTo(output, "\t\t\tconst ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
@@ -1149,9 +1156,17 @@ InstallMethod( DrawComplexToJavaScript,
 
             AppendTo(output, """
                 //translate ring to incenter
-                ringMesh""",face,""".translateX(""",incenter[1],""");
-                ringMesh""",face,""".translateY(""",incenter[2],""");
-                ringMesh""",face,""".translateZ(""",incenter[3],""");
+                var incenter = calulateIncenter([""",coordinateStringA,"""],[ """,coordinateStringB,"""],[""",coordinateStringC,"""]);
+
+                ringMesh""",face,""".position.setX(incenter[0]);
+                ringMesh""",face,""".position.setY(incenter[1]);
+                ringMesh""",face,""".position.setZ(incenter[2]);
+
+                // set the size right. Is done relative to the initial value, as we only can scale the mesh
+                var inradius = calulateInradius(getVertex""",vertexA,"""(vParams.a,vParams.b,), getVertex""",vertexB,"""(vParams.a,vParams.b,), getVertex""",vertexC,"""(vParams.a,vParams.b,));
+                var relRadius = inradius/inradius""",face,""";
+
+                ringMesh""",face,""".scale.set(relRadius, relRadius, relRadius);
 
                 // rotate ring to right angle
                 //calculations for this are done in THREE.js as there are already the right functions for generating and applying the rotation
@@ -1211,7 +1226,7 @@ InstallMethod( DrawComplexToJavaScript,
             # AppendTo(output, "\t\t\tringMesh",face,".translateY(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[1]);\n");
             # AppendTo(output, "\t\t\tringMesh",face,".translateZ(calulateIncenter(",coordinateStringA,", ",coordinateStringB,",",coordinateStringC,")[2]);\n");
 
-            AppendTo(output, "\t\t\t\tsetCircleRotation",face,"();\n");
+            AppendTo(output, "\t\t\t\tsetCircleRotation",face,"(",vertexParameterString,");\n");
         fi;
     od;
     AppendTo(output, "\t\t\t}\n\n");
