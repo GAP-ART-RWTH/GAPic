@@ -1163,7 +1163,7 @@ InstallMethod( DrawComplexToJavaScript,
                 ringMesh""",face,""".position.setZ(incenter[2]);
 
                 // set the size right. Is done relative to the initial value, as we only can scale the mesh
-                var inradius = calulateInradius(getVertex""",vertexA,"""(vParams.a,vParams.b,), getVertex""",vertexB,"""(vParams.a,vParams.b,), getVertex""",vertexC,"""(vParams.a,vParams.b,));
+                var inradius = calulateInradius(getVertex""",vertexA,"""(""",vertexParameterString,"""), getVertex""",vertexB,"""(""",vertexParameterString,"""), getVertex""",vertexC,"""(""",vertexParameterString,"""));
                 var relRadius = inradius/inradius""",face,""";
 
                 ringMesh""",face,""".scale.set(relRadius, relRadius, relRadius);
