@@ -125,7 +125,7 @@
 			controlFolder.add(guiParameters, "circleVisibility");
 			controlFolder.add(guiParameters, "circleWidth", 0.0001, 0.1);
 			controlFolder.add(guiParameters, "normalsVisibility");
-			controlFolder.add(guiParameters, "normalsLength", -5, 5);
+			controlFolder.add(guiParameters, "normalsLength", 0, 2);
             controlFolder.open();
 
             //generate a sphere geometry for the vertices
