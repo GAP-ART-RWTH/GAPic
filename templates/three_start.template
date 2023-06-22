@@ -86,6 +86,8 @@
 				this.normalsMaterial = false;
 				this.circleVisibility = true;
 				this.circleWidth = 0.005;
+				this.normalsVisibility = true;
+				this.normalsLength = 1;
             } ;
 
 			const planeX = new THREE.Plane( new THREE.Vector3( -1, 0, 0 ), guiParameters.planeX );
@@ -122,6 +124,8 @@
             controlFolder.add(guiParameters, "normalsMaterial");
 			controlFolder.add(guiParameters, "circleVisibility");
 			controlFolder.add(guiParameters, "circleWidth", 0.0001, 0.1);
+			controlFolder.add(guiParameters, "normalsVisibility");
+			controlFolder.add(guiParameters, "normalsLenght", -5, 5);
             controlFolder.open();
 
             //generate a sphere geometry for the vertices
