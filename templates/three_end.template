@@ -121,6 +121,12 @@
                     }
                 } );
 
+                ringRoot.traverse( function( node ) {
+                    if( node instanceof THREE.Mesh) {
+                        node.visible = guiParameters.circleVisibility;
+                    }
+                } );
+
                 // update the circle width
                 updateCircleWidth();
 

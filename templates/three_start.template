@@ -84,6 +84,7 @@
 				this.maxZ = 1.5;
                 this.planeZactive = false;
 				this.normalsMaterial = false;
+				this.circleVisibility = true;
 				this.circleWidth = 0.005;
             } ;
 
@@ -119,6 +120,7 @@
             controlFolder.add(guiParameters, "vertexlabelVisibility");
             controlFolder.add(guiParameters, "vertexSize", 0.1, 3);
             controlFolder.add(guiParameters, "normalsMaterial");
+			controlFolder.add(guiParameters, "circleVisibility");
 			controlFolder.add(guiParameters, "circleWidth", 0.0001, 0.1);
             controlFolder.open();
 
