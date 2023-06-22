@@ -156,14 +156,11 @@ InstallMethod( ActivateNormalOfInnerCircles,
     "for a simplicial surface and a record",
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
-			local face;
-			if not IsBound(printRecord.innerCircles) then
-				printRecord := CalculateParametersOfInnerCircle(surface, printRecord);
-			fi;
-			for face in Faces(surface) do
-				printRecord := ActivateNormalOfInnerCircle(surface, face, printRecord);
-			od;
-			return printRecord;
+        local face;
+        for face in Faces(surface) do
+            printRecord := ActivateNormalOfInnerCircle(surface, face, printRecord);
+        od;
+        return printRecord;
     end
 );
 
@@ -180,14 +177,11 @@ InstallMethod( ActivateNormalOfInnerCircle,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-			if not IsBound(printRecord.innerCircles) then
-				printRecord := CalculateParametersOfInnerCircle(surface, printRecord);
-			fi;
-			if not IsBound(printRecord.drawNormalOfInnerCircles) then
-				printRecord.drawNormalOfInnerCircles := [];
-			fi;
-			printRecord.drawNormalOfInnerCircles[face] := true;
-			return printRecord;
+        if not IsBound(printRecord.drawNormalOfInnerCircles) then
+            printRecord.drawNormalOfInnerCircles := [];
+        fi;
+        printRecord.drawNormalOfInnerCircles[face] := true;
+        return printRecord;
     end
 );
 
@@ -207,16 +201,13 @@ InstallMethod( IsNormalOfInnerCircleActive,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-			if not IsBound(printRecord.innerCircles) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawNormalOfInnerCircles) or (face <= 0) then
-					return false;
-				fi;
-				if not IsBound(printRecord.drawNormalOfInnerCircles[face]) then
-					return false;
-				fi;
-				return printRecord.drawNormalOfInnerCircles[face] = true;
+        if not IsBound(printRecord.drawNormalOfInnerCircles) or (face <= 0) then
+            return false;
+        fi;
+        if not IsBound(printRecord.drawNormalOfInnerCircles[face]) then
+            return false;
+        fi;
+        return printRecord.drawNormalOfInnerCircles[face] = true;
     end
 );
 
@@ -1218,7 +1209,7 @@ InstallMethod( DrawComplexToJavaScript,
     coordinateString := "";
     
     # we first get the parameterized vectors which define the normal of the faces
-    AppendTo(output, "\t\t\tfunction getNormalsVectors(",vertexParameterString,"){\n");
+    AppendTo(output, "\t\t\tfunction getNormalsVectors(",vertexParameterNames,"){\n");
     AppendTo(output, "\t\t\t\tvar vector1;\n");
     AppendTo(output, "\t\t\t\tvar vector2;\n\n");
     AppendTo(output, "\t\t\t\tvar normals = [];\n");
@@ -1254,24 +1245,33 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateStringC, ",");
             Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
 
-            atemp := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2] ,printRecord) - GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1] ,printRecord);
-            btemp := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3] ,printRecord) - GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1] ,printRecord);
+            a := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1] ,printRecord);
+            b := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2] ,printRecord);
+            c := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3] ,printRecord);
 
-            AppendTo(output, "\t\t\t\tvector1 = ",atemp,";\n");
-            AppendTo(output, "\t\t\t\tvector2 = ",btemp,";\n");
+            AppendTo(output, "\t\t\t\tvector1 = [];\n");
+            AppendTo(output, "\t\t\t\tvector2 = [];\n");
 
-            AppendTo(output, "\t\t\t\tvar incenter = calulateIncenter([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);");
+            AppendTo(output, "\t\t\t\tvector1[0] = (",b[1],")-(",a[1],");\n");
+            AppendTo(output, "\t\t\t\tvector1[1] = (",b[2],")-(",a[2],");\n");
+            AppendTo(output, "\t\t\t\tvector1[2] = (",b[3],")-(",a[3],");\n\n");
+
+            AppendTo(output, "\t\t\t\tvector2[0] = (",c[1],")-(",a[1],");\n");
+            AppendTo(output, "\t\t\t\tvector2[1] = (",c[2],")-(",a[2],");\n");
+            AppendTo(output, "\t\t\t\tvector2[2] = (",c[3],")-(",a[3],");\n\n");
+
+            AppendTo(output, "\t\t\t\tvar incenter = calulateIncenter([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);\n");
 
             AppendTo(output, "\t\t\t\tnormals.push([vector1, vector2, incenter]);\n\n");
         fi;
     od;
-    AppendTo(output, "\t\t\t\treturn normals;\n");
+    AppendTo(output, "\t\t\treturn normals;\n");
     AppendTo(output, "\t\t\t}\n");
 
     # then we calculate the normals after evaluating them with the current parameters
     AppendTo(output, "\t\t\tfunction getNormalsCoordinates(){\n");
     AppendTo(output, "\t\t\t\tvar res = [];\n");
-    AppendTo(output, "\t\t\t\tvar normals = getNormalsVectors();");
+    AppendTo(output, "\t\t\t\tvar normals = getNormalsVectors(",vertexParameterString,");");
     # AppendTo(output, "var vector2;");
     AppendTo(output, """ 
                 for(var i = 0; i < normals.length; i++){
@@ -1282,29 +1282,34 @@ InstallMethod( DrawComplexToJavaScript,
                     minus[1] = normals[i][2][1] - (normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
                     minus[2] = normals[i][2][2] - (normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
-                    plus[0] = normals[i][2][0] - (normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
-                    plus[1] = normals[i][2][1] - (normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
-                    plus[2] = normals[i][2][2] - (normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+                    plus[0] = normals[i][2][0] + (normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+                    plus[1] = normals[i][2][1] + (normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+                    plus[2] = normals[i][2][2] + (normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
-                    res.push(minus);
-                    res.push(plus);
+                    res.push(minus[0]);
+                    res.push(minus[1]);
+                    res.push(minus[2]);
+                    res.push(plus[0]);
+                    res.push(plus[1]);
+                    res.push(plus[2]);
                 }
+                res = Float32Array.from(res);
+
     """);
     
-    AppendTo(output, "\t\t\t\treturn res;\n");
+    AppendTo(output, "\t\t\treturn res;\n");
     AppendTo(output, "\t\t\t}\n\n");
 
-    if not coordinateString = "" then
-        AppendTo(output, """
+    AppendTo(output, """
             const normalsMaterial = new THREE.LineBasicMaterial( {
                 color: 0x000000,
             } );
-        """);
+    """);
 
-        AppendTo(output, """
+    AppendTo(output, """
             const normalsGeometry = new THREE.BufferGeometry();
             normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
-            const normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+            var normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
 
             function updateNormals(){
                 normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
@@ -1313,8 +1318,7 @@ InstallMethod( DrawComplexToJavaScript,
             
             normalsRoot.add(normalsLine);
 
-        """);
-    fi;
+    """);
 
     # only try automatic vertices if not parameterized, otherwise to complicated
     if not GetPlaneRange(surface, printRecord) = fail then
