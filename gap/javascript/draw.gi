@@ -1205,62 +1205,114 @@ InstallMethod( DrawComplexToJavaScript,
     AppendTo(output, "\t\t\tupdateCircles();\n\n");
 
     # set circle width from the gui
-    AppendTo(output, "function updateCircleWidth(){\n");
+    AppendTo(output, "\t\t\tfunction updateCircleWidth(){\n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            AppendTo(output, "\t\t\t ringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
-            AppendTo(output, "\t\t\t ringMesh",face,".geometry = ringGeometry",face,"; \n");
+            AppendTo(output, "\t\t\t\tringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
+            AppendTo(output, "\t\t\t\tringMesh",face,".geometry = ringGeometry",face,"; \n");
         fi;
     od;
     AppendTo(output, "\t\t\t}\n\n");
     AppendTo(output, "\t\t\tupdateCircleWidth();\n\n");
 
     coordinateString := "";
+    
+    # we first get the parameterized vectors which define the normal of the faces
+    AppendTo(output, "\t\t\tfunction getNormalsVectors(",vertexParameterString,"){\n");
+    AppendTo(output, "\t\t\t\tvar vector1;\n");
+    AppendTo(output, "\t\t\t\tvar vector2;\n\n");
+    AppendTo(output, "\t\t\t\tvar normals = [];\n");
     for face in Faces(surface) do
         if IsNormalOfInnerCircleActive(surface, face, printRecord) then
-            normal := __GAPIC___CalculateNormalvector(surface, printRecord, face);
-            incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
+            # normal := __GAPIC___CalculateNormalvector(surface, printRecord, face);
+            # incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
 
-            # set the two points as incenter plus normal and incenter minus normal
-            # TODO: check if the non-normalized normals generated from the face have a good length, otherwise automate
-            atemp := incenter-normal;
-            btemp := incenter+normal;
+            # # set the two points as incenter plus normal and incenter minus normal
+            # # TODO: check if the non-normalized normals generated from the face have a good length, otherwise automate
+            # atemp := incenter-normal;
+            # btemp := incenter+normal;
 
-            # add to string for later use
-            Append(coordinateString, "\t \t \t");
-            Append(coordinateString, String(atemp[1]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(atemp[2]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(atemp[3]));
-            Append(coordinateString, ", \n");
+            # generate the right strings of the coordinates
+            coordinateStringA := "";
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1]));
+            Append(coordinateStringA, ",");
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2]));
+            Append(coordinateStringA, ",");
+            Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3]));
 
-            Append(coordinateString, "\t \t \t");
-            Append(coordinateString, String(btemp[1]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(btemp[2]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(btemp[3]));
-            Append(coordinateString, ", \n \n");
+            coordinateStringB := "";
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1]));
+            Append(coordinateStringB, ",");
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2]));
+            Append(coordinateStringB, ",");
+            Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3]));
+
+            coordinateStringC := "";
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1]));
+            Append(coordinateStringC, ",");
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2]));
+            Append(coordinateStringC, ",");
+            Append(coordinateStringC, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3]));
+
+            atemp := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2] ,printRecord) - GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1] ,printRecord);
+            btemp := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3] ,printRecord) - GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1] ,printRecord);
+
+            AppendTo(output, "\t\t\t\tvector1 = ",atemp,";\n");
+            AppendTo(output, "\t\t\t\tvector2 = ",btemp,";\n");
+
+            AppendTo(output, "\t\t\t\tvar incenter = calulateIncenter([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);");
+
+            AppendTo(output, "\t\t\t\tnormals.push([vector1, vector2, incenter]);\n\n");
         fi;
     od;
+    AppendTo(output, "\t\t\t\treturn normals;\n");
+    AppendTo(output, "\t\t\t}\n");
+
+    # then we calculate the normals after evaluating them with the current parameters
+    AppendTo(output, "\t\t\tfunction getNormalsCoordinates(){\n");
+    AppendTo(output, "\t\t\t\tvar res = [];\n");
+    AppendTo(output, "\t\t\t\tvar normals = getNormalsVectors();");
+    # AppendTo(output, "var vector2;");
+    AppendTo(output, """ 
+                for(var i = 0; i < normals.length; i++){
+                    var plus = [];
+                    var minus = [];
+
+                    minus[0] = normals[i][2][0] - (normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+                    minus[1] = normals[i][2][1] - (normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+                    minus[2] = normals[i][2][2] - (normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+
+                    plus[0] = normals[i][2][0] - (normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+                    plus[1] = normals[i][2][1] - (normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+                    plus[2] = normals[i][2][2] - (normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+
+                    res.push(minus);
+                    res.push(plus);
+                }
+    """);
+    
+    AppendTo(output, "\t\t\t\treturn res;\n");
+    AppendTo(output, "\t\t\t}\n\n");
+
     if not coordinateString = "" then
         AppendTo(output, """
             const normalsMaterial = new THREE.LineBasicMaterial( {
                 color: 0x000000,
-            } );        
+            } );
         """);
 
-        AppendTo(output, "\tconst normals = new Float32Array( [\n");
-        AppendTo(output, coordinateString);
-
-        AppendTo(output, "\t \t \t]);");
         AppendTo(output, """
             const normalsGeometry = new THREE.BufferGeometry();
-            normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( normals, 3 ) );
-
+            normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
             const normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+
+            function updateNormals(){
+                normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
+                normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+            }            
+            
             normalsRoot.add(normalsLine);
+
         """);
     fi;
 

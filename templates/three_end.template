@@ -79,6 +79,7 @@
                     updateEdgeCoordinates();
                     updateVertexCoordinates();
                     updateCircles();
+                    updateNormals();
                 }                
 
                 //update stuff that changes from the gui
