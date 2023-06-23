@@ -962,7 +962,7 @@ InstallMethod( DrawComplexToJavaScript,
     od;
 
     if IsParameterizedVertices(surface, printRecord) then
-        AppendTo(output, "function updateVerticesCoordinates(){\n");
+        AppendTo(output, "function updateFaceCoordinates(){\n");
         for i in [1..Length(uniqueFaceColors)] do
             AppendTo(output, "\t\tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n");
         od;

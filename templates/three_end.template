@@ -75,10 +75,16 @@
         }
 
         if(vertexParametriziation){
-            updateVerticesCoordinates();
-            updateEdgeCoordinates();
-            updateVertexCoordinates();
-            updateCircles();
+            updateFaceCoordinates();
+            if(guiParameters.edgeVisibility){
+                updateEdgeCoordinates();
+            }
+            if(guiParameters.vertexlabelVisibility || guiParameters.vertexVisibility){
+                updateVertexCoordinates();
+            }
+            if(guiParameters.circleVisibility){
+                updateCircles();
+            }
         }                
 
         //update stuff that changes from the gui
@@ -134,10 +140,14 @@
         } );
 
         // update the circle width
-        updateCircleWidth();
+        if(guiParameters.circleVisibility){
+            updateCircleWidth();
+        }
 
         //update the normals length 
-        updateNormals();
+        if(guiParameters.normalsVisibility){
+            updateNormals();
+        }
 
         controls.update();
 
