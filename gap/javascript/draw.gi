@@ -1278,13 +1278,13 @@ InstallMethod( DrawComplexToJavaScript,
                     var plus = [];
                     var minus = [];
 
-                    minus[0] = normals[i][2][0] - guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
-                    minus[1] = normals[i][2][1] - guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
-                    minus[2] = normals[i][2][2] - guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+                    minus[0] = normals[i][2][0] - (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+                    minus[1] = normals[i][2][1] - (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+                    minus[2] = normals[i][2][2] - (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
-                    plus[0] = normals[i][2][0] + guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
-                    plus[1] = normals[i][2][1] + guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
-                    plus[2] = normals[i][2][2] + guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+                    plus[0] = normals[i][2][0] + (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+                    plus[1] = normals[i][2][1] + (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+                    plus[2] = normals[i][2][2] + (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
                     res.push(minus[0]);
                     res.push(minus[1]);
@@ -1314,7 +1314,7 @@ InstallMethod( DrawComplexToJavaScript,
             function updateNormals(){
                 normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
                 normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
-            }            
+            }
             
             normalsRoot.add(normalsLine);
 

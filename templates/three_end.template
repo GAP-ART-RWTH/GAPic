@@ -79,7 +79,6 @@
                     updateEdgeCoordinates();
                     updateVertexCoordinates();
                     updateCircles();
-                    updateNormals();
                 }                
 
                 //update stuff that changes from the gui
@@ -136,6 +135,9 @@
 
                 // update the circle width
                 updateCircleWidth();
+
+                //update the normals length 
+                updateNormals();
 
                 controls.update();
 
