@@ -584,15 +584,15 @@ InstallMethod( GetCircleColour,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-				local default;
-				default := "0x000000";
-				if not IsBound(printRecord.circleColours) or (face <= 0) then
-					return default;
-				fi;
-				if not IsBound(printRecord.circleColours[face]) then
-					return default; 
-				fi;
-				return printRecord.circleColours[face];
+        local default;
+        default := "0x000000";
+        if not IsBound(printRecord.circleColours) or (face <= 0) then
+            return default;
+        fi;
+        if not IsBound(printRecord.circleColours[face]) then
+            return default; 
+        fi;
+        return printRecord.circleColours[face];
     end
 );
 
@@ -609,10 +609,13 @@ InstallMethod( GetCircleColours,
     "for a simplicial surface and a record",
     [IsTriangularComplex, IsRecord],
     function(surface, printRecord)
-				if not IsBound(printRecord.circleColours) then
-					return [];
-				fi;
-				return printRecord.circleColours;
+		local circleColours, i;
+        circleColours := [];
+        for i in [1..Length(Edges(surface))] do
+            Add(circleColours, GetCircleColour(surface, i, printRecord));
+        od;
+
+        return circleColours;
     end
 );
 
