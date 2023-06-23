@@ -142,11 +142,11 @@ InstallMethod( IsInnerCircleActive,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-        if not IsBound(printRecord.drawInnerCircles) or (face <= 0) then
-            return false;
+        if not IsBound(printRecord.drawInnerCircles) then
+            return true;
         fi;
         if not IsBound(printRecord.drawInnerCircles[face]) then
-            return false;
+            return true;
         fi;
         return printRecord.drawInnerCircles[face] = true;
     end
@@ -201,11 +201,11 @@ InstallMethod( IsNormalOfInnerCircleActive,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-        if not IsBound(printRecord.drawNormalOfInnerCircles) or (face <= 0) then
-            return false;
+        if not IsBound(printRecord.drawNormalOfInnerCircles) then
+            return true;
         fi;
         if not IsBound(printRecord.drawNormalOfInnerCircles[face]) then
-            return false;
+            return true;
         fi;
         return printRecord.drawNormalOfInnerCircles[face] = true;
     end
@@ -802,7 +802,7 @@ InstallMethod( DrawComplexToJavaScript,
         parametersOfEdge, temp, vertex, edge ,face,vertices,edges,
         faceColors, addedFaceColors, uniqueFaceColors, colorPositions, color, coordinateString, edgeThickness,
         faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
-        incenter,inradius, normal, atemp, btemp, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
+        incenter,inradius, normal, a, b, c, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
         maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z, range, vertexA, vertexB, vertexC;
 
     # make sure the defaults are set
@@ -846,16 +846,20 @@ InstallMethod( DrawComplexToJavaScript,
         fi; 
     od;
 
+    AppendTo(output, "\n\t// --- start of generated output --- //\n\n");
+
+    # preperations for parameterized vertex coordinates
+    AppendTo(output, "\t// preperations for parameterized vertex coordinates \n");
     vertexParameterNames := "";
     vertexParameterString := "";
     if IsParameterizedVertices(surface, printRecord) then
         vertexParameters := GetVertexParameters(surface, printRecord);
 
-        AppendTo(output, "\t\t\tvar vParams = new function(){\n");
+        AppendTo(output, "\tvar vParams = new function(){\n");
         for p in vertexParameters do
-            AppendTo(output, "\t\t\t\tthis.",p[1],"=",p[2],";\n");
+            AppendTo(output, "\t\tthis.",p[1],"=",p[2],";\n");
         od;
-        AppendTo(output, "\t\t\t}\n\n");
+        AppendTo(output, "\t}\n\n");
 
         vertexParameterString := "";
         for p in vertexParameters do
@@ -870,21 +874,20 @@ InstallMethod( DrawComplexToJavaScript,
             Append(vertexParameterNames, ",");
         od;
 
-        AppendTo(output, "\t\t\tconst vertexParametriziation = true;\n");
+        AppendTo(output, "\tconst vertexParametriziation = true;\n");
 
-        AppendTo(output, "\t\t\tconst parameterFolder = gui.addFolder(\"Parameters\");\n");
+        AppendTo(output, "\tconst parameterFolder = gui.addFolder(\"Parameters\");\n");
         for p in vertexParameters do
-            AppendTo(output, "\t\t\tparameterFolder.add(vParams, '",p[1],"', ",p[3][1],",",p[3][2],");\n");
+            AppendTo(output, "\tparameterFolder.add(vParams, '",p[1],"', ",p[3][1],",",p[3][2],");\n");
         od;
-        AppendTo(output, "\t\t\tparameterFolder.open();\n\n");
+        AppendTo(output, "\tparameterFolder.open();\n\n");
     else 
-        AppendTo(output, "\t\t\tconst vertexParametriziation = false;\n");
+        AppendTo(output, "\tconst vertexParametriziation = false;\n");
     fi;
-
-    AppendTo(output, "\t\t\tconst numberOfFaceGeometries = ",Length(uniqueFaceColors),";\n\n");
 
     # for each of the unique colors add the faces to a gemeometry and generate a mesh with corresponding color from it
     # also generate a wireframe which can be made visible via the gui
+    AppendTo(output, "\t// generate the faces color by color \n");
     for i in [1..Length(uniqueFaceColors)] do
         color := uniqueFaceColors[i];
         if not StartsWith(color, "0x") then
@@ -892,9 +895,9 @@ InstallMethod( DrawComplexToJavaScript,
         fi;
 
         # generate a geometry with all vertices of the faces belonging to the current face
-        AppendTo(output, "\t \t \tconst geometry",i," = new THREE.BufferGeometry();\n");
-        AppendTo(output, "\t\t\tfunction setVertices",i,"(",vertexParameterNames,"){\n");
-        AppendTo(output, "\t \t \var vertices",i," = new Float32Array( [\n \t \t \t \t");
+        AppendTo(output, "\tconst geometry",i," = new THREE.BufferGeometry();\n");
+        AppendTo(output, "\tfunction setVertices",i,"(",vertexParameterNames,"){\n");
+        AppendTo(output, "\t\tvar vertices",i," = new Float32Array( [\n\t\t\t\t");
 
         colorPositions := Positions(faceColors, color);
         for face in colorPositions do
@@ -903,66 +906,69 @@ InstallMethod( DrawComplexToJavaScript,
                 # as we can assume that all faces of a simplicial surface have exactly 3 vertices we add them to the geometry individually
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1], ",");
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3], ",\n \t \t \t \t");
+                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[3], ",\n\t\t\t");
 
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[1], ",");
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3], ",\n\t \t \t \t");
+                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2], printRecord)[3], ",\n\t\t\t");
 
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[1], ",");
                 AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[2], ",");
-                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3], ",\n\n\t \t \t \t");
+                AppendTo(output, GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3], printRecord)[3], ",\n\n\t\t\t");
             fi;
         od;
-        AppendTo(output, "] ); \n\n");
-        AppendTo(output, "\t\t\t\treturn vertices",i,"; \n \t\t\t}\n\n");
+        AppendTo(output, "\t\t] ); \n\n");
+        AppendTo(output, "\t\treturn vertices",i,"; \n\t}\n\n");
 
-        AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
+        AppendTo(output, "\tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
 
+        AppendTo(output, "\t// generate materials in the given color and normals material for the faces \n");
         # generate a material with the corresponding color
         AppendTo(output, """
-            const materialNormal""",i,""" = new THREE.MeshNormalMaterial({       
-                flatShading: true,       
-            });
-            materialNormal""",i,""".transparent = true;
-            materialNormal""",i,""".side = THREE.DoubleSide;
+    const materialNormal""",i,""" = new THREE.MeshNormalMaterial({
+        flatShading: true,
+    });
+    materialNormal""",i,""".transparent = true;
+    materialNormal""",i,""".side = THREE.DoubleSide;
         """);
         AppendTo(output, """
-            const material""",i,""" = new THREE.MeshPhongMaterial({
-                color: """,GetFaceColour(surface, face, printRecord),""",          
-                flatShading: true,       
-            });
-            material""",i,""".transparent = true;
-            material""",i,""".side = THREE.DoubleSide;
+    const material""",i,""" = new THREE.MeshPhongMaterial({
+        color: """,GetFaceColour(surface, face, printRecord),""",
+        flatShading: true,
+    });
+    material""",i,""".transparent = true;
+    material""",i,""".side = THREE.DoubleSide;
         """);
 
+        AppendTo(output, "\n\t// generate meshes for the faces from the materials with the vertex coordinates from before \n");
         # generate a mesh from the geometry and material above
         AppendTo(output, """
-            const mesh""",i,""" = new THREE.Mesh( geometry""",i,""", material""",i,""" );
-            mesh""",i,""".castShadow = true;                         
-            mesh""",i,""".receiveShadow = true;                      
-                                        
-            meshRoot.add(mesh""",i,""");
+    const mesh""",i,""" = new THREE.Mesh( geometry""",i,""", material""",i,""" );
+    mesh""",i,""".castShadow = true;                         
+    mesh""",i,""".receiveShadow = true;                      
+                                
+    meshRoot.add(mesh""",i,""");
         """);
         AppendTo(output, """
-            const meshNormal""",i,""" = new THREE.Mesh( geometry""",i,""", materialNormal""",i,""" );
-            mesh""",i,""".castShadow = true;                         
-            mesh""",i,""".receiveShadow = true;                      
-                                        
-            normalMeshRoot.add(meshNormal""",i,""");
+    const meshNormal""",i,""" = new THREE.Mesh( geometry""",i,""", materialNormal""",i,""" );
+    mesh""",i,""".castShadow = true;                         
+    mesh""",i,""".receiveShadow = true;                      
+                                
+    normalMeshRoot.add(meshNormal""",i,""");
         """);
     od;
 
     if IsParameterizedVertices(surface, printRecord) then
         AppendTo(output, "function updateVerticesCoordinates(){\n");
         for i in [1..Length(uniqueFaceColors)] do
-            AppendTo(output, "\t\t\t\tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n");
+            AppendTo(output, "\t\tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n");
         od;
-        AppendTo(output, "\t\t\t}\n\n");
+        AppendTo(output, "\t}\n\n");
     fi;
 
     # add edges to geometry by iterating over all colors
     # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the edgeRoot group
+    AppendTo(output, "\n\t// generate the edges grouped by color\n");
     edgeColors := GetEdgeColours(surface, printRecord);
 
     # generate a list of all unique colors of the faces
@@ -973,10 +979,7 @@ InstallMethod( DrawComplexToJavaScript,
         fi; 
     od;
 
-    
-
     # for each of the unique colors add the edges to a gemeometry and generate a mesh with corresponding color from it
-    # also generate a wireframe from the edges which can be made visible via the gui
     for i in [1..Length(uniqueEdgeColors)] do
         color := uniqueEdgeColors[i];
         if not StartsWith(color, "0x") then
@@ -985,14 +988,14 @@ InstallMethod( DrawComplexToJavaScript,
 
         edgeThickness := printRecord.edgeThickness*100;
         AppendTo(output, """
-            const edgeMaterial""",i,""" = new THREE.LineBasicMaterial( {
-                color: """,color,""",
-                linewidth: """,edgeThickness,""",
-            } );        
+    const edgeMaterial""",i,""" = new THREE.LineBasicMaterial( {
+        color: """,color,""",
+        linewidth: """,edgeThickness,""",
+    } );        
         """);
 
-        AppendTo(output, "\t\t\tfunction setEdges",i,"(",vertexParameterNames,"){\n");
-        AppendTo(output, "\tconst edges",i," = new Float32Array( [\n");
+        AppendTo(output, "\tfunction getEdges",i,"(",vertexParameterNames,"){\n");
+        AppendTo(output, "\t\tconst edges",i," = new Float32Array( [\n");
 
         colorPositions := Positions(edgeColors, color);
         for j in colorPositions do
@@ -1017,35 +1020,35 @@ InstallMethod( DrawComplexToJavaScript,
                 Append(coordinateStringB, String(GetVertexCoordinates3DNC(surface, edgeVertexB, printRecord)[3]));
                 Append(coordinateStringB, ",");
 
-                AppendTo(output, "\t \t \t",coordinateStringA,"\n \t \t \t",coordinateStringB,"\n \n");
+                AppendTo(output, "\t\t\t",coordinateStringA,"\n\t\t\t",coordinateStringB,"\n\n");
             fi;
         od;
 
-        AppendTo(output, "\t \t \t]);");
+        AppendTo(output, "\t\t]);");
 
-        AppendTo(output, "\t\t\t\treturn edges",i,"; \n \t\t\t}\n\n");
+        AppendTo(output, "\t\treturn edges",i,";\n\t}\n\n");
 
-        # AppendTo(output, "\t \t \tgeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setVertices",i,"(",vertexParameterString,"), 3 ) );\n\n");
-
+        AppendTo(output, "\n\t// generate geometries and lines for the edges \n");
         AppendTo(output, """
-            const edgeGeometry""",i,""" = new THREE.BufferGeometry();
-            edgeGeometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( setEdges""",i,"""(""",vertexParameterString,"""), 3 ) );
+    const edgeGeometry""",i,""" = new THREE.BufferGeometry();
+    edgeGeometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( getEdges""",i,"""(""",vertexParameterString,"""), 3 ) );
 
-            const edgeLine""",i,""" = new THREE.LineSegments( edgeGeometry""",i,""", edgeMaterial""",i,""" );
-            edgeRoot.add(edgeLine""",i,""");
+    const edgeLine""",i,""" = new THREE.LineSegments( edgeGeometry""",i,""", edgeMaterial""",i,""" );
+    edgeRoot.add(edgeLine""",i,""");
         """);
 
+        AppendTo(output, "\n\t// update function to be called every frame \n");
         if IsParameterizedVertices(surface, printRecord) then
-            AppendTo(output, "function updateEdgeCoordinates(){\n");
+            AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
             for i in [1..Length(uniqueFaceColors)] do
-                AppendTo(output, "\t\t\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( setEdges",i,"(",vertexParameterString,"), 3 ) );\n");
+                AppendTo(output, "\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( getEdges",i,"(",vertexParameterString,"), 3 ) );\n");
             od;
-            AppendTo(output, "\t\t\t}\n\n");
+            AppendTo(output, "\t}\n\n");
         fi; 
     od;
 
     # add spheres and lables on all vertices if they are active
-    AppendTo(output, "\n\n\t//add the vertices with lables\n");
+    AppendTo(output, "\t// generate labels and spheres for the vertices\n");
     for vertex in Vertices(surface) do
         if IsVertexActive(surface, vertex, printRecord) then                
             # generate a string with the coordinates for later use
@@ -1057,52 +1060,52 @@ InstallMethod( DrawComplexToJavaScript,
             Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
             Append(coordinateString, ",");
 
-            AppendTo(output, "\n\n\t\t\tfunction getVertex",vertex,"(",vertexParameterNames,"){\n");
-            AppendTo(output, "\t\t\t\treturn [",coordinateString,"];\n\t\t\t}\n");
+            AppendTo(output, "\n\n\tfunction getVertex",vertex,"(",vertexParameterNames,"){\n");
+            AppendTo(output, "\t\treturn [",coordinateString,"];\n\t}\n");
 
             # add spheres with radius edgeThickness around the active vertices
-            AppendTo(output, "\t\t\tconst sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
-            AppendTo(output, "\t \t \tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
-            AppendTo(output, "\t \t \tvertexRoot.add(sphere",vertex,");\n");
-            AppendTo(output, "\t\t\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
+            AppendTo(output, "\tconst sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
+            AppendTo(output, "\tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
+            AppendTo(output, "\tvertexRoot.add(sphere",vertex,");\n");
+            AppendTo(output, "\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
             AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
             AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
 
             
             # generate the lable for the given vertex
             AppendTo(output, """
-            const lableDiv""",vertex,""" = document.createElement( 'div' );
-            lableDiv""",vertex,""".className = 'label';
-            lableDiv""",vertex,""".textContent = '""",vertex,"""';
-            lableDiv""",vertex,""".style.marginTop = '-1em';
+    const lableDiv""",vertex,""" = document.createElement( 'div' );
+    lableDiv""",vertex,""".className = 'label';
+    lableDiv""",vertex,""".textContent = '""",vertex,"""';
+    lableDiv""",vertex,""".style.marginTop = '-1em';
 
-            const vertexLabel""",vertex,""" = new CSS2DObject( lableDiv""",vertex,""" );
-            vertexLabel""",vertex,""".position.set(getVertex""",vertex,"""(""",vertexParameterString,""")[0],getVertex""",vertex,"""(""",vertexParameterString,""")[1],getVertex""",vertex,"""(""",vertexParameterString,""")[2]);
-            vertexlabelRoot.add( vertexLabel""",vertex,""" );
+    const vertexLabel""",vertex,""" = new CSS2DObject( lableDiv""",vertex,""" );
+    vertexLabel""",vertex,""".position.set(getVertex""",vertex,"""(""",vertexParameterString,""")[0],getVertex""",vertex,"""(""",vertexParameterString,""")[1],getVertex""",vertex,"""(""",vertexParameterString,""")[2]);
+    vertexlabelRoot.add( vertexLabel""",vertex,""" );
             
             """);
         fi;
     od;
 
-    AppendTo(output, "function updateVertexCoordinates(){\n");
-    for vertex in Vertices(surface) do
-        if IsVertexActive(surface, vertex, printRecord) then 
-            if IsParameterizedVertices(surface, printRecord) then
-                #in three steps as return is an array
-                AppendTo(output, "\t\t\t\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
+    if IsParameterizedVertices(surface, printRecord) then
+    AppendTo(output, "\n\t// function to call every frame and update the vertex coordinates \n");
+        AppendTo(output, "\n\tfunction updateVertexCoordinates(){\n");
+        for vertex in Vertices(surface) do
+            if IsVertexActive(surface, vertex, printRecord) then 
+                # in three steps as return is an array
+                AppendTo(output, "\tsphere",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],"); 
                 AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
                 AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
-                AppendTo(output, "\t\t\t\tvertexLabel",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],");
+                AppendTo(output, "\tvertexLabel",vertex,".position.set(getVertex",vertex,"(",vertexParameterString,")[0],");
                 AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[1],");
-                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n");
-            fi; 
-        fi;
-    od;
-    AppendTo(output, "\t\t\t}\n\n");
-
-    #TODO: apply parameters to everything else
+                AppendTo(output, "getVertex",vertex,"(",vertexParameterString,")[2]);\n\n");
+            fi;
+        od;
+        AppendTo(output, "\t}\n\n");
+    fi;
 
     # generate innercircle for all (active) innercircle faces
+    AppendTo(output, "\t// generate the rings for the incircles \n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
             # generate the right strings of the coordinates
@@ -1131,98 +1134,87 @@ InstallMethod( DrawComplexToJavaScript,
             vertexB := VerticesOfFace(surface, face)[2];
             vertexC := VerticesOfFace(surface, face)[3];
 
-            AppendTo(output, "\t\t\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
-            AppendTo(output, "\t\t\tvar incenter",face," = calulateIncenter(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
+            AppendTo(output, "\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
+            AppendTo(output, "\tvar incenter",face," = calulateIncenter(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
 
-            AppendTo(output, "\t\t\var ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
-            AppendTo(output, "\t\t\tconst ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
-            AppendTo(output, "\t\t\tconst ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
+            AppendTo(output, "\tvar ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
+            AppendTo(output, "\tconst ringMaterial",face," = new THREE.LineBasicMaterial( { color: ",GetCircleColour(surface, face, printRecord),", side: THREE.DoubleSide } );\n");
+            AppendTo(output, "\tconst ringMesh",face," = new THREE.Mesh(ringGeometry",face,", ringMaterial",face,");\n");
         
-            AppendTo(output, "\t\t\tfunction setCircleRotation",face,"(",vertexParameterNames,"){\n");
+            AppendTo(output, "\n\tfunction setCircleRotation",face,"(",vertexParameterNames,"){\n");
             
-            # incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
-            # inradius := __GAPIC__CalculateInradius(surface, printRecord, face);
-
-            
-
             AppendTo(output, """
-                //translate ring to incenter
-                var incenter = calulateIncenter([""",coordinateStringA,"""],[ """,coordinateStringB,"""],[""",coordinateStringC,"""]);
+        //translate ring to incenter
+        var incenter = calulateIncenter([""",coordinateStringA,"""],[ """,coordinateStringB,"""],[""",coordinateStringC,"""]);
 
-                ringMesh""",face,""".position.setX(incenter[0]);
-                ringMesh""",face,""".position.setY(incenter[1]);
-                ringMesh""",face,""".position.setZ(incenter[2]);
+        ringMesh""",face,""".position.setX(incenter[0]);
+        ringMesh""",face,""".position.setY(incenter[1]);
+        ringMesh""",face,""".position.setZ(incenter[2]);
 
-                // set the size right. Is done relative to the initial value, as we only can scale the mesh
-                var inradius = calulateInradius(getVertex""",vertexA,"""(""",vertexParameterString,"""), getVertex""",vertexB,"""(""",vertexParameterString,"""), getVertex""",vertexC,"""(""",vertexParameterString,"""));
-                var relRadius = inradius/inradius""",face,""";
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex""",vertexA,"""(""",vertexParameterString,"""), getVertex""",vertexB,"""(""",vertexParameterString,"""), getVertex""",vertexC,"""(""",vertexParameterString,"""));
+        var relRadius = inradius/inradius""",face,""";
 
-                ringMesh""",face,""".scale.set(relRadius, relRadius, relRadius);
+        ringMesh""",face,""".scale.set(relRadius, relRadius, relRadius);
 
-                // rotate ring to right angle
-                //calculations for this are done in THREE.js as there are already the right functions for generating and applying the rotation
-                const A""",face,""" = new THREE.Vector3(""",coordinateStringA,""");
-                const B""",face,""" = new THREE.Vector3(""",coordinateStringB,""");
-                const C""",face,""" = new THREE.Vector3(""",coordinateStringC,""");
+        // rotate ring to right angle
+        const A""",face,""" = new THREE.Vector3(""",coordinateStringA,""");
+        const B""",face,""" = new THREE.Vector3(""",coordinateStringB,""");
+        const C""",face,""" = new THREE.Vector3(""",coordinateStringC,""");
 
-                const normalVec""",face,""" = new THREE.Vector3();
-                normalVec""",face,""".crossVectors(B""",face,""".sub(A""",face,"""), C""",face,""".sub(A""",face,"""));
-                normalVec""",face,""".normalize();
+        const normalVec""",face,""" = new THREE.Vector3();
+        normalVec""",face,""".crossVectors(B""",face,""".sub(A""",face,"""), C""",face,""".sub(A""",face,"""));
+        normalVec""",face,""".normalize();
 
-                //initial normal vector of ringGeometry is (0,0,1), so we use that
-                const initialNormal""",face,""" = new THREE.Vector3(0,0,1);
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal""",face,""" = new THREE.Vector3(0,0,1);
 
-                const quaternionRotation""",face,""" = new THREE.Quaternion();
-                quaternionRotation""",face,""".setFromUnitVectors(initialNormal""",face,""", normalVec""",face,""");
+        const quaternionRotation""",face,""" = new THREE.Quaternion();
+        quaternionRotation""",face,""".setFromUnitVectors(initialNormal""",face,""", normalVec""",face,""");
 
-                ringMesh""",face,""".setRotationFromQuaternion(quaternionRotation""",face,""");
-                
-                return quaternionRotation""",face,""";
-            }
+        ringMesh""",face,""".setRotationFromQuaternion(quaternionRotation""",face,""");
 
-                ringRoot.add(ringMesh""",face,""");
+        return quaternionRotation""",face,""";
+    }
+
+    ringRoot.add(ringMesh""",face,""");
             """);
         fi;
     od;
 
     # make single function to calculate circles 
-    AppendTo(output, "function updateCircles(){\n");
+    AppendTo(output, "\t// function to update the circles every frame \n");
+    AppendTo(output, "\tfunction updateCircles(){\n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            AppendTo(output, "\t\t\t\tsetCircleRotation",face,"(",vertexParameterString,");\n");
+            AppendTo(output, "\t\tsetCircleRotation",face,"(",vertexParameterString,");\n");
         fi;
     od;
-    AppendTo(output, "\t\t\t}\n\n");
-    AppendTo(output, "\t\t\tupdateCircles();\n\n");
+    AppendTo(output, "\t}\n\n");
+    AppendTo(output, "\t// needs to be called once to be initialized \n");
+    AppendTo(output, "\tupdateCircles();\n\n");
 
     # set circle width from the gui
-    AppendTo(output, "\t\t\tfunction updateCircleWidth(){\n");
+    AppendTo(output, "\t// function to update the circles width, that is called every frame even if the surface is not parameterized \n");
+    AppendTo(output, "\tfunction updateCircleWidth(){\n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
-            AppendTo(output, "\t\t\t\tringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
-            AppendTo(output, "\t\t\t\tringMesh",face,".geometry = ringGeometry",face,"; \n");
+            AppendTo(output, "\t\tringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
+            AppendTo(output, "\t\tringMesh",face,".geometry = ringGeometry",face,"; \n");
         fi;
     od;
-    AppendTo(output, "\t\t\t}\n\n");
-    AppendTo(output, "\t\t\tupdateCircleWidth();\n\n");
-
-    coordinateString := "";
+    AppendTo(output, "\t}\n\n");
+    AppendTo(output, "\tupdateCircleWidth();\n\n");
     
     # we first get the parameterized vectors which define the normal of the faces
-    AppendTo(output, "\t\t\tfunction getNormalsVectors(",vertexParameterNames,"){\n");
-    AppendTo(output, "\t\t\t\tvar vector1;\n");
-    AppendTo(output, "\t\t\t\tvar vector2;\n\n");
-    AppendTo(output, "\t\t\t\tvar normals = [];\n");
+    AppendTo(output, "\t// generate the normals trough the incenter orthogonal to the face \n");
+    AppendTo(output, "\t// getNormalsVectors generates the coordinates for the current values of the parameterized surface \n");
+    AppendTo(output, "\tfunction getNormalsVectors(",vertexParameterNames,"){\n");
+    AppendTo(output, "\t\tvar vector1;\n");
+    AppendTo(output, "\t\tvar vector2;\n\n");
+    AppendTo(output, "\t\tvar normals = [];\n");
     for face in Faces(surface) do
         if IsNormalOfInnerCircleActive(surface, face, printRecord) then
-            # normal := __GAPIC___CalculateNormalvector(surface, printRecord, face);
-            # incenter := __GAPIC__CalculateIncenter(surface, printRecord, face);
-
-            # # set the two points as incenter plus normal and incenter minus normal
-            # # TODO: check if the non-normalized normals generated from the face have a good length, otherwise automate
-            # atemp := incenter-normal;
-            # btemp := incenter+normal;
-
             # generate the right strings of the coordinates
             coordinateStringA := "";
             Append(coordinateStringA, String(GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[1], printRecord)[1]));
@@ -1249,86 +1241,88 @@ InstallMethod( DrawComplexToJavaScript,
             b := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[2] ,printRecord);
             c := GetVertexCoordinates3DNC(surface, VerticesOfFace(surface, face)[3] ,printRecord);
 
-            AppendTo(output, "\t\t\t\tvector1 = [];\n");
-            AppendTo(output, "\t\t\t\tvector2 = [];\n");
+            AppendTo(output, "\t\tvector1 = [];\n");
+            AppendTo(output, "\t\tvector2 = [];\n");
 
-            AppendTo(output, "\t\t\t\tvector1[0] = (",b[1],")-(",a[1],");\n");
-            AppendTo(output, "\t\t\t\tvector1[1] = (",b[2],")-(",a[2],");\n");
-            AppendTo(output, "\t\t\t\tvector1[2] = (",b[3],")-(",a[3],");\n\n");
+            AppendTo(output, "\t\tvector1[0] = (",b[1],")-(",a[1],");\n");
+            AppendTo(output, "\t\tvector1[1] = (",b[2],")-(",a[2],");\n");
+            AppendTo(output, "\t\tvector1[2] = (",b[3],")-(",a[3],");\n\n");
 
-            AppendTo(output, "\t\t\t\tvector2[0] = (",c[1],")-(",a[1],");\n");
-            AppendTo(output, "\t\t\t\tvector2[1] = (",c[2],")-(",a[2],");\n");
-            AppendTo(output, "\t\t\t\tvector2[2] = (",c[3],")-(",a[3],");\n\n");
+            AppendTo(output, "\t\tvector2[0] = (",c[1],")-(",a[1],");\n");
+            AppendTo(output, "\t\tvector2[1] = (",c[2],")-(",a[2],");\n");
+            AppendTo(output, "\t\tvector2[2] = (",c[3],")-(",a[3],");\n\n");
 
-            AppendTo(output, "\t\t\t\tvar incenter = calulateIncenter([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);\n");
+            AppendTo(output, "\t\tvar incenter = calulateIncenter([",coordinateStringA,"],[ ",coordinateStringB,"],[",coordinateStringC,"]);\n");
 
-            AppendTo(output, "\t\t\t\tnormals.push([vector1, vector2, incenter]);\n\n");
+            AppendTo(output, "\t\tnormals.push([vector1, vector2, incenter]);\n\n");
         fi;
     od;
-    AppendTo(output, "\t\t\treturn normals;\n");
-    AppendTo(output, "\t\t\t}\n");
+    AppendTo(output, "\treturn normals;\n");
+    AppendTo(output, "\t}\n");
 
     # then we calculate the normals after evaluating them with the current parameters
-    AppendTo(output, "\t\t\tfunction getNormalsCoordinates(){\n");
-    AppendTo(output, "\t\t\t\tvar res = [];\n");
-    AppendTo(output, "\t\t\t\tvar normals = getNormalsVectors(",vertexParameterString,");");
-    # AppendTo(output, "var vector2;");
+    AppendTo(output, "\t// getNormalsCoordinates calculates the right coordinates for the ortogonality and fitting values from the gui \n");
+    AppendTo(output, "\tfunction getNormalsCoordinates(){\n");
+    AppendTo(output, "\t\tvar res = [];\n");
+    AppendTo(output, "\t\tvar normals = getNormalsVectors(",vertexParameterString,");");
     AppendTo(output, """ 
-                for(var i = 0; i < normals.length; i++){
-                    var plus = [];
-                    var minus = [];
+        for(var i = 0; i < normals.length; i++){
+            var plus = [];
+            var minus = [];
 
-                    minus[0] = normals[i][2][0] - (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
-                    minus[1] = normals[i][2][1] - (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
-                    minus[2] = normals[i][2][2] - (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+            minus[0] = normals[i][2][0] - (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+            minus[1] = normals[i][2][1] - (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+            minus[2] = normals[i][2][2] - (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
-                    plus[0] = normals[i][2][0] + (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
-                    plus[1] = normals[i][2][1] + (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
-                    plus[2] = normals[i][2][2] + (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+            plus[0] = normals[i][2][0] + (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+            plus[1] = normals[i][2][1] + (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+            plus[2] = normals[i][2][2] + (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
 
-                    res.push(minus[0]);
-                    res.push(minus[1]);
-                    res.push(minus[2]);
-                    res.push(plus[0]);
-                    res.push(plus[1]);
-                    res.push(plus[2]);
-                }
-                res = Float32Array.from(res);
+            res.push(minus[0]);
+            res.push(minus[1]);
+            res.push(minus[2]);
+            res.push(plus[0]);
+            res.push(plus[1]);
+            res.push(plus[2]);
+        }
+        res = Float32Array.from(res);
 
     """);
     
-    AppendTo(output, "\t\t\treturn res;\n");
-    AppendTo(output, "\t\t\t}\n\n");
+    AppendTo(output, "\n\t\treturn res;\n");
+    AppendTo(output, "\t}\n\n");
 
     AppendTo(output, """
-            const normalsMaterial = new THREE.LineBasicMaterial( {
-                color: 0x000000,
-            } );
+    const normalsMaterial = new THREE.LineBasicMaterial( {
+        color: 0x000000,
+    } );
     """);
 
     AppendTo(output, """
-            const normalsGeometry = new THREE.BufferGeometry();
-            normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
-            var normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+    const normalsGeometry = new THREE.BufferGeometry();
+    normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
+    var normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
 
-            function updateNormals(){
-                normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
-                normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
-            }
-            
-            normalsRoot.add(normalsLine);
+    function updateNormals(){
+        normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
+        normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+    }
+    
+    normalsRoot.add(normalsLine);
 
     """);
+    AppendTo(output, "\n");
 
     # only try automatic vertices if not parameterized, otherwise to complicated
+    AppendTo(output, "\t// generate automatic ranges for the intersections if the surface is not parameterized \n");
     if not GetPlaneRange(surface, printRecord) = fail then
         range := GetPlaneRange(surface, printRecord);
-        AppendTo(output, "\t\t\tguiParameters.maxX = ",range[1][2],";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxY = ",range[2][2],";\n");
-        AppendTo(output, "\t\t\tguiParameters.maxZ = ",range[3][2],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minX = ",range[1][1],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minY = ",range[2][1],";\n");
-        AppendTo(output, "\t\t\tguiParameters.minZ = ",range[3][1],";\n\n");
+        AppendTo(output, "\tguiParameters.maxX = ",range[1][2],";\n");
+        AppendTo(output, "\tguiParameters.maxY = ",range[2][2],";\n");
+        AppendTo(output, "\tguiParameters.maxZ = ",range[3][2],";\n");
+        AppendTo(output, "\tguiParameters.minX = ",range[1][1],";\n");
+        AppendTo(output, "\tguiParameters.minY = ",range[2][1],";\n");
+        AppendTo(output, "\tguiParameters.minZ = ",range[3][1],";\n\n");
     else
         if not IsParameterizedVertices(surface, printRecord) then
             # calculate maximal values in all directions for intersection plane slider 
@@ -1363,18 +1357,21 @@ InstallMethod( DrawComplexToJavaScript,
                 fi;
             od;
 
-            AppendTo(output, "\t\t\tguiParameters.maxX = ",maxXcoord,";\n");
-            AppendTo(output, "\t\t\tguiParameters.maxY = ",maxYcoord,";\n");
-            AppendTo(output, "\t\t\tguiParameters.maxZ = ",maxZcoord,";\n");
-            AppendTo(output, "\t\t\tguiParameters.minX = ",minXcoord,";\n");
-            AppendTo(output, "\t\t\tguiParameters.minY = ",minYcoord,";\n");
-            AppendTo(output, "\t\t\tguiParameters.minZ = ",minZcoord,";\n\n");
+            AppendTo(output, "\tguiParameters.maxX = ",maxXcoord,";\n");
+            AppendTo(output, "\tguiParameters.maxY = ",maxYcoord,";\n");
+            AppendTo(output, "\tguiParameters.maxZ = ",maxZcoord,";\n");
+            AppendTo(output, "\tguiParameters.minX = ",minXcoord,";\n");
+            AppendTo(output, "\tguiParameters.minY = ",minYcoord,";\n");
+            AppendTo(output, "\tguiParameters.minZ = ",minZcoord,";\n\n");
 
-            AppendTo(output, "\t\t\tguiParameters.planeX = ",(minXcoord+maxXcoord)/2,";\n");
-            AppendTo(output, "\t\t\tguiParameters.planeY = ",(minYcoord+maxYcoord)/2,";\n");
-            AppendTo(output, "\t\t\tguiParameters.planeZ = ",(minZcoord+maxZcoord)/2,";\n");
+            AppendTo(output, "\tguiParameters.planeX = ",(minXcoord+maxXcoord)/2,";\n");
+            AppendTo(output, "\tguiParameters.planeY = ",(minYcoord+maxYcoord)/2,";\n");
+            AppendTo(output, "\tguiParameters.planeZ = ",(minZcoord+maxZcoord)/2,";\n");
         fi;
     fi;
+
+
+    AppendTo(output, "\t// --- end of generated output --- //\n\n");
 
     AppendTo( output, __GAPIC__ReadTemplateFromFile("three_end.template") );
 

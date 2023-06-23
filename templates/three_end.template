@@ -1,163 +1,163 @@
-            const planeFolder = gui.addFolder("Intersection Planes");
-            planeFolder.add(guiParameters, 'planeXactive');
-            planeFolder.add(guiParameters, 'planeX', guiParameters.minX*1.1, guiParameters.maxX*1.1);
-            planeFolder.add(guiParameters, 'planeYactive');
-            planeFolder.add(guiParameters, 'planeY', guiParameters.minY*1.1, guiParameters.maxY*1.1);
-            planeFolder.add(guiParameters, 'planeZactive');
-            planeFolder.add(guiParameters, 'planeZ', guiParameters.minZ*1.1, guiParameters.maxZ*1.1);
-			
-            camera.position.z = (1.5)*guiParameters.minZ;
-            camera.lookAt(0,0,-1);
+    const planeFolder = gui.addFolder("Intersection Planes");
+    planeFolder.add(guiParameters, 'planeXactive');
+    planeFolder.add(guiParameters, 'planeX', guiParameters.minX*1.1, guiParameters.maxX*1.1);
+    planeFolder.add(guiParameters, 'planeYactive');
+    planeFolder.add(guiParameters, 'planeY', guiParameters.minY*1.1, guiParameters.maxY*1.1);
+    planeFolder.add(guiParameters, 'planeZactive');
+    planeFolder.add(guiParameters, 'planeZ', guiParameters.minZ*1.1, guiParameters.maxZ*1.1);
+    
+    camera.position.z = (1.5)*guiParameters.minZ;
+    camera.lookAt(0,0,-1);
 
-            scene.background = new THREE.Color( 'white' );
+    scene.background = new THREE.Color( 'white' );
 
-            // add both roots to the scene
-            scene.add( meshRoot );
-            scene.add( wireRoot );
-            scene.add( vertexRoot );
-            scene.add( vertexlabelRoot );
-            scene.add( edgeRoot );
-            scene.add( ringRoot );
-            scene.add( normalsRoot );
-            scene.add( normalMeshRoot );
+    // add both roots to the scene
+    scene.add( meshRoot );
+    scene.add( wireRoot );
+    scene.add( vertexRoot );
+    scene.add( vertexlabelRoot );
+    scene.add( edgeRoot );
+    scene.add( ringRoot );
+    scene.add( normalsRoot );
+    scene.add( normalMeshRoot );
 
 
-            function animate() {
-                requestAnimationFrame( animate );
-                meshRoot.rotation.x += guiParameters.speedX/100;
-                meshRoot.rotation.y += guiParameters.speedY/100;
-                meshRoot.rotation.z += guiParameters.speedZ/100;
+    function animate() {
+        requestAnimationFrame( animate );
+        meshRoot.rotation.x += guiParameters.speedX/100;
+        meshRoot.rotation.y += guiParameters.speedY/100;
+        meshRoot.rotation.z += guiParameters.speedZ/100;
 
-                wireRoot.rotation.x += guiParameters.speedX/100;
-                wireRoot.rotation.y += guiParameters.speedY/100;
-                wireRoot.rotation.z += guiParameters.speedZ/100;
+        wireRoot.rotation.x += guiParameters.speedX/100;
+        wireRoot.rotation.y += guiParameters.speedY/100;
+        wireRoot.rotation.z += guiParameters.speedZ/100;
 
-                vertexRoot.rotation.x += guiParameters.speedX/100;
-                vertexRoot.rotation.y += guiParameters.speedY/100;
-                vertexRoot.rotation.z += guiParameters.speedZ/100;
+        vertexRoot.rotation.x += guiParameters.speedX/100;
+        vertexRoot.rotation.y += guiParameters.speedY/100;
+        vertexRoot.rotation.z += guiParameters.speedZ/100;
 
-                vertexlabelRoot.rotation.x += guiParameters.speedX/100;
-                vertexlabelRoot.rotation.y += guiParameters.speedY/100;
-                vertexlabelRoot.rotation.z += guiParameters.speedZ/100;
+        vertexlabelRoot.rotation.x += guiParameters.speedX/100;
+        vertexlabelRoot.rotation.y += guiParameters.speedY/100;
+        vertexlabelRoot.rotation.z += guiParameters.speedZ/100;
 
-                edgeRoot.rotation.x += guiParameters.speedX/100;
-                edgeRoot.rotation.y += guiParameters.speedY/100;
-                edgeRoot.rotation.z += guiParameters.speedZ/100;
+        edgeRoot.rotation.x += guiParameters.speedX/100;
+        edgeRoot.rotation.y += guiParameters.speedY/100;
+        edgeRoot.rotation.z += guiParameters.speedZ/100;
 
-                ringRoot.rotation.x += guiParameters.speedX/100;
-                ringRoot.rotation.y += guiParameters.speedY/100;
-                ringRoot.rotation.z += guiParameters.speedZ/100;
+        ringRoot.rotation.x += guiParameters.speedX/100;
+        ringRoot.rotation.y += guiParameters.speedY/100;
+        ringRoot.rotation.z += guiParameters.speedZ/100;
 
-                normalsRoot.rotation.x += guiParameters.speedX/100;
-                normalsRoot.rotation.y += guiParameters.speedY/100;
-                normalsRoot.rotation.z += guiParameters.speedZ/100;
+        normalsRoot.rotation.x += guiParameters.speedX/100;
+        normalsRoot.rotation.y += guiParameters.speedY/100;
+        normalsRoot.rotation.z += guiParameters.speedZ/100;
 
-                normalMeshRoot.rotation.x += guiParameters.speedX/100;
-                normalMeshRoot.rotation.y += guiParameters.speedY/100;
-                normalMeshRoot.rotation.z += guiParameters.speedZ/100;
+        normalMeshRoot.rotation.x += guiParameters.speedX/100;
+        normalMeshRoot.rotation.y += guiParameters.speedY/100;
+        normalMeshRoot.rotation.z += guiParameters.speedZ/100;
 
-                //update the light when the camera moves (with orbitcontrols)
-                light.position.set(camera.position.x, camera.position.y, camera.position.z);
+        //update the light when the camera moves (with orbitcontrols)
+        light.position.set(camera.position.x, camera.position.y, camera.position.z);
 
-                planeX.constant = guiParameters.planeX;
-                planeY.constant = guiParameters.planeY;
-                planeZ.constant = guiParameters.planeZ;
+        planeX.constant = guiParameters.planeX;
+        planeY.constant = guiParameters.planeY;
+        planeZ.constant = guiParameters.planeZ;
 
-                localPlanes = [];
-                if(guiParameters.planeXactive){
-                    localPlanes.push(planeX);
+        activePlanes = [];
+        if(guiParameters.planeXactive){
+            activePlanes.push(planeX);
+        }
+        if(guiParameters.planeYactive){
+            activePlanes.push(planeY);
+        }
+        if(guiParameters.planeZactive){
+            activePlanes.push(planeZ);
+        }
+
+        if(vertexParametriziation){
+            updateVerticesCoordinates();
+            updateEdgeCoordinates();
+            updateVertexCoordinates();
+            updateCircles();
+        }                
+
+        //update stuff that changes from the gui
+        meshRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.opacity = guiParameters.transparency;
+                node.material.clippingPlanes = activePlanes;
+                if(guiParameters.normalsMaterial){
+                    node.material.opacity = 0;
                 }
-                if(guiParameters.planeYactive){
-                    localPlanes.push(planeY);
-                }
-                if(guiParameters.planeZactive){
-                    localPlanes.push(planeZ);
-                }
-
-                if(vertexParametriziation){
-                    updateVerticesCoordinates();
-                    updateEdgeCoordinates();
-                    updateVertexCoordinates();
-                    updateCircles();
-                }                
-
-                //update stuff that changes from the gui
-                meshRoot.traverse( function( node ) {
-                    if ( node instanceof THREE.Mesh ) {
-                        node.material.opacity = guiParameters.transparency;
-                        node.material.clippingPlanes = localPlanes;
-                        if(guiParameters.normalsMaterial){
-                            node.material.opacity = 0;
-                        }
-                    }
-                } );
-
-                normalMeshRoot.traverse( function( node ) {
-                    if ( node instanceof THREE.Mesh ) {
-                        node.material.opacity = guiParameters.transparency;
-                        node.material.clippingPlanes = localPlanes;
-                        if(!guiParameters.normalsMaterial){
-                            node.material.opacity = 0;
-                        }
-                    }
-                } );
-
-                edgeRoot.traverse( function( node ) {
-                    if ( node instanceof THREE.LineSegments ) {
-                        node.material.visible = guiParameters.edgeVisibility;
-                    }
-                } );
-
-                vertexRoot.traverse( function( node ) {
-                    if ( node instanceof THREE.Mesh ) {
-                        node.material.visible = guiParameters.vertexVisibility;
-                        node.scale.setScalar(guiParameters.vertexSize);
-                    }
-                } );
-
-                vertexlabelRoot.traverse( function( node ) {
-                    if( node instanceof CSS2DObject) {
-                        node.visible = guiParameters.vertexlabelVisibility;
-                    }
-                } );
-
-                ringRoot.traverse( function( node ) {
-                    if( node instanceof THREE.Mesh) {
-                        node.visible = guiParameters.circleVisibility;
-                    }
-                } );
-
-                normalsRoot.traverse( function( node ) {
-                    if( node instanceof THREE.LineSegments) {
-                        node.visible = guiParameters.normalsVisibility;
-                    }
-                } );
-
-                // update the circle width
-                updateCircleWidth();
-
-                //update the normals length 
-                updateNormals();
-
-                controls.update();
-
-                renderer.localClippingEnabled = true;
-
-                renderer.render( scene, camera );
-                labelRenderer.render( scene, camera );
             }
-            animate();
+        } );
 
-            //resize of window size changes
-            window.addEventListener( 'resize', onWindowResize );
-            function onWindowResize() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-
-                renderer.setSize( window.innerWidth, window.innerHeight );
-                labelRenderer.setSize( window.innerWidth, window.innerHeight );
+        normalMeshRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.opacity = guiParameters.transparency;
+                node.material.clippingPlanes = activePlanes;
+                if(!guiParameters.normalsMaterial){
+                    node.material.opacity = 0;
+                }
             }
+        } );
+
+        edgeRoot.traverse( function( node ) {
+            if ( node instanceof THREE.LineSegments ) {
+                node.material.visible = guiParameters.edgeVisibility;
+            }
+        } );
+
+        vertexRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.visible = guiParameters.vertexVisibility;
+                node.scale.setScalar(guiParameters.vertexSize);
+            }
+        } );
+
+        vertexlabelRoot.traverse( function( node ) {
+            if( node instanceof CSS2DObject) {
+                node.visible = guiParameters.vertexlabelVisibility;
+            }
+        } );
+
+        ringRoot.traverse( function( node ) {
+            if( node instanceof THREE.Mesh) {
+                node.visible = guiParameters.circleVisibility;
+            }
+        } );
+
+        normalsRoot.traverse( function( node ) {
+            if( node instanceof THREE.LineSegments) {
+                node.visible = guiParameters.normalsVisibility;
+            }
+        } );
+
+        // update the circle width
+        updateCircleWidth();
+
+        //update the normals length 
+        updateNormals();
+
+        controls.update();
+
+        renderer.localClippingEnabled = true;
+
+        renderer.render( scene, camera );
+        labelRenderer.render( scene, camera );
+    }
+    animate();
+
+    //resize of window size changes
+    window.addEventListener( 'resize', onWindowResize );
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        labelRenderer.setSize( window.innerWidth, window.innerHeight );
+    }
 </script>
 
-	</body>
+</body>
 </html>
