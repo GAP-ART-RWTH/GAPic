@@ -84,9 +84,9 @@
 		this.maxZ = 1.5;
 		this.planeZactive = false;
 		this.normalsMaterial = false;
-		this.circleVisibility = true;
+		this.circleVisibility = false;
 		this.circleWidth = 0.005;
-		this.normalsVisibility = true;
+		this.normalsVisibility = false;
 		this.normalsLength = 1;
 	} ;
 
