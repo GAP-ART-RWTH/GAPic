@@ -21,6 +21,8 @@
     scene.add( normalsRoot );
     scene.add( normalMeshRoot );
 
+    //presave some current gui parameters to only update if they change
+    var currentCircleWidth = guiParameters.circleWidth;
 
     function animate() {
         requestAnimationFrame( animate );
@@ -140,8 +142,9 @@
         } );
 
         // update the circle width
-        if(guiParameters.circleVisibility){
+        if(guiParameters.circleVisibility && currentCircleWidth != guiParameters.circleWidth){
             updateCircleWidth();
+            currentCircleWidth = guiParameters.circleWidth;
         }
 
         //update the normals length 

@@ -997,7 +997,7 @@ InstallMethod( DrawComplexToJavaScript,
     } );        
         """);
 
-        AppendTo(output, "\tfunction getEdges",i,"(",vertexParameterNames,"){\n");
+        AppendTo(output, "\n\tfunction getEdges",i,"(",vertexParameterNames,"){\n");
         AppendTo(output, "\t\tconst edges",i," = new Float32Array( [\n");
 
         colorPositions := Positions(edgeColors, color);
@@ -1027,7 +1027,7 @@ InstallMethod( DrawComplexToJavaScript,
             fi;
         od;
 
-        AppendTo(output, "\t\t]);");
+        AppendTo(output, "\t\t]);\n");
 
         AppendTo(output, "\t\treturn edges",i,";\n\t}\n\n");
 
@@ -1137,7 +1137,7 @@ InstallMethod( DrawComplexToJavaScript,
             vertexB := VerticesOfFace(surface, face)[2];
             vertexC := VerticesOfFace(surface, face)[3];
 
-            AppendTo(output, "\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
+            AppendTo(output, "\n\tvar inradius",face," = calulateInradius(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
             AppendTo(output, "\tvar incenter",face," = calulateIncenter(getVertex",vertexA,"(",vertexParameterString,"), getVertex",vertexB,"(",vertexParameterString,"), getVertex",vertexC,"(",vertexParameterString,"));\n");
 
             AppendTo(output, "\tvar ringGeometry",face," = new THREE.RingGeometry((inradius",face," - 0.005),inradius",face,", 32);\n");
@@ -1202,6 +1202,7 @@ InstallMethod( DrawComplexToJavaScript,
     AppendTo(output, "\tfunction updateCircleWidth(){\n");
     for face in Faces(surface) do
         if(IsInnerCircleActive(surface, face, printRecord)) then
+            AppendTo(output, "\t\tringGeometry",face,".dispose();\n");
             AppendTo(output, "\t\tringGeometry",face," = new THREE.RingGeometry((inradius",face," - guiParameters.circleWidth),inradius",face,", 32);\n");
             AppendTo(output, "\t\tringMesh",face,".geometry = ringGeometry",face,"; \n");
         fi;
