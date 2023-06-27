@@ -9,18 +9,18 @@
 # component and draws this face.
 
 
-BindGlobal("__SIMPLICIAL_EqualFloats",
+BindGlobal("__GAPIC__EqualFloats",
     function(x,y, eps)
         return (x-y)^2 < eps;
     end
 );
-BindGlobal( "__SIMPLICIAL_EqualPoints",
+BindGlobal( "__GAPIC__EqualPoints",
     function( p, q, eps )
         return (p[1]-q[1])^2 + (p[2]-q[2])^2 < eps;
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordInitStringList",
+BindGlobal( "__GAPIC__PrintRecordInitStringList",
     function(printRecord, entry, indices)
         local ls, i;
 
@@ -49,7 +49,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInitStringList",
         printRecord!.(entry) := List( printRecord!.(entry), String );
     end
 );
-BindGlobal( "__SIMPLICIAL_PrintRecordInitBool",
+BindGlobal( "__GAPIC__PrintRecordInitBool",
     function(printRecord, entry, default)
         if not IsBound(printRecord!.(entry)) or not IsBool(printRecord!.(entry)) then
             printRecord!.(entry) := default;
@@ -57,7 +57,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInitBool",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordInit",
+BindGlobal( "__GAPIC__PrintRecordInit",
     function(printRecord, surface)
         local givenStarts, v, e, givenEdgeDrawOrder, i, col, f;
 
@@ -136,26 +136,26 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInit",
 
 
         # drawing options
-        __SIMPLICIAL_PrintRecordInitBool( printRecord, "vertexLabelsActive", true );
-        __SIMPLICIAL_PrintRecordInitStringList( printRecord, "vertexLabels", 
+        __GAPIC__PrintRecordInitBool( printRecord, "vertexLabelsActive", true );
+        __GAPIC__PrintRecordInitStringList( printRecord, "vertexLabels", 
             VerticesAttributeOfComplex(surface) );
 
-        __SIMPLICIAL_PrintRecordInitBool( printRecord, "edgeLabelsActive", true );
-        __SIMPLICIAL_PrintRecordInitStringList( printRecord, "edgeLabels", Edges(surface) );
+        __GAPIC__PrintRecordInitBool( printRecord, "edgeLabelsActive", true );
+        __GAPIC__PrintRecordInitStringList( printRecord, "edgeLabels", Edges(surface) );
 
-        __SIMPLICIAL_PrintRecordInitBool( printRecord, "faceLabelsActive", true );
-        __SIMPLICIAL_PrintRecordInitStringList( printRecord, "faceLabels", Faces(surface) );
+        __GAPIC__PrintRecordInitBool( printRecord, "faceLabelsActive", true );
+        __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", Faces(surface) );
         
         if not IsBound( printRecord!.scale ) then
             printRecord!.scale := 2;
         fi;
-        __SIMPLICIAL_PrintRecordInitBool(printRecord, "avoidIntersections", true);
+        __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
 
         # colours
-        __SIMPLICIAL_PrintRecordInitStringList(printRecord, "vertexColours", 
+        __GAPIC__PrintRecordInitStringList(printRecord, "vertexColours", 
             VerticesAttributeOfComplex(surface));
-        __SIMPLICIAL_PrintRecordInitStringList(printRecord, "edgeColours", Edges(surface));
-        __SIMPLICIAL_PrintRecordInitStringList(printRecord, "faceColours", Faces(surface));
+        __GAPIC__PrintRecordInitStringList(printRecord, "edgeColours", Edges(surface));
+        __GAPIC__PrintRecordInitStringList(printRecord, "faceColours", Faces(surface));
         # if the faceColours are custom given, we check for errors
         for i in [1..Length(printRecord!.faceColours)] do
             if IsBound( printRecord!.faceColours[i] ) then
@@ -172,9 +172,9 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInit",
 
 
         # automatic compilation
-        __SIMPLICIAL_PrintRecordInitBool( printRecord, "compileLaTeX", false );
+        __GAPIC__PrintRecordInitBool( printRecord, "compileLaTeX", false );
         # only write the tikzpicture (this will not be able to compile on its own!)
-        __SIMPLICIAL_PrintRecordInitBool( printRecord, "onlyTikzpicture", false );
+        __GAPIC__PrintRecordInitBool( printRecord, "onlyTikzpicture", false );
         if printRecord!.compileLaTeX and printRecord!.onlyTikzpicture then
             Error("DrawSurfaceToTikz: The options 'compileLaTeX' and 'onlyTikzpicture' can't be true simultaneously.");
         fi;
@@ -183,17 +183,17 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInit",
             printRecord.latexDocumentclass := "article";
         fi;
 
-        __SIMPLICIAL_PrintRecordInitBool(printRecord, "noOutput", false);
+        __GAPIC__PrintRecordInitBool(printRecord, "noOutput", false);
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordCleanup",
+BindGlobal( "__GAPIC__PrintRecordCleanup",
     function(printRecord)
         Unbind( printRecord!.openEdges );
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordInitializePolygons",
+BindGlobal( "__GAPIC__PrintRecordInitializePolygons",
     function(printRecord, surface)
         local lengths, angles, edges, vertices, f, v, e, regAngle, sin, cos,
             radAngles, angleSum, i, oppVert, j, k;
@@ -234,10 +234,10 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInitializePolygons",
                 # Check inner angle sum
                 radAngles := List( vertices, v -> Atan2(angles[f][v][1], angles[f][v][2]) );
                 angleSum := Sum( radAngles );
-                if not __SIMPLICIAL_EqualFloats( angleSum, ( Length(edges) - 2 )*FLOAT.PI, printRecord!.floatAccuracy ) then
+                if not __GAPIC__EqualFloats( angleSum, ( Length(edges) - 2 )*FLOAT.PI, printRecord!.floatAccuracy ) then
                     Error(Concatenation("Wrong angles for face ", String(f), " given."));
                 else
-                    continue; # We don't check whether the face closes since this is checked in __SIMPLICIAL_PrintRecordComputeFace
+                    continue; # We don't check whether the face closes since this is checked in __GAPIC__PrintRecordComputeFace
                 fi;
             fi;
 
@@ -253,7 +253,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordInitializePolygons",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordStartingFace",
+BindGlobal( "__GAPIC__PrintRecordStartingFace",
     function(printRecord, surface, unplacedFaces)
         local f;
 
@@ -269,7 +269,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordStartingFace",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordFindVertex",
+BindGlobal( "__GAPIC__PrintRecordFindVertex",
     function(printRecord, prVertex, drawIndex)
         local i, pos, compareCoords;
 
@@ -281,7 +281,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordFindVertex",
             fi;
 
             # The test only checks the first two entries
-            if __SIMPLICIAL_EqualPoints( compareCoords, prVertex[2], printRecord!.floatAccuracy ) then
+            if __GAPIC__EqualPoints( compareCoords, prVertex[2], printRecord!.floatAccuracy ) then
                 pos := i;
                 break;
             fi;
@@ -299,7 +299,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordFindVertex",
 # 2. A list of edges around the face (correctly oriented), stored as
 #       [e, vertexPair], where vertexPair consists of two vertex-numbers
 #       The initial edge is not part of this list.
-BindGlobal( "__SIMPLICIAL_PrintRecordComputeFace",
+BindGlobal( "__GAPIC__PrintRecordComputeFace",
     function(printRecord, surface, face, edge, drawIndex)
         local givenEdge, givenPRVertexFirst, givenPRVertexSecond, 
             returnedVertices, returnedEdges, lastVertex, lastVertexCoord, 
@@ -338,7 +338,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordComputeFace",
             nextVertexCoords := currentVertexCoord + newVector;
 
             # Check if this vertex coordinates already appear somewhere
-            pos := __SIMPLICIAL_PrintRecordFindVertex( printRecord, [nextVertex, nextVertexCoords], drawIndex );
+            pos := __GAPIC__PrintRecordFindVertex( printRecord, [nextVertex, nextVertexCoords], drawIndex );
             if pos = 0 then
                 Add( returnedVertices, [nextVertex, nextVertexCoords] );
             else
@@ -362,7 +362,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordComputeFace",
         return [returnedVertices, returnedEdges];
     end
 );
-BindGlobal( "__SIMPLICIAL_PrintRecordComputeFirstFace",
+BindGlobal( "__GAPIC__PrintRecordComputeFirstFace",
     function(printRecord, surface, face, drawIndex)
         local edges, len, verts, res, v1, v2;
 
@@ -377,13 +377,13 @@ BindGlobal( "__SIMPLICIAL_PrintRecordComputeFirstFace",
         v2 := [ verts[2], Length(printRecord.vertexCoordinates[verts[2]]) ];
         Add( printRecord!.edgeEndpoints[edges[1]], [ v1, v2, drawIndex ] );
 
-        res := __SIMPLICIAL_PrintRecordComputeFace( printRecord, surface, face, edges[1], drawIndex );
+        res := __GAPIC__PrintRecordComputeFace( printRecord, surface, face, edges[1], drawIndex );
         printRecord!.edgeEndpoints[edges[1]][Length(printRecord.edgeEndpoints[edges[1]])] := [ v2, v1, drawIndex ];
         return res;
     end
 );
 
-BindGlobal( "__SIMPLICIAL_IsFloatZero",
+BindGlobal( "__GAPIC__IsFloatZero",
     function( fl, accuracy )
         if AbsoluteValue(fl) < accuracy then
             return 0.;
@@ -393,7 +393,7 @@ BindGlobal( "__SIMPLICIAL_IsFloatZero",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordAddFace",
+BindGlobal( "__GAPIC__PrintRecordAddFace",
     function( printRecord, surface, returnedVertices, returnedEdges, face, drawIndex )
         local vertexPositions, prVertex, pos, prEdge, vertices, i, 
             draw, specificVerts, generalVerts, first, second;
@@ -405,11 +405,11 @@ BindGlobal( "__SIMPLICIAL_PrintRecordAddFace",
                 vertexPositions[prVertex[1]] := prVertex[2];
             else
                 # Try to find this vertex
-                pos := __SIMPLICIAL_PrintRecordFindVertex( printRecord, prVertex, drawIndex );
+                pos := __GAPIC__PrintRecordFindVertex( printRecord, prVertex, drawIndex );
                 if pos = 0 then
                     # It is new
-                    first := __SIMPLICIAL_IsFloatZero(prVertex[2][1], printRecord.floatAccuracy);
-                    second := __SIMPLICIAL_IsFloatZero(prVertex[2][2], printRecord.floatAccuracy);
+                    first := __GAPIC__IsFloatZero(prVertex[2][1], printRecord.floatAccuracy);
+                    second := __GAPIC__IsFloatZero(prVertex[2][2], printRecord.floatAccuracy);
 
                     Add( printRecord!.vertexCoordinates[prVertex[1]], [first, second, drawIndex] );
                     pos := Length( printRecord!.vertexCoordinates[prVertex[1]] );
@@ -448,7 +448,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordAddFace",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordNextEdge",
+BindGlobal( "__GAPIC__PrintRecordNextEdge",
     function( printRecord, rejected )
         local diff;
         #TODO implement more involved methods
@@ -461,7 +461,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordNextEdge",
         fi;
     end
 );
-BindGlobal( "__SIMPLICIAL_PrintRecordNextEdgeByDrawOrder",
+BindGlobal( "__GAPIC__PrintRecordNextEdgeByDrawOrder",
     function( printRecord, rejected )
         local currentCompNr, order, i, tryEdge;
 
@@ -485,7 +485,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordNextEdgeByDrawOrder",
 # We use the answer of
 # https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 # to compute the intersection of two line segments
-BindGlobal( "__SIMPLICIAL_IntersectingLineSegments",
+BindGlobal( "__GAPIC__IntersectingLineSegments",
     function( edgeCoords1, edgeCoords2, eps )
         local Cross, vtx1, vtx2, det, diff, factor1, factor2, min, max;
 
@@ -500,12 +500,12 @@ BindGlobal( "__SIMPLICIAL_IntersectingLineSegments",
         # Check first if the lines are parallel
         det := Cross( vtx1, vtx2 );
         diff := edgeCoords2[1] - edgeCoords1[1];
-        if __SIMPLICIAL_EqualFloats(det, 0., eps) then
+        if __GAPIC__EqualFloats(det, 0., eps) then
             # parallel case:
             # We have to check if the lines coincide
             # For that we check if the vector between the two base
             # points is parallel to the line directions
-            if not __SIMPLICIAL_EqualFloats( Cross( vtx1, diff ), Float(0), eps) then
+            if not __GAPIC__EqualFloats( Cross( vtx1, diff ), Float(0), eps) then
                 return false;
             fi;
             
@@ -514,7 +514,7 @@ BindGlobal( "__SIMPLICIAL_IntersectingLineSegments",
             # p_2 = p_1 + factor1 * vtx_1
             # and factor2 such that
             # p_2 + vtx_2 = p_1 + factor * vtx_1
-            if not __SIMPLICIAL_EqualFloats( vtx1[1], Float(0) , eps) then
+            if not __GAPIC__EqualFloats( vtx1[1], Float(0) , eps) then
                 factor1 := diff[1]/vtx1[1];
                 factor2 := factor1 + vtx2[1]/vtx1[1];
             else
@@ -541,8 +541,8 @@ BindGlobal( "__SIMPLICIAL_IntersectingLineSegments",
                 return false;
             elif factor2 < Float(0) or factor2 > Float(1) then
                 return false;
-            elif ( __SIMPLICIAL_EqualFloats(factor1,0., eps) or __SIMPLICIAL_EqualFloats(factor1,1., eps) )
-                and ( __SIMPLICIAL_EqualFloats(factor2,0., eps) or __SIMPLICIAL_EqualFloats(factor2,1., eps) ) then
+            elif ( __GAPIC__EqualFloats(factor1,0., eps) or __GAPIC__EqualFloats(factor1,1., eps) )
+                and ( __GAPIC__EqualFloats(factor2,0., eps) or __GAPIC__EqualFloats(factor2,1., eps) ) then
                 return false;
             else
                 return true;
@@ -552,7 +552,7 @@ BindGlobal( "__SIMPLICIAL_IntersectingLineSegments",
 );
 
 
-BindGlobal("__SIMPLICIAL_PrintRecordNoIntersection",
+BindGlobal("__GAPIC__PrintRecordNoIntersection",
     function( printRecord, surface, vertexData, edgeData, drawIndex, testResults )
         local cleanEdges, edge, edgePos, edgeEndpoints, vertex1, vertex2,
             vertex1Coord, vertex2Coord, newEdge, newVertex1Name, newVertex2Name,
@@ -620,14 +620,14 @@ BindGlobal("__SIMPLICIAL_PrintRecordNoIntersection",
                     else
                         # compare coordinates
                         newVertex1Coord := vertexInfo[newVertex1Name];
-                        if __SIMPLICIAL_EqualPoints( vertex1Coord, vertexInfo[newVertex1Name], printRecord!.floatAccuracy ) then
+                        if __GAPIC__EqualPoints( vertex1Coord, vertexInfo[newVertex1Name], printRecord!.floatAccuracy ) then
                             if newVertex1Name <> vertex1[1] then
                                 # Conflict with two different vertices at the same position
                                 return [false, cleanEdges];
                             else
                                 correspondenceMatrix[1][1] := 1;
                             fi;
-                        elif __SIMPLICIAL_EqualPoints( vertex2Coord, vertexInfo[newVertex1Name], printRecord!.floatAccuracy) then
+                        elif __GAPIC__EqualPoints( vertex2Coord, vertexInfo[newVertex1Name], printRecord!.floatAccuracy) then
                             if newVertex1Name <> vertex2[1] then
                                 return [false, cleanEdges];
                             else
@@ -647,14 +647,14 @@ BindGlobal("__SIMPLICIAL_PrintRecordNoIntersection",
                     else
                         newVertex2Coord := vertexInfo[newVertex2Name];
                         # compare coordinates
-                        if __SIMPLICIAL_EqualPoints( vertex1Coord, vertexInfo[newVertex2Name], printRecord!.floatAccuracy ) then
+                        if __GAPIC__EqualPoints( vertex1Coord, vertexInfo[newVertex2Name], printRecord!.floatAccuracy ) then
                             if newVertex2Name <> vertex1[1] then
                                 # Conflict with two different vertices at the same position
                                 return [false, cleanEdges];
                             else
                                 correspondenceMatrix[1][2] := 1;
                             fi;
-                        elif __SIMPLICIAL_EqualPoints( vertex2Coord, vertexInfo[newVertex2Name], printRecord!.floatAccuracy) then
+                        elif __GAPIC__EqualPoints( vertex2Coord, vertexInfo[newVertex2Name], printRecord!.floatAccuracy) then
                             if newVertex2Name <> vertex2[1] then
                                 return [false, cleanEdges];
                             else
@@ -672,7 +672,7 @@ BindGlobal("__SIMPLICIAL_PrintRecordNoIntersection",
                         fi;
                     else
                         # Compute the intersection normally
-                        if __SIMPLICIAL_IntersectingLineSegments( [vertex1Coord, vertex2Coord], [newVertex1Coord, newVertex2Coord], printRecord.floatAccuracy ) then
+                        if __GAPIC__IntersectingLineSegments( [vertex1Coord, vertex2Coord], [newVertex1Coord, newVertex2Coord], printRecord.floatAccuracy ) then
                             return [false, cleanEdges];
                         fi;
                     fi;
@@ -687,7 +687,7 @@ BindGlobal("__SIMPLICIAL_PrintRecordNoIntersection",
 );
 
 
-BindGlobal("__SIMPLICIAL_PrintRecordGeneralHeader",
+BindGlobal("__GAPIC__PrintRecordGeneralHeader",
     function(printRecord)
         local res;
 
@@ -705,7 +705,7 @@ BindGlobal("__SIMPLICIAL_PrintRecordGeneralHeader",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_ReadTemplateFromFile",
+BindGlobal( "__GAPIC__ReadTemplateFromFile",
     function(relPath)
         local path, input, content;
 
@@ -721,14 +721,14 @@ BindGlobal( "__SIMPLICIAL_ReadTemplateFromFile",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordTikzHeader",
+BindGlobal( "__GAPIC__PrintRecordTikzHeader",
     function(printRecord)
-        return __SIMPLICIAL_ReadTemplateFromFile("TikZHeader.tex");
+        return __GAPIC__ReadTemplateFromFile("TikZHeader.tex");
     end
 );
 
 
-BindGlobal( "__SIMPLICIAL_PrintRecordDrawVertex",
+BindGlobal( "__GAPIC__PrintRecordDrawVertex",
     function( printRecord, surface, vertex, vertexTikzCoord, vertexCoord )
         local res;
 
@@ -751,7 +751,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordDrawVertex",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordDrawEdge",
+BindGlobal( "__GAPIC__PrintRecordDrawEdge",
     function( printRecord, surface, edge, vertexTikzCoord, vertexCoord )
         local res;
 
@@ -774,7 +774,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordDrawEdge",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordDrawFace",
+BindGlobal( "__GAPIC__PrintRecordDrawFace",
     function( printRecord, surface, face, vertexTikzCoord, vertexCoord )
         local res, i, coord;
 
@@ -822,7 +822,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordDrawFace",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordTikzOptions",
+BindGlobal( "__GAPIC__PrintRecordTikzOptions",
     function(printRecord, surface)
         local res;
 
@@ -872,7 +872,7 @@ InstallMethod( DrawSurfaceToTikz,
             drawIndex, ind, drawIndices, strongCompNumber;
 
         # Do something different for the manual
-        if __SIMPLICIAL_MANUAL_MODE then
+        if __GAPIC__MANUAL_MODE then
             printRecord!.onlyTikzpicture := true;
             printRecord!.compileLaTeX := false;
             printRecord!.noOutput := true;
@@ -893,8 +893,8 @@ InstallMethod( DrawSurfaceToTikz,
         SetPrintFormattingStatus( output, false );
 
 
-        __SIMPLICIAL_PrintRecordInit(printRecord, surface);
-        __SIMPLICIAL_PrintRecordInitializePolygons(printRecord, surface);
+        __GAPIC__PrintRecordInit(printRecord, surface);
+        __GAPIC__PrintRecordInitializePolygons(printRecord, surface);
 
         # Start the actual method
         unplacedFaces := Faces(surface);
@@ -902,7 +902,7 @@ InstallMethod( DrawSurfaceToTikz,
         drawIndex := 0;
         while Length(unplacedFaces) > 0 do
             # Find the starting face
-            start := __SIMPLICIAL_PrintRecordStartingFace( printRecord, surface, unplacedFaces );
+            start := __GAPIC__PrintRecordStartingFace( printRecord, surface, unplacedFaces );
             Add( printRecord!.startingFaces, start );
             Add( printRecord.edgeDrawOrder,  [] );
 
@@ -910,13 +910,13 @@ InstallMethod( DrawSurfaceToTikz,
             drawIndex := drawIndex + 1;
             drawIndices := [drawIndex];
             #drawIndex := 1;
-            computedFace := __SIMPLICIAL_PrintRecordComputeFirstFace( printRecord, surface, start, drawIndex );
-            __SIMPLICIAL_PrintRecordAddFace(printRecord, surface, computedFace[1], computedFace[2], start, drawIndex);
+            computedFace := __GAPIC__PrintRecordComputeFirstFace( printRecord, surface, start, drawIndex );
+            __GAPIC__PrintRecordAddFace(printRecord, surface, computedFace[1], computedFace[2], start, drawIndex);
             unplacedFaces := Difference( unplacedFaces, [start] );
             printRecord.openEdges := Filtered( EdgesOfFaces(surface)[start], e -> Length( Intersection(unplacedFaces, FacesOfEdges(surface)[e]) ) > 0 );
 
-            nextFct := [ ["__SIMPLICIAL_PrintRecordNextEdgeByDrawOrder", infinity], ["__SIMPLICIAL_PrintRecordNextEdge", infinity] ];
-            checkFct := [ "__SIMPLICIAL_PrintRecordNoIntersection" ];
+            nextFct := [ ["__GAPIC__PrintRecordNextEdgeByDrawOrder", infinity], ["__GAPIC__PrintRecordNextEdge", infinity] ];
+            checkFct := [ "__GAPIC__PrintRecordNoIntersection" ];
             repeatData := [];
             # This is an infinite loop to extend all edges - bounded from above by the number of edges
             for k in [1..NumberOfEdges(surface)] do
@@ -962,7 +962,7 @@ InstallMethod( DrawSurfaceToTikz,
                         testResults := repeatData[proposedEdge][4];
                     else
                         adFace := Intersection( FacesOfEdges(surface)[proposedEdge], unplacedFaces )[1];
-                        vertexEdgeData := __SIMPLICIAL_PrintRecordComputeFace(printRecord, surface, adFace, proposedEdge, drawIndex);
+                        vertexEdgeData := __GAPIC__PrintRecordComputeFace(printRecord, surface, adFace, proposedEdge, drawIndex);
                         vertexData := vertexEdgeData[1];
                         edgeData := vertexEdgeData[2];
                         testResults := [];
@@ -1005,12 +1005,12 @@ InstallMethod( DrawSurfaceToTikz,
                     drawIndex := drawIndex + 1;
                     Add(drawIndices, drawIndex);
                     Add( comp, [repeatData[proposedEdge][1]]  );
-                    computedFace := __SIMPLICIAL_PrintRecordComputeFirstFace( printRecord, surface, repeatData[proposedEdge][1], drawIndex );
-                    __SIMPLICIAL_PrintRecordAddFace(printRecord, surface, computedFace[1], computedFace[2], repeatData[proposedEdge][1], drawIndex);
+                    computedFace := __GAPIC__PrintRecordComputeFirstFace( printRecord, surface, repeatData[proposedEdge][1], drawIndex );
+                    __GAPIC__PrintRecordAddFace(printRecord, surface, computedFace[1], computedFace[2], repeatData[proposedEdge][1], drawIndex);
 
                     Print("DrawSurfaceToTikz: Could not find intersection-free continuation. Draw face ", repeatData[proposedEdge][1], " via edge ", firstEdge, " instead.\n");
                 else
-                    __SIMPLICIAL_PrintRecordAddFace( printRecord, surface, repeatData[proposedEdge][2], repeatData[proposedEdge][3], repeatData[proposedEdge][1], drawIndex );
+                    __GAPIC__PrintRecordAddFace( printRecord, surface, repeatData[proposedEdge][2], repeatData[proposedEdge][3], repeatData[proposedEdge][1], drawIndex );
                     # We will be in this case until we can't continue any edge without failing some test.
                     # Therefore this case will always add in the component that was last modified
                     Add( comp[Length(comp)], repeatData[proposedEdge][1] );
@@ -1041,8 +1041,8 @@ InstallMethod( DrawSurfaceToTikz,
 
         # Write this data into the file
         if not printRecord!.onlyTikzpicture then
-            AppendTo( output, __SIMPLICIAL_PrintRecordGeneralHeader(printRecord) );
-            AppendTo( output, __SIMPLICIAL_PrintRecordTikzHeader(printRecord) );
+            AppendTo( output, __GAPIC__PrintRecordGeneralHeader(printRecord) );
+            AppendTo( output, __GAPIC__PrintRecordTikzHeader(printRecord) );
             AppendTo( output, "\n\n\\begin{document}\n\n" );
         
             if IsBound(printRecord!.caption) then
@@ -1063,7 +1063,7 @@ InstallMethod( DrawSurfaceToTikz,
                 drawIndex := printRecord.drawIndices[strongCompNumber][ind];
 
                 # Start the picture
-                AppendTo( output, "\n\n\\begin{tikzpicture}[", __SIMPLICIAL_PrintRecordTikzOptions(printRecord, comp), "]\n\n" );
+                AppendTo( output, "\n\n\\begin{tikzpicture}[", __GAPIC__PrintRecordTikzOptions(printRecord, comp), "]\n\n" );
                 # Activate alternative face colours
     #            if printRecord!.faceSwapColoursActive then
     #                AppendTo( output, "\\def\\swapColors{1}\n\n" );
@@ -1084,7 +1084,7 @@ InstallMethod( DrawSurfaceToTikz,
                 AppendTo( output, "% Fill in the faces\n" );
                 for f in Faces(comp) do
                     vertexPositions := printRecord!.faceVertices[f][drawIndex];
-                    AppendTo( output, __SIMPLICIAL_PrintRecordDrawFace(printRecord, surface, f, 
+                    AppendTo( output, __GAPIC__PrintRecordDrawFace(printRecord, surface, f, 
                         List(vertexPositions, TikzCoordFromVertexPosition), List(vertexPositions, p -> allVertexCoords[p[1]][p[2]])) );
                 od;
                 AppendTo( output, "\n\n" );
@@ -1095,7 +1095,7 @@ InstallMethod( DrawSurfaceToTikz,
                     ends := printRecord!.edgeEndpoints[e];
                     for i in [1..Length(ends)] do
                         if ends[i][3] = drawIndex then
-                            AppendTo( output, __SIMPLICIAL_PrintRecordDrawEdge( printRecord, surface, e,
+                            AppendTo( output, __GAPIC__PrintRecordDrawEdge( printRecord, surface, e,
                                 List( ends[i]{[1,2]}, TikzCoordFromVertexPosition ),
                                 List( ends[i]{[1,2]}, p -> allVertexCoords[p[1]][p[2]] ) ) );
                         fi;
@@ -1109,7 +1109,7 @@ InstallMethod( DrawSurfaceToTikz,
                     positions := allVertexCoords[v];
                     for i in [1..Length(positions)] do
                         if allVertexCoords[v][i][3] = drawIndex then
-                            AppendTo( output, __SIMPLICIAL_PrintRecordDrawVertex( printRecord, surface, v, TikzCoordFromVertexPosition([v,i]), allVertexCoords[v][i] ));
+                            AppendTo( output, __GAPIC__PrintRecordDrawVertex( printRecord, surface, v, TikzCoordFromVertexPosition([v,i]), allVertexCoords[v][i] ));
                         fi;
                     od;
                 od;
@@ -1141,7 +1141,7 @@ InstallMethod( DrawSurfaceToTikz,
 
 
         # Clean up the record
-        __SIMPLICIAL_PrintRecordCleanup(printRecord);
+        __GAPIC__PrintRecordCleanup(printRecord);
 
         return printRecord;
     end
@@ -1159,7 +1159,7 @@ RedispatchOnCondition( DrawSurfaceToTikz, true, [IsTwistedPolygonalComplex,IsStr
 
 ############################################################
 
-BindGlobal( "__SIMPLICIAL_PrintRecordDrawFaceFG",
+BindGlobal( "__GAPIC__PrintRecordDrawFaceFG",
     function( printRecord, surface, face, faceTikzCoord)
         local res;
 
@@ -1180,7 +1180,7 @@ BindGlobal( "__SIMPLICIAL_PrintRecordDrawFaceFG",
     end
 );
 
-BindGlobal( "__SIMPLICIAL_PrintRecordDrawVertexFG",
+BindGlobal( "__GAPIC__PrintRecordDrawVertexFG",
     function( printRecord, surface, vertex,vertexCoord )
         local res, i, coord;
 
@@ -1239,7 +1239,7 @@ InstallOtherMethod( SetFaceCoordinates2DNC,
     end
 );
 
-BindGlobal( "__SIMPLICIAL_IsCoordinates2D",
+BindGlobal( "__GAPIC__IsCoordinates2D",
     function(surface, coordinates)
         local coord;
         if not IsList(coordinates) then
@@ -1267,7 +1267,7 @@ BindGlobal( "__SIMPLICIAL_IsCoordinates2D",
     ## this help function takes a positive integer as input and returns a list of 2D-
     ## coordinates, situated on a square with the vertices [0,0],[n,0],[n,n],[0,n]
     ## so that each side has exactly n/4 or n/4+1 vertices
-BindGlobal( "__SIMPLICIAL_StartPositions",
+BindGlobal( "__GAPIC__StartPositions",
     function(n)
 	local k,startPositions;
 	startPositions:=[];
@@ -1308,7 +1308,7 @@ BindGlobal( "__SIMPLICIAL_StartPositions",
 
     # this function returns the face sequence of faces contained in the umbrella
     # and not contained in visitedFaces
-BindGlobal( "__SIMPLICIAL_OrderFaces",
+BindGlobal( "__GAPIC__OrderFaces",
     function(face1,face2,currUmb,visitedFaces)
 	local f,cyc,orderedFaces;
 	orderedFaces:=[];
@@ -1335,7 +1335,7 @@ BindGlobal( "__SIMPLICIAL_OrderFaces",
     ## The returned list activeFaces is ordered in the sense that there exists 
     ## a umbrella containing the faces activefaces[i], activeFaces[i+1] and 
     ## faces whose coordinate has not been calculated yet
-BindGlobal( "__SIMPLICIAL_ActiveFaces",
+BindGlobal( "__GAPIC__ActiveFaces",
     function(facePositions,Umbrellas)
 	local g,activeFaces,minFace,maxFace,minX,maxX,minY,maxY,min,max,i,
 	xCoordinates,yCoordinates,posMinY,posMinX,posMaxY,posMaxX;
@@ -1399,7 +1399,7 @@ BindGlobal( "__SIMPLICIAL_ActiveFaces",
     ## This method tries to apply coordinates to the faces in nextFaces[i] so the 
     ## the embedding is still planar and vertices of the surface can be
     ## identified as faces of the resulting face graph
-BindGlobal( "__SIMPLICIAL_NewFaceCoordinates",
+BindGlobal( "__GAPIC__NewFaceCoordinates",
     function(activeFaces,nextFaces,Umbrellas,facePositions)
 	local g,l,numNewCoor,maxX,maxY,minX,minY,newPositions,face1,face2,t,
 	nextFacesSubDiv,i,xCoordinates,yCoordinates,pos;
@@ -1624,7 +1624,7 @@ BindGlobal( "__SIMPLICIAL_NewFaceCoordinates",
 );
 
     ## this function returns the face sequence of an umbrella as a list
-BindGlobal( "__SIMPLICIAL_UmbrellaAsList",
+BindGlobal( "__GAPIC__UmbrellaAsList",
     function(cyc)
 	local i,f;
 	f:=1;	
@@ -1639,15 +1639,15 @@ BindGlobal( "__SIMPLICIAL_UmbrellaAsList",
     # compute the embedding of a face graph of a simplicial sphere
     # by assigning 2D-coordinates to the faces
 
-BindGlobal( "__SIMPLICIAL_SetFaceCoordinates",
+BindGlobal( "__GAPIC__SetFaceCoordinates",
     function(surface)
 	local activeFaces,face1,face2,f,facePositions,g,newCoor,Listact,output,temp,
 	visited,tempFacPos,currUmb,Umbrellas,i,startPositions,umb,coor,newFaces;
 	Umbrellas:=UmbrellaDescriptorOfSurface(surface);
-	Umbrellas:=List(Umbrellas,umb->__SIMPLICIAL_UmbrellaAsList(umb));
+	Umbrellas:=List(Umbrellas,umb->__GAPIC__UmbrellaAsList(umb));
 	currUmb:=Filtered(Umbrellas,umb->Length(umb)= 
 					Maximum(FaceDegreesOfVertices(surface)))[1];
-	startPositions:=__SIMPLICIAL_StartPositions(Length(currUmb));
+	startPositions:=__GAPIC__StartPositions(Length(currUmb));
 	facePositions:=[];
 	for i in [1..Length(currUmb)] do 
 	    facePositions[currUmb[i]]:=startPositions[i];
@@ -1656,7 +1656,7 @@ BindGlobal( "__SIMPLICIAL_SetFaceCoordinates",
 	visited:=currUmb;	
 	tempFacPos:=ShallowCopy(facePositions);
 	while Umbrellas <> [] do 
-	    activeFaces:=__SIMPLICIAL_ActiveFaces(tempFacPos,Umbrellas);
+	    activeFaces:=__GAPIC__ActiveFaces(tempFacPos,Umbrellas);
 	    Add(activeFaces,activeFaces[1]);
 	    Listact:=[];
 	    for i in [1..Length(activeFaces)-1] do
@@ -1666,13 +1666,13 @@ BindGlobal( "__SIMPLICIAL_SetFaceCoordinates",
 							Intersection(umb,visited)<>[]);
 	        if currUmb<> [] then 
 		    currUmb:=currUmb[1];
-		    Add(Listact,__SIMPLICIAL_OrderFaces(face1,face2,currUmb,visited));
+		    Add(Listact,__GAPIC__OrderFaces(face1,face2,currUmb,visited));
 		    Umbrellas:=Difference(Umbrellas,[currUmb]);
 	        else 
 		    Add(Listact,[]);
 	        fi;
 	    od;
-	    newCoor:=__SIMPLICIAL_NewFaceCoordinates(activeFaces,Listact,Umbrellas,tempFacPos);
+	    newCoor:=__GAPIC__NewFaceCoordinates(activeFaces,Listact,Umbrellas,tempFacPos);
 	    for coor in newCoor do
 	        tempFacPos[Position(newCoor,coor)]:=coor;
 	    od;
@@ -1697,7 +1697,7 @@ BindGlobal( "__SIMPLICIAL_SetFaceCoordinates",
     ## this functions manipulates the printRecord so that functionalities of 
     ## DrawSurfaceToTikZ can be used 
 
-BindGlobal( "__SIMPLICIAL_InitializePrintRecord",
+BindGlobal( "__GAPIC__InitializePrintRecord",
     function(surface,printRecord)
 	local g,colour,e,f,v;
 	if not IsBound(printRecord.vertexLabelsActive) then
@@ -1740,12 +1740,12 @@ BindGlobal( "__SIMPLICIAL_InitializePrintRecord",
 	fi;	
 	if not IsBound(printRecord.faceCoordinates2D) then
 	    if IsClosedSurface(surface) and IsVertexFaithful(surface) and EulerCharacteristic(surface)=2 then
-		printRecord.faceCoordinates2D:= __SIMPLICIAL_SetFaceCoordinates(surface);
+		printRecord.faceCoordinates2D:= __GAPIC__SetFaceCoordinates(surface);
 	    else 
 		Error("face coordinates have to be specified");
 	   fi;
 	else 
-	    if not __SIMPLICIAL_IsCoordinates2D(surface,printRecord.faceCoordinates2D) then
+	    if not __GAPIC__IsCoordinates2D(surface,printRecord.faceCoordinates2D) then
 	        Error("face coordinates have to be in the correct format");
 	    fi;
 	fi;	
@@ -1821,7 +1821,7 @@ InstallMethod( DrawFacegraphToTikz,
 	return fail;
     fi;
         # Do something different for the manual
-        if __SIMPLICIAL_MANUAL_MODE then
+        if __GAPIC__MANUAL_MODE then
             printRecord!.onlyTikzpicture := true;
             printRecord!.compileLaTeX := false;
             printRecord!.noOutput := true;
@@ -1847,7 +1847,7 @@ InstallMethod( DrawFacegraphToTikz,
     if output = fail then
         Error(Concatenation("File ", String(file), " can't be opened.") );
     fi;
-    printRecord:=__SIMPLICIAL_InitializePrintRecord(surface,printRecord);
+    printRecord:=__GAPIC__InitializePrintRecord(surface,printRecord);
     SetPrintFormattingStatus( output, false );
 
     # Add Header to .tex file 
@@ -1861,8 +1861,8 @@ InstallMethod( DrawFacegraphToTikz,
 
   # Write this data into the file
     if not printRecord!.onlyTikzpicture then
-        AppendTo( output, __SIMPLICIAL_PrintRecordGeneralHeader(tempRec));
-        AppendTo( output, __SIMPLICIAL_PrintRecordTikzHeader(tempRec));
+        AppendTo( output, __GAPIC__PrintRecordGeneralHeader(tempRec));
+        AppendTo( output, __GAPIC__PrintRecordTikzHeader(tempRec));
         AppendTo( output, "\n\n\\begin{document}\n\n" );
         if IsBound(printRecord!.caption) then
             AppendTo( output,
@@ -1870,11 +1870,11 @@ InstallMethod( DrawFacegraphToTikz,
             fi;
         fi;
 
-#    AppendTo( output,__SIMPLICIAL_PrintRecordGeneralHeader(tempRec));
-#    AppendTo( output,__SIMPLICIAL_PrintRecordTikzHeader(tempRec));
+#    AppendTo( output,__GAPIC__PrintRecordGeneralHeader(tempRec));
+#    AppendTo( output,__GAPIC__PrintRecordTikzHeader(tempRec));
 #    AppendTo( output, "\n\n\\begin{document}\n");
     AppendTo( output, "\n\n\\begin{tikzpicture}[",
-    __SIMPLICIAL_PrintRecordTikzOptions(tempRec, surface), "]\n\n" );
+    __GAPIC__PrintRecordTikzOptions(tempRec, surface), "]\n\n" );
 
     faceCoordTikZ:=[];
     for f in Faces(surface) do
@@ -1884,13 +1884,13 @@ InstallMethod( DrawFacegraphToTikz,
     for f in Faces(surface) do
 	AppendTo(output	,"\\coordinate (",faceCoordTikZ[f],") at (",
 	printRecord.faceCoordinates2D[f][1]," , ",printRecord.faceCoordinates2D[f][2],");\n");
-	#AppendTo(output,__SIMPLICIAL_PrintRecordDrawFaceFG(printRecord, surface, face, faceTikzCoord));
+	#AppendTo(output,__GAPIC__PrintRecordDrawFaceFG(printRecord, surface, face, faceTikzCoord));
    od;
 
     ##draw edges
     for e in InnerEdges(surface) do 
 	foe:=FacesOfEdge(surface,e);
-        AppendTo(output,__SIMPLICIAL_PrintRecordDrawEdge(printRecord,surface,e,
+        AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,surface,e,
 	faceCoordTikZ{foe},printRecord.faceCoordinates2D{foe}));
     od;
     ##draw faces as nodes
@@ -1900,11 +1900,11 @@ InstallMethod( DrawFacegraphToTikz,
 
     AppendTo( output, "% Draw the faces\n" );
     for f in Faces(surface) do
-	AppendTo( output, __SIMPLICIAL_PrintRecordDrawFaceFG( printRecord, surface, f, faceCoordTikZ[f]));
+	AppendTo( output, __GAPIC__PrintRecordDrawFaceFG( printRecord, surface, f, faceCoordTikZ[f]));
     od;
 
     umbrellas:=UmbrellaDescriptorOfSurface(surface);
-    umbrellas:=List(umbrellas,umb->__SIMPLICIAL_UmbrellaAsList(umb));
+    umbrellas:=List(umbrellas,umb->__GAPIC__UmbrellaAsList(umb));
     currUmb:=Filtered(umbrellas,umb->Length(umb)=Maximum(FaceDegreesOfVertices(surface)))[1];
 
     ## draw vertex labels
@@ -1918,13 +1918,13 @@ InstallMethod( DrawFacegraphToTikz,
 	    maxY:=Maximum(List(coordinates,g->g[2]));
 	    minY:=Minimum(List(coordinates,g->g[2]));
 #	    AppendTo(output,"\\node[faceLabel,scale=1.5] at (",maxX+1.,",",minY+1/2*(maxY-minY),") {$",v,"$};\n");
-	    AppendTo(output,__SIMPLICIAL_PrintRecordDrawVertexFG(printRecord, surface, v,[maxX+1.,minY+1/2*(maxY-minY)]) ); 
+	    AppendTo(output,__GAPIC__PrintRecordDrawVertexFG(printRecord, surface, v,[maxX+1.,minY+1/2*(maxY-minY)]) ); 
            ## now the other labels 
 	    for umb in umbrellas do
 		v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(umb))[1];
 		coordinates:=List(umb,f->printRecord.faceCoordinates2D[f]);
 		temp:=sum(coordinates);
-		AppendTo(output,__SIMPLICIAL_PrintRecordDrawVertexFG(printRecord,surface,v,temp));
+		AppendTo(output,__GAPIC__PrintRecordDrawVertexFG(printRecord,surface,v,temp));
 	    od; 
 	fi;
     fi;
