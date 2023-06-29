@@ -6,7 +6,7 @@
     planeFolder.add(guiParameters, 'planeZactive');
     planeFolder.add(guiParameters, 'planeZ', guiParameters.minZ*1.1, guiParameters.maxZ*1.1);
     
-    camera.position.z = (1.5)*guiParameters.minZ;
+    camera.position.z = Math.max((1.5)*guiParameters.minZ, 1)
     camera.lookAt(0,0,-1);
 
     scene.background = new THREE.Color( 'white' );
