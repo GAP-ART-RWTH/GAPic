@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Embeddings">
+<Heading>Nets and embeddings</Heading>
+
+<P/>
+ One of the central questions about polygonal complexes and simplicial
+ surfaces (for the detailed definitions see Chapter 
+ <Ref Chap="PolygonalStructures"/>) is whether they can be embedded into
+ <M>&RR;^3</M>. This is a very hard question and can
+ currently only be solved for small examples.
+<P/>
+ Therefore the <K>SimplicialSurface</K>-package does not contain methods to
+ compute general embeddings. This chapter contains some prerequisite methods
+ in the direction of the general embedding-problem.
+<P/>
+ Section <Ref Sect="Section_Embeddings_Anomalies"/> deals with properties 
+ that make embeddings impossible. Section
+ <Ref Sect="Section_Embeddings_DrawTikz"/> contains a method to draw the net 
+ of a polygonal complex.
+<Section Label="Section_Embeddings_Anomalies">
+<Heading>Anomalies</Heading>
+
+<P/>
+ If an embedding of a polygonal complex maps edges to straight lines, it is
+ defined by the images of its vertices alone. This restricts the possible
+ incidence structures:
+<P/>
+ Two edges that are incident to
+ the same vertices would be mapped to the same line, contradicting the
+ injectivity of the embedding. The same argument applies to two faces
+ with the same vertices.
+<P/>
+ Those cases are called <E>edge-anomalies</E> and <E>face-anomalies</E>.
+ Both are appearing in the example of an open bag:
+ <Alt Only="TikZ">
+   \begin{tikzpicture}[vertexStyle, edgeStyle, faceStyle]
+      \input{Image_OpenBag.tex}
+   \end{tikzpicture}
+ </Alt>
+<Example><![CDATA[
+gap> bag := SimplicialSurfaceByUpwardIncidence( [ [1,2], [1,3,4], [2,3,4] ],
+>               [ [1,2], [1,2], [2], [1] ]);;
+gap> IsAnomalyFree( bag );
+false
+gap> EdgeAnomalyClasses( bag );
+[ [ 1 ], [ 2 ], [ 3, 4 ] ]
+gap> FaceAnomalyClasses( bag );
+[ [ 1, 2 ] ]
+]]></Example>
+
+
+<P/>
+ <ManSection Label="IsAnomalyFree"> 
+   <Prop Name="IsAnomalyFree" Arg="complex" Label="for IsPolygonalComplex"
+      Comm="Checks whether a given polygonal complex contains anomalies"/>
+   <Filt Name="IsVertexFaithful" Arg="complex" Type="property"
+      Comm="Checks whether a given polygonal complex contains anomalies"/>
+   <Returns><K>true</K> or <K>false</K></Returns>
+   <Description>
+     Check whether the given polygonal complex contains anomalies, i.e.
+     pairs of edges or pairs of faces that are incident to the same 
+     vertices.
+     <P/>
+     As examples, consider a tetrahedron (without any anomalies) and the
+     open bag from the start of section 
+     <Ref Sect="Section_Embeddings_Anomalies"/> (with anomalies):
+<Example><![CDATA[
+gap> IsAnomalyFree( Tetrahedron() );
+true
+gap> IsAnomalyFree( bag );
+false
+
+gap> IsVertexFaithful( Tetrahedron() );
+true
+gap> IsVertexFaithful( bag );
+false
+]]></Example>
+
+
+   </Description>
+ </ManSection>
+<ManSection Label="EdgeAnomalies">
+  <Attr Arg="complex" Name="EdgeAnomalyClasses" Label="for IsPolygonalComplex"/>
+  <Oper Arg="complex, edge" Name="EdgeAnomalyClassOfEdge" Label="for IsPolygonalComplex, IsPosInt"/>
+  <Oper Arg="complex, edge" Name="EdgeAnomalyClassOfEdgeNC" Label="for IsPolygonalComplex, IsPosInt"/>
+ <Returns>a set of sets of positive integers
+</Returns>
+ <Description>
+ Return the set of all edge-anomaly-classes of the given polygonal complex.
+ Two edges of <A>complex</A> lie in the same <E>edge-anomaly-class</E> if
+ they are incident to the same vertices.
+<P/>
+ The method <K>EdgeAnomalyClassOfEdge</K> only returns the 
+ edge-anomaly-class of the given edge (as set). The NC-version does not
+ check if <A>edge</A> is an edge of <A>complex</A>.
+<P/>
+ Consider the open bag from the start of section 
+ <Ref Sect="Section_Embeddings_Anomalies"/>:
+ <Alt Only="TikZ">
+    \begin{tikzpicture}[vertexStyle, edgeStyle, faceStyle]
+       \input{Image_OpenBag.tex}
+    \end{tikzpicture}
+ </Alt>
+<Example><![CDATA[
+gap> EdgeAnomalyClassOfEdge( bag, 1 );
+[ 1 ]
+gap> EdgeAnomalyClassOfEdge( bag, 3 );
+[ 3, 4 ]
+gap> EdgeAnomalyClasses( bag );
+[ [ 1 ], [ 2 ], [ 3, 4 ] ]
+]]></Example>
+
+
+<P/>
+ </Description>
+</ManSection>
+
+
+<ManSection Label="FaceAnomalies">
+  <Attr Arg="complex" Name="FaceAnomalyClasses" Label="for IsPolygonalComplex"/>
+  <Oper Arg="complex, face" Name="FaceAnomalyClassOfFace" Label="for IsPolygonalComplex, IsPosInt"/>
+  <Oper Arg="complex, face" Name="FaceAnomalyClassOfFaceNC" Label="for IsPolygonalComplex, IsPosInt"/>
+ <Returns>a set of sets of positive integers
+</Returns>
+ <Description>
+ Return the set of all face-anomaly-classes of the given polygonal complex.
+ Two faces of <A>complex</A> lie in the same <E>face-anomaly-class</E> if
+ they are incident to the same vertices.
+<P/>
+ The method <K>FaceAnomalyClassOfFace</K> only returns the 
+ face-anomaly-class of the given face (as set). The NC-version does not
+ check if <A>face</A> is a face of <A>complex</A>.
+<P/>
+ Consider the open bag from the start of section 
+ <Ref Sect="Section_Embeddings_Anomalies"/>:
+ <Alt Only="TikZ">
+    \begin{tikzpicture}[vertexStyle, edgeStyle, faceStyle]
+       \input{Image_OpenBag.tex}
+    \end{tikzpicture}
+ </Alt>
+<Example><![CDATA[
+gap> FaceAnomalyClassOfFace( bag, 1 );
+[ 1, 2 ]
+gap> FaceAnomalyClasses( bag );
+[ [ 1, 2 ] ]
+]]></Example>
+
+
+<P/>
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+<Section Label="Section_Embeddings_DrawTikz">
+<Heading>Drawing a net in TikZ</Heading>
+
+<P/>
+<#Include Label="DrawSurfaceToTikz_Tutorial">
+
+<P/>
+<ManSection Label="DrawSurfaceToTikz">
+  <Oper Arg="ramSurf, fileName[, printRecord]" Name="DrawSurfaceToTikz" Label="for IsPolygonalComplex and IsNotEdgeRamified, IsString, IsRecord"/>
+ <Returns>a record
+</Returns>
+ <Description>
+ Draw the net of the given <A>ramSurf</A> into a tex-file (using TikZ).
+ An introduction to the use of this method (along with several examples) 
+ can be found at the start of section 
+ <Ref Sect="Section_Embeddings_DrawTikz"/>.
+<P/>
+<List>
+<Item>
+If the given <A>fileName</A> does not end in <E>.tex</E> the ending 
+   <E>.tex</E> will be added to it. 
+</Item>
+<Item>
+The given file will be overwritten without asking if it already exists.
+   If you don't have permission to write in that file, this method will
+   throw an error.
+</Item>
+<Item>
+The particulars of the drawing are determined by the 
+   given <A>printRecord</A>. If this is not given, the default settings are 
+   used. 
+</Item>
+<Item>
+The <A>printRecord</A> will be modified and returned by this method.
+   It contains the data to recreate the drawing of the surface.
+</Item>
+</List>
+<P/>
+ There are several parameters to change the output of this method, from 
+ cosmetic changes to exactly controlling in which order the faces are drawn.
+ There are the following classes of parameters:
+<List>
+<Item>
+<E>Colours</E> 
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Colours"/>): Change the 
+   colours of vertices, edges and faces.
+</Item>
+<Item>
+<E>Labels</E>
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Labels"/>): Modify the labels
+   of vertices, edges and faces.
+</Item>
+<Item>
+<E>Lengths and angles</E> 
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_LengthsAndAngles"/>): These
+   parameters control the size and shape of the drawing and the individual 
+   faces.
+</Item>
+<Item>
+<E>Draw order</E> 
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_DrawOrder"/>): They control 
+   the order in which the faces are drawn.
+</Item>
+<Item>
+<E>Output control</E> 
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Output"/>): Modify how the
+   &LaTeX;-output behaves and how much information is printed to the 
+   console.
+</Item>
+<Item>
+<E>Data representation</E> 
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Data"/>): These
+   parameters can't be influenced by the user and contain the information to
+   recreate the drawing.
+</Item>
+</List>
+<P/>
+ </Description>
+</ManSection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_Colours">
+<Heading>Colours</Heading>
+
+<#Include Label="DrawSurfaceToTikz_Colours">
+
+<P/>
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_Labels">
+<Heading>Labels</Heading>
+
+<#Include Label="DrawSurfaceToTikz_Labels">
+
+<P/>
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_LengthsAndAngles">
+<Heading>Lengths and angles</Heading>
+
+<#Include Label="DrawSurfaceToTikz_LengthsAndAngles">
+
+<P/>
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_DrawOrder">
+<Heading>Draw order</Heading>
+
+<#Include Label="DrawSurfaceToTikz_DrawOrder">
+
+<P/>
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_Output">
+<Heading>Output control</Heading>
+
+<#Include Label="DrawSurfaceToTikz_Output">
+
+<P/>
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawSurfaceToTikz_Data">
+<Heading>Data representation</Heading>
+
+<#Include Label="DrawSurfaceToTikz_Data">
+
+</Subsection>
+
+
+<ManSection Label="SetFaceCoordinates2D">
+  <Oper Arg="surface, coordinates[, printRecord]" Name="SetFaceCoordinates2D" Label="for IsSimplicialSurface,IsList,IsRecord"/>
+  <Oper Arg="surface, coordinates[, printRecord]" Name="SetFaceCoordinates2DNC" Label="for IsSimplicialSurface, IsList,IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ Save the given list of 2D-coordinates in the given or an empty print record.
+ If the format of the 2D-coordinates (2D-coordinates have to be a list
+ of 2 entries of floats) is not correct, then an error is shown.
+ The NC-version does not check the coordinate format.
+<P/>
+ For an example consider the tetrahedron.
+<Example><![CDATA[
+gap> printRecord:=rec();;
+gap> SetFaceCoordinates2D(Tetrahedron(),[[0.,0.],[0.,1.],[1.,1.],[0.,1.]]);
+rec( faceCoordinates2D := [ [ 0., 0. ], [ 0., 1. ], [ 1., 1. ], [ 0., 1. ] ] )
+gap> SetFaceCoordinates2D(Tetrahedron(),[[0.,0.],[0.,1.],[1.,1.],[0.,1.]],
+> printRecord);;
+gap> printRecord;
+rec( faceCoordinates2D := [ [ 0., 0. ], [ 0., 1. ], [ 1., 1. ], [ 0., 1. ] ] )
+]]></Example>
+
+
+<P/>
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+<Section Label="Section_DrawFrGrTikz">
+<Heading>Drawing the face graph</Heading>
+
+<P/>
+<#Include Label="DrawFacegraphToTikz_Tutorial">
+
+<P/>
+<ManSection Label="DrawFacegraphToTikz">
+  <Oper Arg="surface, file[, printRecord]" Name="DrawFacegraphToTikz" Label="for IsSimplicialSurface ,IsString,IsRecord"/>
+ <Returns>a record
+</Returns>
+ <Description>
+ Draw the face graph of the given <A>surface</A> into a tex-file (using TikZ).
+ An introduction to the use of this method (along with several examples) 
+ can be found at the start of section <Ref Sect="Section_DrawFrGrTikz"/>.
+ If <K>surface</K> is a simplicial vertex faithful sphere and the function
+ is used without the argument <K>printRecord</K>, then the drawing printed
+ into <K>file</K> is a planar embedding of the face graph of <K>surface</K>,
+ where the vertices of the surface are identified by the faces of the
+ embedding. Trying to use the function for a surface that is not a 
+ vertex-faithful sphere results in returning <K>fail</K>.
+<P/>
+<List>
+<Item>
+If the given <A>file</A> does not end in <E>.tex</E> the ending 
+   <E>.tex</E> will be added to it. 
+</Item>
+<Item>
+The given file will be overwritten without asking if it already exists.
+   If you don't have permission to write in that file, this method will
+   throw an error.
+</Item>
+<Item>
+The particulars of the drawing are determined by the 
+   given <A>printRecord</A>. If this is not given and <A>surface</A> is a
+   simplicial sphere, the default settings are used. 
+</Item>
+<Item>
+The <A>printRecord</A> will be modified and returned by this method.
+   It contains the data to recreate the drawing of the surface.
+</Item>
+</List>
+<P/>
+ There are several parameters to change the output of this method. 
+ Since the design of the parameters is similar to the design of the parameters
+ of <K>DrawSurfaceToTikz</K>(<Ref Subsect="DrawSurfaceToTikz"/>),
+ one can also refer to the corresponding subsections for a better 
+ understanding.
+ There are the following classes of parameters:
+<List>
+<Item>
+<E>Colours</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Colours"/>): Change the 
+   colours of edges and faces represented as vertices.
+</Item>
+<Item>
+<E>Labels</E>
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Labels"/>): Modify the labels
+   of vertices, edges and faces.
+</Item>
+<Item>
+<E>Scale</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Scaling"/>): These
+   parameters control the size of the drawing.
+</Item>
+<Item>
+<E>faceCoordinates2D</E>
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_FaceCoordinates"/>):
+   Modify the 2D-coordinates of the faces.
+</Item>
+<Item>
+<E>Geodesics</E>
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Geodesics"/>): Draw the 
+   geodesics of the simplicial surface into the file.
+</Item>
+<Item>
+<E>Output control</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Output"/>): Modify how the
+   &LaTeX;-output behaves and how much information is printed to the 
+   console.
+</Item>
+</List>
+<P/>
+ If <K>surface</K> is a simplicial sphere without 2-waists, the function can
+ be called without specifying the parameter <K>faceCoordinates2D</K>.
+ In this case the implementation computes coordinates for the faces represented
+ by vertices so that the embedded facegraph is planar.
+<P/>
+ </Description>
+</ManSection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_Colours">
+<Heading>Colours</Heading>
+
+<#Include Label="DrawFacegraphToTikz_Colours">
+
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_Labels">
+<Heading>Labels</Heading>
+
+<#Include Label="DrawFacegraphToTikz_Labels">
+
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_Scaling">
+<Heading>Scaling</Heading>
+
+<#Include Label="DrawFacegraphToTikz_Scaling">
+
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_FaceCoordinates">
+<Heading>Face coordinates</Heading>
+
+<#Include Label="DrawFacegraphToTikz_FaceCoordinates">
+
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_Geodesics">
+<Heading>Geodesics</Heading>
+
+<#Include Label="DrawFacegraphToTikz_Geodesics">
+
+</Subsection>
+
+
+<Subsection Label="Subsection_DrawFacegraphToTikz_Output">
+<Heading>Output control</Heading>
+
+<#Include Label="DrawFacegraphToTikz_Output">
+
+<P/>
+</Subsection>
+
+
+<ManSection Label="DrawConvexFacegraphToTikz">
+  <Oper Arg="surface, file[, printRecord]" Name="DrawConvexFacegraphToTikz" Label="for IsSimplicialSurface, IsString, IsRecord"/>
+ <Returns>a record
+</Returns>
+ <Description>
+ Draw the face graph of the given <A>surface</A> into a tex-file (using TikZ).
+ An introduction to the use of this method (along with several examples) 
+ can be found at the start of section <Ref Sect="Section_DrawFrGrTikz"/>.
+ If <K>surface</K> is a simplicial vertex faithful sphere and the function
+ is used without the argument <K>printRecord</K>, then the drawing printed
+ into <K>file</K> is a planar embedding of the face graph of <K>surface</K>,
+ where the vertices of the surface are identified by the faces of the
+ embedding. <K>DrawConvexFacegraphToTikz</K> differs from <K>DrawFacegraphToTikz</K> 
+ (<Ref Subsect="DrawFacegraphToTikz"/>) by constructing the face graph 
+ by successively manipulating a convex drawing plane and calculating new face coordinates.
+ The new coordinates are then drawn with <K>DrawFacegraphToTikz</K>. 
+ This results in an embedding which maps the faces
+ of one of the largest umbrella paths on the outer ring as a 
+ regular polygon. Trying to use the function for a surface that is not a 
+ vertex-faithful sphere results in returning <K>fail</K>.
+<P/>
+<List>
+<Item>
+If the given <A>file</A> does not end in <E>.tex</E> the ending 
+   <E>.tex</E> will be added to it. 
+</Item>
+<Item>
+The given file will be overwritten without asking if it already exists.
+   If you don't have permission to write in that file, this method will
+   throw an error.
+</Item>
+<Item>
+The particulars of the drawing are determined by the 
+   given <A>printRecord</A>. If this is not given and <A>surface</A> is a
+   simplicial sphere, the default settings are used. 
+</Item>
+<Item>
+The <A>printRecord</A> will be modified and returned by this method.
+   It contains the data to recreate the drawing of the surface.
+</Item>
+</List>
+<P/>
+ There are several parameters to change the output of this method. 
+ Since the design of the parameters is the design of the parameters
+ of <K>DrawFacegraphToTikz</K>(<Ref Subsect="DrawFacegraphToTikz"/>),
+ one can also refer to the corresponding subsections for a better 
+ understanding.
+ There are the following classes of parameters:
+<List>
+<Item>
+<E>Colours</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Colours"/>): Change the 
+   colours of edges and faces represented as vertices.
+</Item>
+<Item>
+<E>Labels</E>
+   (<Ref Subsect="Subsection_DrawSurfaceToTikz_Labels"/>): Modify the labels
+   of vertices, edges and faces.
+</Item>
+<Item>
+<E>Scale</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Scaling"/>): These
+   parameters control the size of the drawing.
+</Item>
+<Item>
+<E>faceCoordinates2D</E>
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_FaceCoordinates"/>):
+   Modify the 2D-coordinates of the faces.
+</Item>
+<Item>
+<E>Geodesics</E>
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Geodesics"/>): Draw the 
+   geodesics of the simplicial surface into the file.
+</Item>
+<Item>
+<E>Output control</E> 
+   (<Ref Subsect="Subsection_DrawFacegraphToTikz_Output"/>): Modify how the
+   &LaTeX;-output behaves and how much information is printed to the 
+   console.
+</Item>
+</List>
+<P/>
+ Consider the following example of the double-6-gon:
+<#Include Label="DrawConvexFacegraphToTikz_example">
+
+<P/>
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+
