@@ -19,7 +19,7 @@ if not __SIMPLICIAL_MANUAL_MODE then
 fi;
 
 
-#! @BeginChunk DrawSurfaceToTikz_Tutorial
+# @BeginChunk DrawSurfaceToTikz_Tutorial
 #! While it is very hard to compute an embedding into <M>&RR;^3</M> it is
 #! quite easy to draw the net of a ramified polygonal surface into a
 #! plane.

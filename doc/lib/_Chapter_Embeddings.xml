@@ -160,7 +160,7 @@ gap> FaceAnomalyClasses( bag );
 <Heading>Drawing a net in TikZ</Heading>
 
 <P/>
-<#Include Label="DrawSurfaceToTikz_Tutorial">
+<!-- <#Include Label="DrawSurfaceToTikz_Tutorial"> -->
 
 <P/>
 <ManSection Label="DrawSurfaceToTikz">
