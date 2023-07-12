@@ -69,7 +69,7 @@
 		this.transparency = 1;
 		this.edgeVisibility = false;
 		this.vertexVisibility = true;
-		this.vertexlabelVisibility = true;
+		this.vertexlabelVisibility = false;
 		this.vertexSize = 1;
 		this.planeX = 0.0;
 		this.minX = -1.5;
