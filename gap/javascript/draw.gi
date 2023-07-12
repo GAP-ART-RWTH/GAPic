@@ -1,6 +1,6 @@
 BindGlobal( "__GAPIC__IsCoordinates3D",
     function(surface, coordinates)
-        local coord,i;
+        local coord,i, j;
         if Filtered([1..Length(coordinates)],i->IsBound(coordinates[i])) <> Vertices(surface) then
             return false;
 	fi;
@@ -13,6 +13,11 @@ BindGlobal( "__GAPIC__IsCoordinates3D",
             if Length(coord) <> 3 then
                 return false;
             fi;
+            for j in coord do
+                if not IsFloat(j) then
+                    return false;
+                fi;
+            od;
         od;
         return true;
     end
