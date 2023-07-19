@@ -337,7 +337,7 @@ DeclareOperation("SetFaceCoordinates2DNC", [IsSimplicialSurface, IsList,IsRecord
 #!
 #! @Returns a record
 #! @Arguments surface, file[, printRecord]
-DeclareOperation( "DrawFacegraphToTikz", [IsSimplicialSurface ,IsString,IsRecord]);
+DeclareOperation( "DrawConvexFacegraphToTikz", [IsSimplicialSurface ,IsString,IsRecord]);
 #! @EndGroup
    
 #! @Subsection Colours
