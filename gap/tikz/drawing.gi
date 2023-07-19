@@ -705,22 +705,6 @@ BindGlobal("__GAPIC__PrintRecordGeneralHeader",
     end
 );
 
-BindGlobal( "__GAPIC__ReadTemplateFromFile",
-    function(relPath)
-        local path, input, content;
-
-        path := Filename(DirectoriesPackageLibrary("SimplicialSurfaces", "doc"), relPath);
-        if path <> fail then
-            input := InputTextFile( path );
-            content := ReadAll(input);
-            CloseStream(input);
-            return content;
-        fi;
-
-        Error("Internal Error: ", relPath, " not found in GAP root directories.");
-    end
-);
-
 BindGlobal( "__GAPIC__PrintRecordTikzHeader",
     function(printRecord)
         return __GAPIC__ReadTemplateFromFile("TikZHeader.tex");
