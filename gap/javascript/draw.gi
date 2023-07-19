@@ -15,7 +15,9 @@ BindGlobal( "__GAPIC__IsCoordinates3D",
             fi;
             for j in coord do
                 if not IsFloat(j) then
-                    return false;
+                    if not IsInt(j) then
+                        return false;
+                    fi;
                 fi;
             od;
         od;
@@ -742,6 +744,35 @@ InstallMethod( IsParameterizedVertices,
     end
 );
 
+InstallMethod( ActivateLineWidth,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.lineWidth := true;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( DeactivateLineWidth,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.lineWidth := false;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( IsLineWidth,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    if not IsBound(printRecord.lineWidth) then
+        return false;
+    fi;
+ 
+	return true;
+    end
+);
+
 
 InstallMethod( SetVertexCoordinatesParameterized,
     "for a simplicial surface, a list of coordinates and a record",
@@ -836,10 +867,11 @@ InstallMethod( DrawComplexToJavaScript,
 
     AppendTo( output, __GAPIC__ReadTemplateFromFile("three_start.template") );
 
-    # Check if surface is in 3d coords
-    # TODO neccessary?
-    if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
-        Error( " invalid coordinate format " );
+    # Check if surface is in 3d coords to use NC versions later
+    if not IsParameterizedVertices(surface, printRecord) then
+        if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
+            Error( " invalid coordinate format " );
+        fi;
     fi;
 
     # add faces to geometry by iterating over all colors
@@ -995,12 +1027,24 @@ InstallMethod( DrawComplexToJavaScript,
         fi;
 
         edgeThickness := printRecord.edgeThickness*100;
-        AppendTo(output, """
+        
+
+        if IsLineWidth(surface, printRecord) then
+            AppendTo(output, """
+    const edgeMaterial""",i,""" = new LineMaterial( {
+        color: """,color,""",
+        linewidth: """,edgeThickness,""",
+    } );
+        """);
+        else
+            AppendTo(output, """
     const edgeMaterial""",i,""" = new THREE.LineBasicMaterial( {
         color: """,color,""",
         linewidth: """,edgeThickness,""",
-    } );        
+    } );
+    controlFolder.remove(edgeWidthGUI);
         """);
+        fi;
 
         AppendTo(output, "\n\tfunction getEdges",i,"(",vertexParameterNames,"){\n");
         AppendTo(output, "\t\tconst edges",i," = new Float32Array( [\n");
@@ -1037,7 +1081,26 @@ InstallMethod( DrawComplexToJavaScript,
         AppendTo(output, "\t\treturn edges",i,";\n\t}\n\n");
 
         AppendTo(output, "\n\t// generate geometries and lines for the edges \n");
-        AppendTo(output, """
+
+        if IsLineWidth(surface, printRecord) then
+            AppendTo(output, """
+    const edgeGeometry""",i,""" = new LineGeometry();
+    edgeGeometry""",i,""".setPositions(getEdges""",i,"""(""",vertexParameterString,""") );
+
+    const edgeLine""",i,""" = new Line2( edgeGeometry""",i,""", edgeMaterial""",i,""" );
+    edgeRoot.add(edgeLine""",i,""");
+        """);
+
+            AppendTo(output, "\n\t// update function to be called every frame \n");
+            if IsParameterizedVertices(surface, printRecord) then
+                AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
+                for i in [1..Length(uniqueFaceColors)] do
+                    AppendTo(output, "\t\tedgeGeometry",i,".setPositions(getEdges",i,"(",vertexParameterString,") );\n");
+                od;
+                AppendTo(output, "\t}\n\n");
+            fi; 
+        else
+            AppendTo(output, """
     const edgeGeometry""",i,""" = new THREE.BufferGeometry();
     edgeGeometry""",i,""".setAttribute( 'position', new THREE.BufferAttribute( getEdges""",i,"""(""",vertexParameterString,"""), 3 ) );
 
@@ -1045,14 +1108,15 @@ InstallMethod( DrawComplexToJavaScript,
     edgeRoot.add(edgeLine""",i,""");
         """);
 
-        AppendTo(output, "\n\t// update function to be called every frame \n");
-        if IsParameterizedVertices(surface, printRecord) then
-            AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
-            for i in [1..Length(uniqueFaceColors)] do
-                AppendTo(output, "\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( getEdges",i,"(",vertexParameterString,"), 3 ) );\n");
-            od;
-            AppendTo(output, "\t}\n\n");
-        fi; 
+            AppendTo(output, "\n\t// update function to be called every frame \n");
+            if IsParameterizedVertices(surface, printRecord) then
+                AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
+                for i in [1..Length(uniqueFaceColors)] do
+                    AppendTo(output, "\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( getEdges",i,"(",vertexParameterString,"), 3 ) );\n");
+                od;
+                AppendTo(output, "\t}\n\n");
+            fi; 
+        fi;
     od;
 
     # add spheres and lables on all vertices if they are active

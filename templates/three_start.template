@@ -30,6 +30,9 @@
 	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 	import { GUI } from 'gui';
 	import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+	import { Line2 } from 'three/addons/lines/Line2.js';
+	import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+	import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 
 	//start scene and camera
 	const scene = new THREE.Scene();
@@ -68,6 +71,8 @@
 		this.speedZ = 0.0;
 		this.transparency = 1;
 		this.edgeVisibility = false;
+		this.edgeWidth = 0.2;
+
 		this.vertexVisibility = true;
 		this.vertexlabelVisibility = false;
 		this.vertexSize = 1;
@@ -121,6 +126,7 @@
 	const controlFolder = gui.addFolder("Controls");
 	controlFolder.add(guiParameters, "transparency", 0, 1);
 	controlFolder.add(guiParameters, "edgeVisibility");
+	var edgeWidthGUI = controlFolder.add(guiParameters, "edgeWidth", 0.01, 2);
 	controlFolder.add(guiParameters, "vertexVisibility");
 	controlFolder.add(guiParameters, "vertexlabelVisibility");
 	controlFolder.add(guiParameters, "vertexSize", 0.1, 3);

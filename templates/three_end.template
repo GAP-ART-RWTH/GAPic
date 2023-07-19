@@ -111,6 +111,10 @@
         } );
 
         edgeRoot.traverse( function( node ) {
+            if ( node instanceof Line2 ) {
+                node.material.visible = guiParameters.edgeVisibility;
+                node.material.linewidth = guiParameters.edgeWidth/100;
+            }
             if ( node instanceof THREE.LineSegments ) {
                 node.material.visible = guiParameters.edgeVisibility;
             }

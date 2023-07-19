@@ -76,6 +76,10 @@ DeclareOperation( "DeactivateEdges", [IsTriangularComplex, IsRecord] );
 DeclareOperation( "DeactivateEdge", [IsTriangularComplex, IsPosInt, IsRecord] );
 
 
+DeclareOperation( "ActivateLineWidth", [IsTriangularComplex, IsRecord]);
+DeclareOperation( "DeactivateLineWidth", [IsTriangularComplex, IsRecord]);
+DeclareOperation( "IsLineWidth", [IsTriangularComplex, IsRecord]);
+
 
 DeclareOperation( "SetTransparencyJava", [IsTriangularComplex, IsPosInt, IsFloat, IsRecord] );
 
