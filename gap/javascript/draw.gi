@@ -1013,20 +1013,35 @@ InstallMethod( DrawComplexToJavaScript,
 
     # generate a list of all unique colors of the faces
     uniqueEdgeColors := [];
+    uniqueEdgeColorsActive := [];
     for color in edgeColors do
         if not color in uniqueEdgeColors then
             Add(uniqueEdgeColors, color);
         fi; 
     od;
 
+    for color in uniqueEdgeColors do
+        delete := true;
+        colorPositions := Positions(edgeColors, color);
+        for pos in colorPositions do
+            edge := Edges(surface)[pos];
+            if IsEdgeActive(surface, edge, printRecord) then
+                delete := false;
+            fi;
+        od;
+        if not delete then
+            Add(uniqueEdgeColorsActive, color);
+        fi;
+    od;
+
     # remove slider if not functional
-    if IsLineWidth(surface, printRecord) then
+    if not IsLineWidth(surface, printRecord) then
         AppendTo(output, "\t\tcontrolFolder.remove(edgeWidthGUI);\n");
     fi;
 
     # for each of the unique colors add the edges to a gemeometry and generate a mesh with corresponding color from it
-    for i in [1..Length(uniqueEdgeColors)] do
-        color := uniqueEdgeColors[i];
+    for i in [1..Length(uniqueEdgeColorsActive)] do
+        color := uniqueEdgeColorsActive[i];
         if not StartsWith(color, "0x") then
             colour := Concatenation("\"", color, "\"");
         fi;
