@@ -1019,6 +1019,11 @@ InstallMethod( DrawComplexToJavaScript,
         fi; 
     od;
 
+    # remove slider if not functional
+    if IsLineWidth(surface, printRecord) then
+        AppendTo(output, "\t\tcontrolFolder.remove(edgeWidthGUI);\n");
+    fi;
+
     # for each of the unique colors add the edges to a gemeometry and generate a mesh with corresponding color from it
     for i in [1..Length(uniqueEdgeColors)] do
         color := uniqueEdgeColors[i];
@@ -1042,7 +1047,6 @@ InstallMethod( DrawComplexToJavaScript,
         color: """,color,""",
         linewidth: """,edgeThickness,""",
     } );
-    controlFolder.remove(edgeWidthGUI);
         """);
         fi;
 
