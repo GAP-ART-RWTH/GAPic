@@ -1103,7 +1103,7 @@ InstallMethod( DrawComplexToJavaScript,
 
         if IsLineWidth(surface, printRecord) then
             AppendTo(output, """
-    const edgeGeometry""",i,""" = new LineGeometry();
+    const edgeGeometry1 = new LineSegmentsGeometry();
     edgeGeometry""",i,""".setPositions(getEdges""",i,"""(""",vertexParameterString,""") );
 
     const edgeLine""",i,""" = new Line2( edgeGeometry""",i,""", edgeMaterial""",i,""" );
