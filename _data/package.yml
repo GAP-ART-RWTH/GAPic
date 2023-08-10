@@ -34,8 +34,8 @@ maintainers:
 GAP: ">= 4.11"
 
 www: https://github.com/GAP-ART-RWTH/GAPic
-readme: GAPicREADME.md
-packageinfo: https://github.com/GAP-ART-RWTH/GAPicPackageInfo.g
+readme: README.md
+packageinfo: https://github.com/GAP-ART-RWTH/GAPic/PackageInfo.g
 
 downloads:
     - name: .tar.gz
