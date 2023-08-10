@@ -1,101 +1,135 @@
-#############################################################################
-##  
-##  Demo PackageInfo.g for the GitHubPagesForGAP
-##
-
+#
+# GAPic: GAP image creator, for visualizing structures
+#
+# This file contains package meta data. For additional information on
+# the meaning and correct usage of these fields, please consult the
+# manual of the "Example" package as well as the comments in its
+# PackageInfo.g file.
+#
 SetPackageInfo( rec(
 
-PackageName := "GitHubPagesForGAP",
-
-Subtitle := "A GitHub Pages generator for GAP packages",
-Version := "0.3",
-Date := "10/11/2019", # dd/mm/yyyy format
-License := "0BSD",
+PackageName := "GAPic",
+Subtitle := "GAP image creator, for visualizing structures",
+Version := "0.1",
+Date := "22/04/2023", # dd/mm/yyyy format
+License := "GPL-2.0-or-later",
 
 Persons := [
   rec(
-    LastName      := "Horn",
-    FirstNames    := "Max",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "max.horn@uni-siegen.de",
-    WWWHome       := "https://www.quendi.de/math",
+    FirstNames := "Alice",
+    LastName := "Niemeyer",
+    WWWHome := "http://www.math.rwth-aachen.de/~Alice.Niemeyer/",
+    Email := "alice.niemeyer@art.rwth-aachen.de",
+    IsAuthor := true,
+    IsMaintainer := true,
     PostalAddress := Concatenation(
-                       "Department Mathematik\n",
-                       "Universität Siegen\n",
-                       "Walter-Flex-Straße 3\n",
-                       "57072 Siegen\n",
-                       "Germany" ),
-    Place         := "Siegen",
-    Institution   := "Universität Siegen"
+               "Alice Niemeyer\n",
+               "Lehrstuhl für Algebra und Darstellungstheorie\n",
+               "RWTH Aachen\n",
+               "Pontdriesch 10/16\n",
+               "52062 Aachen\n",
+               "GERMANY" ),
+    Place := "Aachen",
+    Institution := "Chair of Algebra and Representation Theory",
   ),
-
   rec(
-    LastName      := "Thor",
-    FirstNames    := "A. U.",
-    IsAuthor      := true,
-    IsMaintainer  := false,
-    #Email         := "author@example.com",
+    IsAuthor := true,
+    IsMaintainer := false,
+    FirstNames := "Markus",
+    LastName := "Baumeister",
+    WWWHome := "https://markusbaumeister.github.io/",
+    Email := "baumeister@mathb.rwth-aachen.de",
+    PostalAddress := "--",
+    Place := "Aachen",
+    Institution := "",
   ),
-
   rec(
-    LastName      := "Itor",
-    FirstNames    := "Jan",
-    IsAuthor      := false,
-    IsMaintainer  := true,
-    #Email         := "janitor@example.com",
+    IsAuthor := true,
+    IsMaintainer := true,
+    FirstNames := "Reymond",
+    LastName := "Akpanya",
+    Email := "akpanya@art.rwth-aachen.de",
+    PostalAddress := "--",
+    Place := "Aachen",
+    Institution := "Chair of Algebra and Representation Theory",
+  ),
+  rec(
+    IsAuthor := true,
+    IsMaintainer := true,
+    FirstNames := "Tom",
+    LastName := "Görtzen",
+    Email := "goertzen@art.rwth-aachen.de",
+    PostalAddress := "--",
+    Place := "Aachen",
+    Institution := "Chair of Algebra and Representation Theory",
+  ),
+  rec(
+    IsAuthor := true,
+    IsMaintainer := true,
+    FirstNames := "Meike",
+    LastName := "Weiß",
+    Email := "meike.weiss@rwth-aachen.de",
+    PostalAddress := "--",
+    Place := "Aachen",
+    Institution := "Chair of Algebra and Representation Theory",
+  ),
+  rec(
+    IsAuthor := true,
+    IsMaintainer := true,
+    FirstNames := "Lukas",
+    LastName := "Schnelle",
+    WWWHome := "https://lukasschnelle.de",
+    Email := "lukas.schnelle1@rwth-aachen.de",
+    IsAuthor := true,
+    IsMaintainer := true,
+    Place := "Aachen",
+    Institution := "Chair of Algebra and Representation Theory",
   ),
 ],
 
-Status := "other",
-
-# The following are not strictly necessary in your own PackageInfo.g
-# (in the sense that update.g only looks at the usual fields
-# like PackageWWWHome, ArchiveURL etc.). But they are convenient
-# if you use exactly the scheme for your package website that we propose.
-GithubUser := "gap-system",
-GithubRepository := ~.PackageName,
-GithubWWW := Concatenation("https://github.com/", ~.GithubUser, "/", ~.GithubRepository),
-
-PackageWWWHome := Concatenation("https://", ~.GithubUser, ".github.io/", ~.GithubRepository, "/"),
-README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
+SourceRepository := rec( Type := "git", URL := "https://github.com/GAP-ART-RWTH/GAPic" ),
+IssueTrackerURL := "https://github.com/GAP-ART-RWTH/GAPic/issues",
+PackageWWWHome := "https://github.com/GAP-ART-RWTH/GAPic",
 PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
-# The following assumes you are using the Github releases system. If not, adjust
-# it accordingly.
-ArchiveURL     := Concatenation(~.GithubWWW,
-                    "/releases/download/v", ~.Version, "/",
-                    ~.GithubRepository, "-", ~.Version),
+README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
+ArchiveURL     := Concatenation( ~.PackageWWWHome,
+                                 "/", ~.PackageName, "-", ~.Version ),
 
-ArchiveFormats := ".tar.gz .tar.bz2",
+ArchiveFormats := ".tar.gz",
 
-AbstractHTML := 
-  "This is a pseudo package that contains no actual\
-  <span class=\"pkgname\">GAP</span> code. Instead, it is a template for other\
-  GAP packages that allows to quickly setup GitHub Pages.",
+##  Status information. Currently the following cases are recognized:
+##    "accepted"      for successfully refereed packages
+##    "submitted"     for packages submitted for the refereeing
+##    "deposited"     for packages for which the GAP developers agreed
+##                    to distribute them with the core GAP system
+##    "dev"           for development versions of packages
+##    "other"         for all other packages
+##
+Status := "dev",
+
+AbstractHTML   :=  "",
 
 PackageDoc := rec(
-  BookName  := "GitHubPagesForGAP",
+  BookName  := "GAPic",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/chap0.html",
+  HTMLStart := "doc/html-version/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
-  SixFile   := "doc/manual.six",
-  LongTitle := "A GitHub Pages generator for GAP packages",
+  SixFile   := "doc/build/manual.six",
+  LongTitle := "GAP image creator, for visualizing structures",
 ),
 
-# The following dependencies are fake and for testing / demo purposes
 Dependencies := rec(
-  GAP := ">=4.8.1",
-  NeededOtherPackages := [
-    ["GAPDoc", ">= 1.2"],
-    ["IO", ">= 4.1"],
-  ],
-  SuggestedOtherPackages := [["orb", ">= 4.2"]],
-  ExternalConditions := []
+  GAP := ">= 4.11",
+  NeededOtherPackages := [ ],
+  SuggestedOtherPackages := [ ],
+  ExternalConditions := [ ],
 ),
 
 AvailabilityTest := ReturnTrue,
 
-Keywords := ["GitHub Pages", "GAP"]
+TestFile := "tst/testall.g",
+
+#Keywords := [ "TODO" ],
 
 ));
 
