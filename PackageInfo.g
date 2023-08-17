@@ -131,6 +131,23 @@ TestFile := "tst/testall.g",
 
 #Keywords := [ "TODO" ],
 
+Extensions := [
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/javascript/draw.gd",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/javascript/draw.gi",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/tikz/drawing.gd",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/tikz/drawing.gi",
+  )
+],
+
 ));
-
-
