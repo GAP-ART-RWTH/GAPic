@@ -5,5 +5,8 @@
 #
 ReadPackage( "GAPic", "gap/GAPic.gi");
 ReadPackage( "GAPic", "gap/io.gi");
-# ReadPackage( "GAPic", "gap/javascript/draw.gi");
-# ReadPackage( "GAPic", "gap/tikz/drawing.gi");
+
+if not IsBound(GAPInfo.PackageExtensionsLoaded) then
+    ReadPackage( "GAPic", "gap/javascript/draw.gi");
+    ReadPackage( "GAPic", "gap/tikz/drawing.gi");
+fi;
