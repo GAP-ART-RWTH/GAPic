@@ -5,5 +5,5 @@
 #
 
 ReadPackage( "GAPic", "gap/GAPic.gd");
-ReadPackage( "GAPic", "gap/javascript/draw.gd");
-ReadPackage( "GAPic", "gap/tikz/drawing.gd");
+# ReadPackage( "GAPic", "gap/javascript/draw.gd");
+# ReadPackage( "GAPic", "gap/tikz/drawing.gd");
