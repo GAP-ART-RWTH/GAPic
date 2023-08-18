@@ -855,14 +855,6 @@ InstallMethod( DrawSurfaceToTikz,
             lastOrder, nextFctIndex, oldFace, pos, strongComp, drawComp,
             drawIndex, ind, drawIndices, strongCompNumber;
 
-        # Do something different for the manual
-        if __GAPIC__MANUAL_MODE then
-            printRecord!.onlyTikzpicture := true;
-            printRecord!.compileLaTeX := false;
-            printRecord!.noOutput := true;
-            fileName := Concatenation( "doc/_TIKZ_", fileName );
-        fi;
-
         # Make the file end with .tex
         if not EndsWith( fileName, ".tex" ) then
             fileName := Concatenation( fileName, ".tex" );
@@ -1804,13 +1796,6 @@ InstallMethod( DrawFacegraphToTikz,
     if not( IsClosedSurface(surface) and IsVertexFaithful(surface) and EulerCharacteristic(surface)=2) and not IsBound(printRecord.faceCoordinates2D) then 
 	return fail;
     fi;
-        # Do something different for the manual
-        if __GAPIC__MANUAL_MODE then
-            printRecord!.onlyTikzpicture := true;
-            printRecord!.compileLaTeX := false;
-            printRecord!.noOutput := true;
-            file := Concatenation( "doc/_TIKZ_", file );
-        fi;
 
     sum:=function(L)
 	local g,s,n;
