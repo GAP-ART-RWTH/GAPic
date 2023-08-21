@@ -1778,11 +1778,6 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     end
 );
 
-
-
-
-
-
    #this function prints the embedding of the face graph of a 
    #simplicial surface into a .tex file
 InstallMethod( DrawFacegraphToTikz,
