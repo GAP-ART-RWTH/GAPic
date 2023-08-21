@@ -4,13 +4,13 @@
 <Heading>Animating surfaces with Java Script</Heading>
 
 <P/>
- This chapter deals with animating simplicial surfaces via Javascript
+ This chapter describes animating simplicial surfaces via Javascript
  using three.js, see <URL>https://threejs.org/</URL>. Currently we are using r148.
 <Section Label="Section_LabelIntroductionAndQuickStartAnimating">
 <Heading>Introduction and Quick Start</Heading>
 
- This section contains a minimal example by animating an octahedron and shows the general animation workflow.
- To construct an octahedron, we only need to specify the 3D-coordinates of the vertices.
+ This section contains a minimal example by animating an octahedron.
+ To construct an octahedron, we specify the 3D-coordinates of its vertices.
 <Log><![CDATA[
 gap> oct := Octahedron();;
 gap> verticesPositions := [
@@ -27,16 +27,14 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 
  Now, your working directory should contain a file "octahedron.html". Here is an image of the animation:<Br/>
 
-<Alt Only="HTML">&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_animated.png}</Alt>
+<Alt Only="HTML">&lt;br>&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animated.png]</Alt><Br/>
 
-
- The philosophy of the code presented in this chapter is as follows:
+The 
  The main method <K>DrawComplexToJavascript</K> (Section <Ref Sect="Section_LabelCoordinatesAndCoreFunctionality"/>)
  animates the surfaces using the configuration saved in the so called  <A>printRecord</A>,
  e.g. the 3D-coordinates (lists with three float entries) of the vertices.
- It is necessary that the printRecord contains the 3D-coordinates of each vertex of the surface which should be animated.
  Based on the 3D-coordinates of the vertices, the surface is placed in the animation.
  Therefore, a typical workflow to animate a surfaces looks like this:
  <Enum>
