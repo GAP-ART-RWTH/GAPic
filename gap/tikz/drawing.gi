@@ -1685,9 +1685,9 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	if not IsBound(printRecord.edgeLabelsActive) then
 	    printRecord.edgeLabelsActive := false; 
 	fi;
-	# if not IsBound(printRecord.faceLabelsActive) then
-	#     printRecord.faceLabelsActive := true;
-	# fi;
+	if not IsBound(printRecord.faceLabelsActive) then
+	    printRecord.faceLabelsActive := true;
+	fi;
 	if not IsBound(printRecord.scale) then
 	    printRecord.scale :=2;
 	fi;
