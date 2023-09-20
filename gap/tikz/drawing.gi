@@ -2207,12 +2207,12 @@ InstallMethod(DrawDigraphToTikz,
 
         # Add Header to .tex file 
         tempRec:=ShallowCopy(printRecord);
-        tempRec.faceLabelsActive:= printRecord.vertexLabelsActive;
-        tempRec.vertexLabelsActive:= printRecord.faceLabelsActive;
-        tempRec.vertexLabels:=printRecord.faceLabels;
-        tempRec.faceLabels:=printRecord.vertexLabels;
-        tempRec.vertexColours:=printRecord.faceColours;
-        tempRec.faceColours:=printRecord.vertexColours;
+        # tempRec.faceLabelsActive:= printRecord.vertexLabelsActive;
+        # tempRec.vertexLabelsActive:= printRecord.faceLabelsActive;
+        # tempRec.vertexLabels:=printRecord.faceLabels;
+        # tempRec.faceLabels:=printRecord.vertexLabels;
+        # tempRec.vertexColours:=printRecord.faceColours;
+        # tempRec.faceColours:=printRecord.vertexColours;
 
     # Write this data into the file
         if not printRecord!.onlyTikzpicture then
@@ -2371,7 +2371,9 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
     "for a planar digraph, a file name and a record",
     [IsPlanarDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
-
+        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition, InFilterFunc,
+                IntersectionFilterFunc, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
+                DrawConvexPlaneGraph, embedding;
         RegularPolygon := function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
             local n, res, i;
             res := [];
@@ -2518,14 +2520,14 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
 
         if not "startFace" in RecNames(printRecord) then
             Error("Select a start face!"); # To be changed?
-        else
-            printRecord.startFace := start_face;
+        # else
+        #     printRecord.startFace := start_face;
         fi;
 
         if not "nodesOfFaces" in RecNames(printRecord) then
             Error("Select all faces characterised by their surrounding nodes!"); # To be changed?
-        else
-            printRecord.nodesOfFaces := nodes_of_faces;
+        # else
+        #     printRecord.nodesOfFaces := nodes_of_faces;
         fi;
 
         embedding := DrawConvexPlaneGraph(graph, printRecord.startFace, printRecord.spread, printRecord.nodesOfFaces);
