@@ -739,7 +739,7 @@ BindGlobal( "__GAPIC__PrintRecordDrawEdge",
     function( printRecord, graph, edge, vertexTikzCoord, vertexCoord )
         local res;
 
-        # res := "\\draw[edge";
+        res := "\\draw[edge";
         # if IsBound( printRecord!.edgeColours[edge] ) then
         #     res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
         # fi;
@@ -1140,16 +1140,16 @@ BindGlobal( "__GAPIC__PrintRecordDrawFaceFG",
         local res;
 
         res := "\\vertexLabelR";
-        if IsBound( printRecord!.faceColours[face] ) then
-            res := Concatenation(res, "[", printRecord!.faceColours[face],"]");
-        fi;
+        # if IsBound( printRecord!.faceColours[face] ) then
+        #     res := Concatenation(res, "[", printRecord!.faceColours[face],"]");
+        # fi;
 
         res := Concatenation( res, "{", faceTikzCoord, "}{left}{$");
-        if IsBound(printRecord!.faceLabels[face]) then
-            Append(res, printRecord!.faceLabels[face]);
-        else
+        # if IsBound(printRecord!.faceLabels[face]) then
+        #     Append(res, printRecord!.faceLabels[face]);
+        # else
             Append( res, String(face) );
-        fi;
+        # fi;
         Append(res,"$}\n" );
 
         return res;
@@ -2369,11 +2369,15 @@ InstallMethod(DrawDigraphToTikz,
 
 InstallMethod( DrawConvexPlaneGraphToTikz,
     "for a planar digraph, a file name and a record",
-    [IsPlanarDigraph, IsString, IsRecord],
+    [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
         local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition, InFilterFunc,
                 IntersectionFilterFunc, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
                 DrawConvexPlaneGraph, embedding;
+
+        if (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
+            return fail;
+        fi;
         RegularPolygon := function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
             local n, res, i;
             res := [];
@@ -2531,7 +2535,8 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
         fi;
 
         embedding := DrawConvexPlaneGraph(graph, printRecord.startFace, printRecord.spread, printRecord.nodesOfFaces);
-        printRecord.faceCoordinates2D := SortBy(embedding, x -> x[1]);
+        SortBy(embedding, x -> x[1]);
+        printRecord.faceCoordinates2D := List(embedding, x -> x[2]);
 
         return DrawDigraphToTikz(graph, file, printRecord);
         # if "scale" in RecNames(record) and "faceCoordinates2D" in RecNames(record) then

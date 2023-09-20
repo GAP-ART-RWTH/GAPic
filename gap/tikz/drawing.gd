@@ -19,4 +19,4 @@ DeclareOperation("SetFaceCoordinates2DNC", [IsSimplicialSurface, IsList,IsRecord
 
 DeclareOperation( "DrawConvexFacegraphToTikz", [IsSimplicialSurface ,IsString,IsRecord]);
 DeclareOperation( "DrawDigraphToTikz", [IsDigraph, IsString, IsRecord]);
-DeclareOperation( "DrawConvexPlaneGraphToTikz", [IsPlanarDigraph ,IsString,IsRecord]);
+DeclareOperation( "DrawConvexPlaneGraphToTikz", [IsDigraph ,IsString,IsRecord]);
