@@ -72,56 +72,135 @@ It includes options for the following:
   <Item>Enabling and moving intersection planes. More in <Ref Subsect="Subsection_IntersectionPlanes"/></Item>
 </Enum>
 
-
-
-
-</Section>
-
-
-<Section Label="Section_output">
-<Heading>Output files and the GUI</Heading>
-
-
-
- Here you can change the following:
- <Enum>
-   <Item>The speed of rotation in the X, Y and Z direction</Item>
-   <Item>The transparency of the faces which are enabled</Item>
-   <Item>Show the edges according to visibility and colour</Item>
-   <Item>The visibility of the active edges and their respective labels. More in <Ref Subsect="Section_Visibility"/></Item>
-   <Item>The size the vertices are show with</Item>
-   <Item>Switch to normalsMaterial. More in <Ref Subsect="Section_NormalsMaterial"/></Item>
-   <Item>Optional: Parameters set for the coordinates. More in <Ref Subsect="Section_ParameterizedCoordinates"/></Item>
-   <Item>Intersection Planes. More in <Ref Subsect="Subsection_IntersectionPlanes"/></Item>
- </Enum>
- This GUI is implemented using the dat.GUI package from three.js.  
- <Subsection Label="Subsection_IntersectionPlanes">
- <Heading>Intersection Planes</Heading>
-  In the GUI there is the option for so called intersection planes. These are three axis aligned planes, that intersect the complete animation and only show one of the sides. <Br/>
-  This allows to look into the animation and can be very helpful for example if there are selfintersections or a complex gets very big.<Br/>
-  To activate any plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. <Br/>
-  If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging in the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
-  If there are coordinates which are parameterized or you want to change the range of the planes for another reason, it is possible to set them manually:
-  </Subsection>
-  <ManSection Label="SetPlaneRange">
+This GUI is implemented using the dat.GUI package from three.js.  
+<Subsection Label="Subsection_IntersectionPlanes">
+<Heading>Intersection Planes</Heading>
+In the GUI there is the option for so called intersection planes. These are three axis aligned planes, that intersect the complete animation and only show one of the sides. <Br/>
+This allows to look into the animation and can be very helpful for example if there are selfintersections or a complex gets very big.<Br/>
+To activate any plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. <Br/>
+If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging in the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
+If there are coordinates which are parameterized or you want to change the range of the planes for another reason, it is possible to set them manually:
+</Subsection>
+<ManSection Label="SetPlaneRange">
   <Oper Arg="surface, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- Change the range of the intersection planes by giving a list of the <A>ranges</A> in the following format: <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A>
-<P/>
- </Description>
+  <Returns>the updated print record
+  </Returns>
+  <Description>
+  Change the range of the intersection planes by giving a list of the <A>ranges</A> in the following format: <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A>
+  <P/>
+  </Description>
 </ManSection>
 
 <ManSection Label="GetPlaneRange">
   <Oper Arg="surface, printRecord" Name="GetPlaneRange" Label="for IsTriangularComplex, IsRecord"/>
- <Returns>a list of lists
+  <Returns>a list of lists
+  </Returns>
+  <Description>
+  Returns the plane ranges set in <A>SetPlaneRange</A> in the format <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A> or <A>fail</A> if they are not set (i.e. automatic).
+  <P/>
+  </Description>
+</ManSection>
+
+<Subsection Label="Section_Visibility">
+<Heading>Visibility</Heading>
+
+Sometimes parts of the complex should be not visible. In the GUI it is possible to turn all of these of but sometimes it can help if there are more fine controls. This can be done for the following things:
+<Enum>
+  <Item>Vertices (see <Ref Subsect="ActivateVertices"/>) </Item>
+  <Item>Edges (see <Ref Subsect="ActivateEdges"/>)</Item>
+  <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
+</Enum>
+By default, all faces are visible. In the GUI the vertices and edges can also be activated.
+In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<br>
+If however any (subset) of them are deactivated they will be skipped during the generation of the animation. This gives finer control over which will be shown. With this it is also possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set this property can only be changed by generating regenerating the file.
+
+We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible.
+<Log><![CDATA[
+gap> oct := Octahedron();;
+gap> verticesPositions := [
+> [ 0, 0, Sqrt(2.) ],
+> [ 1, 1, 0 ],
+> [ 1, -1, 0 ],
+> [ -1, -1, 0 ],
+> [ -1, 1, 0 ],
+> [ 0, 0, -Sqrt(2.) ] ];;
+gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
+gap> printRecord := DeactivateVertices(oct, printRecord);;
+gap> printRecord := ActivateVertex(oct, 2, printRecord);;
+gap> printRecord := ActivateVertex(oct, 3, printRecord);;
+gap> List([1..NumberOfVertices(oct)], i -> IsVertexActive(oct, i, printRecord));
+[ false, true, true, false, false, false ]
+gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
+]]></Log>
+
+<Alt Only="HTML">&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img></Alt>
+<Alt Only="LaTeX">\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt><Br/>
+
+
+<ManSection Label="ActivateVertices">
+  <Oper Arg="surface, printRecord" Name="ActivateVertices" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="ActivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="IsVertexActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
 </Returns>
  <Description>
- Returns the plane ranges set in <A>SetPlaneRange</A> in the format <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A> or <A>fail</A> if they are not set (i.e. automatic).
+ The method <K>ActivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the vertex <A>i</A>.
+ If a vertex is active, then the vertex is shown in the animation as a node with the number <A>i</A>.
+ The method <K>ActivateVertices</K>(<A>surface</A>, <A>printRecord</A>) activates all vertices of <A>surface</A>.
+ By default, all vertices are activated.
 <P/>
  </Description>
 </ManSection>
+
+
+<ManSection Label="DeactivateVertices">
+  <Oper Arg="surface, printRecord" Name="DeactivateVertices" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="DeactivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ The method <K>DeactivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the vertex <A>i</A>.
+ If a vertex is inactive, then the vertex is not shown separately.
+ The method <K>DeactivateVertices</K>(<A>surface</A>, <A>printRecord</A>) deactivates all vertices of <A>surface</A>.
+ By default, all vertices are activated.
+<P/>
+ </Description>
+</ManSection>
+
+
+<ManSection Label="ActivateFaces">
+  <Oper Arg="surface, printRecord" Name="ActivateFaces" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="ActivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="IsFaceActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ The method <K>ActivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the face <A>i</A>.
+ If a face is active, then the face is shown in the animation as an area.
+ The method <K>ActivateFaces</K>(<A>surface</A>, <A>printRecord</A>) activates all faces of <A>surface</A>.
+ By default, all faces are activated.
+<P/>
+ </Description>
+</ManSection>
+
+
+<ManSection Label="DeactivateFaces">
+  <Oper Arg="surface, printRecord" Name="DeactivateFaces" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="DeactivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ The method <K>DeactivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the face <A>i</A>.
+ If an face is inactive, then the face is not shown in the animation as an area.
+ The method <K>DeactivateFace</K>(<A>surface</A>, <A>printRecord</A>) deactivates all faces of <A>surface</A>.
+ By default, all faces are activated.
+<P/>
+ </Description>
+</ManSection>
+
+
+</Subsection>
 
 </Section>
 
@@ -269,126 +348,7 @@ The particulars of the drawing are determined by the
 </Section>
 
 
-<Section Label="Section_Visibility">
-<Heading>Visibility</Heading>
 
- A simplicial surface is described through its vertices, edges, and faces. But sometimes, not all of them should be visible.
- Therefore, it is possible to make the following visible and invisible:
- <Enum>
-   <Item>Vertices (see <Ref Subsect="ActivateVertices"/>) </Item>
-   <Item>Edges (The default colour is 0x000000, black. See <Ref Subsect="SetEdgeColours"/>)</Item>
-   <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
- </Enum>
- By default, all vertices, and faces are visible. For the visibility of the edges, there is a wireframe option in the GUI of the output file. 
- It is also possible in the GUI to change the transparency of all faces. Otherwise all vertices which are active will be shown. 
- Both can be changed live and updates the shown render immediately. 
- The following example shows an animation with invisible vertices.
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := DeactivateVertices(oct, printRecord);;
-gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
-]]></Log>
-
-<Alt Only="HTML">&lt;img src="../images/Octahedron_animatedWithoutVertices.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_animatedWithoutVertices.png}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutVertices.png]</Alt><Br/>
-
- It is also possible that some vertices are visible and others are not.
- We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible.
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := DeactivateVertices(oct, printRecord);;
-gap> printRecord := ActivateVertex(oct, 2, printRecord);;
-gap> printRecord := ActivateVertex(oct, 3, printRecord);;
-gap> List([1..NumberOfVertices(oct)], i -> IsVertexActive(oct, i, printRecord));
-[ false, true, true, false, false, false ]
-gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
-]]></Log>
-
-<Alt Only="HTML">&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt><Br/>
-
-
-<ManSection Label="ActivateVertices">
-  <Oper Arg="surface, printRecord" Name="ActivateVertices" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsVertexActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- The method <K>ActivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the vertex <A>i</A>.
- If a vertex is active, then the vertex is shown in the animation as a node with the number <A>i</A>.
- The method <K>ActivateVertices</K>(<A>surface</A>, <A>printRecord</A>) activates all vertices of <A>surface</A>.
- By default, all vertices are activated.
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="DeactivateVertices">
-  <Oper Arg="surface, printRecord" Name="DeactivateVertices" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- The method <K>DeactivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the vertex <A>i</A>.
- If a vertex is inactive, then the vertex is not shown separately.
- The method <K>DeactivateVertices</K>(<A>surface</A>, <A>printRecord</A>) deactivates all vertices of <A>surface</A>.
- By default, all vertices are activated.
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="ActivateFaces">
-  <Oper Arg="surface, printRecord" Name="ActivateFaces" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsFaceActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- The method <K>ActivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the face <A>i</A>.
- If a face is active, then the face is shown in the animation as an area.
- The method <K>ActivateFaces</K>(<A>surface</A>, <A>printRecord</A>) activates all faces of <A>surface</A>.
- By default, all faces are activated.
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="DeactivateFaces">
-  <Oper Arg="surface, printRecord" Name="DeactivateFaces" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- The method <K>DeactivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the face <A>i</A>.
- If an face is inactive, then the face is not shown in the animation as an area.
- The method <K>DeactivateFace</K>(<A>surface</A>, <A>printRecord</A>) deactivates all faces of <A>surface</A>.
- By default, all faces are activated.
-<P/>
- </Description>
-</ManSection>
-
-
-</Section>
 
 
 <Section Label="Section_LabelColouring">
