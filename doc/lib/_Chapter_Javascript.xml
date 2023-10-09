@@ -43,7 +43,7 @@ Therefore, a typical workflow to animate a complex would look like this:
   <Item>Generate the animation as a <A>.html</A> file.</Item>
 </Enum>
 
-This file can be opened with most browsers and the surface will be shown as a 3D render with some options. These will be described in <Ref Subsect="Section_LabelGUI"/>. <br>
+This file can be opened with most browsers and the surface will be shown as a 3D render with some options. These will be described in <Ref Subsect="Section_LabelGUI"/>. <Br/>
 Because we load the <A>three.js</A> dependecies (and <A>three.js</A> itself) from a CDN (content delivery network) the animation requires an active internet connection. (Some browsers will cache the files so it might work offline but there is no guarantee)
 </Section>
 
@@ -111,7 +111,7 @@ Sometimes parts of the complex should be not visible. In the GUI it is possible 
   <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
 </Enum>
 By default, all faces are visible. In the GUI the vertices and edges can also be activated.
-In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<br>
+In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<Br/>
 If however any (subset) of them are deactivated they will be skipped during the generation of the animation. This gives finer control over which will be shown. With this it is also possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set this property can only be changed by generating regenerating the file.
 
 We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible.
@@ -136,6 +136,8 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 <Alt Only="HTML">&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img></Alt>
 <Alt Only="LaTeX">\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt><Br/>
+
+</Subsection>
 
 
 <ManSection Label="ActivateVertices">
@@ -198,9 +200,6 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 <P/>
  </Description>
 </ManSection>
-
-
-</Subsection>
 
 </Section>
 
