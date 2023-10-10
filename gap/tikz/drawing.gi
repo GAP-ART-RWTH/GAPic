@@ -424,7 +424,7 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     function(graph ,printRecord)
 	local g,colour,e,f,v;
 	if not IsBound(printRecord.vertexLabelsActive) then
-	    printRecord.vertexLabelsActive := false;
+	    printRecord.vertexLabelsActive := true;
 	fi;
 	if not IsBound(printRecord.latexDocumentclass) then
 	    printRecord.latexDocumentclass := "article";
@@ -433,7 +433,7 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	    printRecord.edgeLabelsActive := false; 
 	fi;
 	if not IsBound(printRecord.faceLabelsActive) then
-	    printRecord.faceLabelsActive := true;
+	    printRecord.faceLabelsActive := false;
 	fi;
 	if not IsBound(printRecord.scale) then
 	    printRecord.scale :=2;
@@ -602,7 +602,10 @@ InstallMethod(DrawDigraphToTikz,
             AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph,e,
                     faceCoordTikZ{e},printRecord.faceCoordinates2D{e}));
         od;
-        ##draw faces as nodes
+        ##draw vertices as nodes
+        # for v in DigraphVertices(graph) do
+        #     AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
+        # od;
     #    for f in Faces(surface) do
     #	AppendTo(output,"\\vertexLabelR{",faceCoordTikZ[f],"}{left}{$",f,"$}\n");
     #   od;
@@ -722,7 +725,7 @@ InstallMethod(DrawDigraphToTikz,
     end
 );
 
-InstallMethod( DrawConvexPlaneGraphToTikz,
+InstallMethod( DrawStraightPlanarDigraphToTikz,
     "for a planar digraph, a file name and a record",
     [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
@@ -752,7 +755,7 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
         end;
 
         NeighboursOfVertex := function(graph, vertex)
-            return Concatenation(InNeighboursOfVertex(graph, vertex), OutNeighboursOfVertex(graph, vertex));
+            return Union(InNeighboursOfVertex(graph, vertex), OutNeighboursOfVertex(graph, vertex));
         end;
 
         SplitListPosition := function(list, v) # help function
@@ -779,16 +782,16 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
             fi;
         end;
 
-        IntersectionFilterFunc := function(faceGraph, list) # help function
-            if not IsEmpty(Intersection(faceGraph, list)) then
+        IntersectionFilterFunc := function(embedding, list) # help function
+            if not IsEmpty(Intersection(embedding, list)) then
                 return true;
             else 
                 return false;
             fi;
         end;
 
-        CorrectNodesOfFaceFilter := function(cur1, cur2, faceGraph, list) # help function
-            return InFilterFunc(cur1, cur2, list) and IntersectionFilterFunc(faceGraph, list);
+        CorrectNodesOfFaceFilter := function(cur1, cur2, embedding, list) # help function
+            return InFilterFunc(cur1, cur2, list) and IntersectionFilterFunc(embedding, list);
         end;
 
         MultipleWeightedCentricParameters := function(list, main_anchor, start_anchor, end_anchor, p) # help function
@@ -829,13 +832,14 @@ InstallMethod( DrawConvexPlaneGraphToTikz,
                         to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
                         to_be_positioned_nodes_ordered := [];
                         seen_nodes := [];
-                        correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], cur[Length(cur)][1], nodes_of_embedding, x));
+                        correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[1], nodes_of_embedding, x));
+                        # Error();
                         next_node_in_order := Intersection(to_be_positioned_nodes, correct_nodes_of_face[1])[1];
                         Add(to_be_positioned_nodes_ordered, next_node_in_order);
                         Add(seen_nodes, next_node_in_order);
                         # Error();
                         for i in [2..Length(to_be_positioned_nodes)] do
-                            # Error(); # TODO
+                            # Error();
                             correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
                             next_node_in_order := Difference(Intersection(to_be_positioned_nodes, correct_nodes_of_face[1]), seen_nodes)[1];
                             Add(to_be_positioned_nodes_ordered, next_node_in_order);
