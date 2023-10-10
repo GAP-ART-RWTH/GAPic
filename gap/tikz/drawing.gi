@@ -881,19 +881,19 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             Error("The spread parameter has to be chosen in the interval (0, 1) !");
         fi;
 
-        if not "startFace" in RecNames(printRecord) then
-            Error("Select a start face!"); # To be changed?
-        # else
-        #     printRecord.startFace := start_face;
-        fi;
-
         if not "nodesOfFaces" in RecNames(printRecord) then
             Error("Select all faces characterised by their surrounding nodes!"); # To be changed?
         # else
         #     printRecord.nodesOfFaces := nodes_of_faces;
         fi;
 
-        embedding := DrawConvexPlaneGraph(graph, printRecord.startFace, printRecord.spread, printRecord.nodesOfFaces);
+        if not "infiniteFace" in RecNames(printRecord) then
+            max_nodes_face_pos := PositionMaximum(List(printRecord.nodesOfFaces, x -> Length(x)));
+            max_nodes_face := printRecord.nodesOfFaces[max_nodes_face_pos];
+            printRecord.infiniteFace := max_nodes_face;
+        fi;
+
+        embedding := DrawConvexPlaneGraph(graph, printRecord.infiniteFace, printRecord.spread, printRecord.nodesOfFaces);
         SortBy(embedding, x -> x[1]);
         printRecord.faceCoordinates2D := List(embedding, x -> x[2]);
 
