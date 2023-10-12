@@ -78,7 +78,7 @@ This GUI is implemented using the dat.GUI package from three.js.
 In the GUI there is the option for so called intersection planes. These are three axis aligned planes, that intersect the complete animation and only show one of the sides. <Br/>
 This allows to look inside the animation and can be very helpful for example if there are self-intersections or a complex gets fairly big.<Br/>
 To activate a plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. <Br/>
-If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging in the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
+If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging on the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
 If there are coordinates which are parameterized or you want to change the range of the planes for another reason, it is possible to set them manually:
 </Subsection>
 <ManSection Label="SetPlaneRange">
@@ -104,7 +104,7 @@ If there are coordinates which are parameterized or you want to change the range
 <Subsection Label="Section_Visibility">
 <Heading>Visibility</Heading>
 
-Sometimes parts of the complex should be not visible. In the GUI it is possible to turn all of these of but sometimes it can help if there are more fine controls. This can be done for the following things:
+Sometimes parts of the complex should be not visible. In the GUI it is possible to turn all of these off but sometimes it can help if only certain (subsets of) parts of the complex are visible. This can be done for the following things:
 <Enum>
   <Item>Vertices (see <Ref Subsect="ActivateVertices"/>) </Item>
   <Item>Edges (see <Ref Subsect="ActivateEdges"/>)</Item>
@@ -112,7 +112,7 @@ Sometimes parts of the complex should be not visible. In the GUI it is possible 
 </Enum>
 By default, all faces are visible. In the GUI the vertices and edges can also be activated.
 In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<Br/>
-If however any (subset) of them are deactivated they will be skipped during the generation of the animation. This gives finer control over which will be shown. With this it is also possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set this property can only be changed by generating regenerating the file.
+If however any (subset) of them are deactivated they will be skipped during the generation of the animation. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
 
 We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible.
 <Log><![CDATA[
