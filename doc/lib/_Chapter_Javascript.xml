@@ -114,7 +114,7 @@ By default, all faces are visible. In the GUI the vertices and edges can also be
 In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<Br/>
 If however any (subset) of them are deactivated they will be skipped during the generation of the animation. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
 
-We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible.
+We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated
 <Log><![CDATA[
 gap> oct := Octahedron();;
 gap> verticesPositions := [
