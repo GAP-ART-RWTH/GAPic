@@ -16,7 +16,7 @@
 <#Include SYSTEM "_Chapter_Introduction.xml">
 <#Include SYSTEM "_Chapter_Functionality.xml">
 <#Include SYSTEM "_Chapter_Javascript.xml">
-<#Include SYSTEM "_Chapter_Embeddings.xml">
+<#Include SYSTEM "_Chapter_Drawing_A_Graph.xml">
 </Body>
 <TheIndex/>
 </Book>

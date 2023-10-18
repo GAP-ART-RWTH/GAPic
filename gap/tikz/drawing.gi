@@ -461,14 +461,14 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	# if not IsBound(printRecord.geodesicActive) then
 	#     printRecord.geodesicActive:= false;
 	# fi;	
-	# if not IsBound(printRecord.faceCoordinates2D) then
+	# if not IsBound(printRecord.nodeCoordinates) then
 	#     if IsClosedSurface(surface) and IsVertexFaithful(surface) and EulerCharacteristic(surface)=2 then
-	# 	printRecord.faceCoordinates2D:= __GAPIC__SetFaceCoordinates(surface);
+	# 	printRecord.nodeCoordinates:= __GAPIC__SetFaceCoordinates(surface);
 	#     else 
 	# 	Error("face coordinates have to be specified");
 	#    fi;
 	# else 
-    # if not __GAPIC__IsCoordinates2D(graph,printRecord.faceCoordinates2D) then
+    # if not __GAPIC__IsCoordinates2D(graph,printRecord.nodeCoordinates) then
     #     Error("face coordinates have to be in the correct format");
     # fi;
 	# fi;	
@@ -593,14 +593,14 @@ InstallMethod(DrawDigraphToTikz,
         ##define face coordinates
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
-            printRecord.faceCoordinates2D[node][1]," , ",printRecord.faceCoordinates2D[node][2],");\n");
+            printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
             #AppendTo(output,__GAPIC__PrintRecordDrawFaceFG(printRecord, surface, face, faceTikzCoord));
         od;
 
         ##draw edges
         for e in DigraphEdges(graph) do 
             AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph,e,
-                    faceCoordTikZ{e},printRecord.faceCoordinates2D{e}));
+                    faceCoordTikZ{e},printRecord.nodeCoordinates{e}));
         od;
         ##draw vertices as nodes
         # for v in DigraphVertices(graph) do
@@ -624,7 +624,7 @@ InstallMethod(DrawDigraphToTikz,
     #     # at first draw vertex label of the outer umbrella
     #         v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(currUmb))[1];
     #         umbrellas:=Difference(umbrellas,[currUmb]);
-    #         coordinates:=List(currUmb,f->printRecord.faceCoordinates2D[f]);
+    #         coordinates:=List(currUmb,f->printRecord.nodeCoordinates[f]);
     #         maxX:=Maximum(List(coordinates,g->g[1]));
     #         maxY:=Maximum(List(coordinates,g->g[2]));
     #         minY:=Minimum(List(coordinates,g->g[2]));
@@ -633,7 +633,7 @@ InstallMethod(DrawDigraphToTikz,
     #         ## now the other labels 
     #         for umb in umbrellas do
     #         v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(umb))[1];
-    #         coordinates:=List(umb,f->printRecord.faceCoordinates2D[f]);
+    #         coordinates:=List(umb,f->printRecord.nodeCoordinates[f]);
     #         temp:=sum(coordinates);
     #         AppendTo(output,__GAPIC__PrintRecordDrawVertexFG(printRecord,surface,v,temp));
     #         od; 
@@ -647,31 +647,31 @@ InstallMethod(DrawDigraphToTikz,
         #     coordinates:=List(Vertices(surface),v->[]);
         #     for umb in umbrellas do
         #     v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(umb))[1];
-        #     temp:=List(umb,f->printRecord.faceCoordinates2D[f]);
+        #     temp:=List(umb,f->printRecord.nodeCoordinates[f]);
         #     for f in umb do 
-        #         coordinates[v][f]:=printRecord.faceCoordinates2D[f]+0.1*(sum(temp)-printRecord.faceCoordinates2D[f]);
+        #         coordinates[v][f]:=printRecord.nodeCoordinates[f]+0.1*(sum(temp)-printRecord.nodeCoordinates[f]);
         #     od;
         #     od;
         #     v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(currUmb))[1];
-        #     temp:=sum(List(currUmb,f->printRecord.faceCoordinates2D[f]));
-        #     maxX:=Maximum(List(currUmb,f->printRecord.faceCoordinates2D[f][1]));
-        #     maxY:=Maximum(List(currUmb,f->printRecord.faceCoordinates2D[f][2]));
-        #     minX:=Minimum(List(currUmb,f->printRecord.faceCoordinates2D[f][1]));
-        #     minY:=Minimum(List(currUmb,f->printRecord.faceCoordinates2D[f][2]));
+        #     temp:=sum(List(currUmb,f->printRecord.nodeCoordinates[f]));
+        #     maxX:=Maximum(List(currUmb,f->printRecord.nodeCoordinates[f][1]));
+        #     maxY:=Maximum(List(currUmb,f->printRecord.nodeCoordinates[f][2]));
+        #     minX:=Minimum(List(currUmb,f->printRecord.nodeCoordinates[f][1]));
+        #     minY:=Minimum(List(currUmb,f->printRecord.nodeCoordinates[f][2]));
         #     mX:=maxX-minX;
         #     mY:=maxY-minY;
         #     for f in currUmb do 
-        #     coordinates[v][f]:=printRecord.faceCoordinates2D[f];
-        #     if printRecord.faceCoordinates2D[f][1]=minX then 
+        #     coordinates[v][f]:=printRecord.nodeCoordinates[f];
+        #     if printRecord.nodeCoordinates[f][1]=minX then 
         #         coordinates[v][f]:=coordinates[v][f]-[0.05*mX,0.];
         #     fi;
-        #     if printRecord.faceCoordinates2D[f][2]=minY then 
+        #     if printRecord.nodeCoordinates[f][2]=minY then 
         #         coordinates[v][f]:=coordinates[v][f]-[0.,0.05*mY];
         #     fi;
-        #     if printRecord.faceCoordinates2D[f][1]=maxX then 
+        #     if printRecord.nodeCoordinates[f][1]=maxX then 
         #         coordinates[v][f]:=coordinates[v][f]+[0.05*mX,0.];
         #     fi;
-        #     if printRecord.faceCoordinates2D[f][2]=maxY then 
+        #     if printRecord.nodeCoordinates[f][2]=maxY then 
         #         coordinates[v][f]:=coordinates[v][f]+[0.,0.05*mY];
         #     fi;
         #     od;
@@ -731,9 +731,9 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
     function(graph, file, printRecord)
         local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition, InFilterFunc,
                 IntersectionFilterFunc, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
-                DrawConvexPlaneGraph, embedding;
+                DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face;
 
-        if (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
+        if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
             return fail;
         fi;
         RegularPolygon := function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
@@ -895,17 +895,17 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
 
         embedding := DrawConvexPlaneGraph(graph, printRecord.infiniteFace, printRecord.spread, printRecord.nodesOfFaces);
         SortBy(embedding, x -> x[1]);
-        printRecord.faceCoordinates2D := List(embedding, x -> x[2]);
+        printRecord.nodeCoordinates := List(embedding, x -> x[2]);
 
         return DrawDigraphToTikz(graph, file, printRecord);
-        # if "scale" in RecNames(record) and "faceCoordinates2D" in RecNames(record) then
+        # if "scale" in RecNames(record) and "nodeCoordinates" in RecNames(record) then
         #     return DrawFacegraphToTikz(surf, name, record);
-        # elif (not "scale" in RecNames(record)) and "faceCoordinates2D" in RecNames(record) then
+        # elif (not "scale" in RecNames(record)) and "nodeCoordinates" in RecNames(record) then
         #     record.scale := 4;
-        # elif "scale" in RecNames(record) and (not "faceCoordinates2D" in RecNames(record)) then
-        #     record.faceCoordinates2D := List(graph, x -> x[2]);
+        # elif "scale" in RecNames(record) and (not "nodeCoordinates" in RecNames(record)) then
+        #     record.nodeCoordinates := List(graph, x -> x[2]);
         # else
-        #     record.faceCoordinates2D := List(graph, x -> x[2]);
+        #     record.nodeCoordinates := List(graph, x -> x[2]);
         #     record.scale := 4;
         # fi;
         
