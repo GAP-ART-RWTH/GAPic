@@ -4,13 +4,11 @@
 <Heading>Animating surfaces with Java Script</Heading>
 
 <P/>
- This chapter describes animating simplicial surfaces via Javascript
- using three.js, see <URL>https://threejs.org/</URL>. Currently we are using r148.
+This chapter describes animating simplicial surfaces via Javascript using three.js, see <URL>https://threejs.org/</URL>. Currently this uses r148.
 <Section Label="Section_LabelIntroductionAndQuickStartAnimating">
-<Heading>Introduction and Quick Start</Heading>
+<Heading>Quick Start</Heading>
 
- This section contains a minimal example by animating an octahedron.
- To construct an octahedron, we specify the 3D-coordinates of its vertices.
+This section contains a minimal example by animating an octahedron. To construct an octahedron, we need to specify the 3D-coordinates of its vertices. After this, we can already generate an animation.
 <Log><![CDATA[
 gap> oct := Octahedron();;
 gap> verticesPositions := [
@@ -24,18 +22,13 @@ gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
 gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-
-Now, your working directory should contain a file "octahedron.html", this is what it should look like if opened with your browser of choice:<Br/>
+Now, your working directory should contain a file "octahedron.html". This is what it should look like if opened with your browser of choice:<Br/>
 
 <Alt Only="HTML">&lt;br>&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check &lt;package location&rt;/doc/images/Octahedron_animated.png]</Alt><Br/>
 
-The main method <K>DrawComplexToJavascript</K> (Section <Ref Sect="Section_LabelCoordinatesAndCoreFunctionality"/>)
-generates this .html file. It does this using a configuration saved in a so called <A>printRecord</A>. It containes
-at least the 3D-coordinates (lists with three float entries) of the vertices and might contain some other information.
-Based on these 3D-coordinates of the vertices, the complex is placed in the animation.
-Therefore, a typical workflow to animate a complex would look like this:
+The method <K>DrawComplexToJavascript</K> (Section <Ref Sect="Section_LabelCoordinatesAndCoreFunctionality"/>) generates this .html file. It does this using a configuration saved in a so called <A>printRecord</A>. This <A>printRecord</A> containes at least the 3D-coordinates (as lists with three float entries) of the vertices. Based on these 3D-coordinates of the vertices, the complex is placed in the animation. Therefore, a typical workflow to animate a complex would look like this:
 <Enum>
   <Item>Construct the complex as structure from the <A>SimplicialSurfaces</A> package.</Item>
   <Item>Set the location of the vertices</Item>
@@ -43,8 +36,8 @@ Therefore, a typical workflow to animate a complex would look like this:
   <Item>Generate the animation as a <A>.html</A> file.</Item>
 </Enum>
 
-This file can be opened with most browsers and the surface will be shown as a 3D render with some options. These will be described in <Ref Subsect="Section_LabelGUI"/>. <Br/>
-Because we load the <A>three.js</A> dependencies (and <A>three.js</A> itself) from a CDN (content delivery network) the animation requires an active internet connection. (Some browsers will cache the files so it might work offline but there is no guarantee)
+This file can be opened with most modern browsers and the surface will be shown as a 3D render with some options. More on them in <Ref Subsect="Section_LabelGUI"/>. <Br/>
+Because we load the <A>three.js</A> dependencies (and <A>three.js</A> itself) from a content delivery network (CDN) the animation requires an active internet connection. (Some browsers will cache these files so it might work offline but this is not guaranteed)
 </Section>
 
 <Section Label="Section_LabelGUI">
@@ -60,7 +53,7 @@ It includes options for the following:
 <Enum>
   <Item>Speed of rotation in the X, Y and Z direction</Item>
   <Item>Transparency of the faces that are enabled</Item>
-  <Item>Visibility of the edges that are enabled</Item>
+  <Item>Visibility of the edges that are enabled. More in <Ref Subsect="Section_Visibility"/></Item>
   <Item>Visibility of the vertices that are enabled</Item>
   <Item>Visibility of the names (labels) of the vertices that are enabled</Item>
   <Item>Changing the size of the visible vertices (displayed as spheres)</Item>
@@ -68,7 +61,7 @@ It includes options for the following:
   <Item>Visibility of the inner circles. More in <Ref Subsect="Section_LabelInnerCircles"/></Item>
   <Item>Width of the inner circles.</Item>
   <Item>Visibility of the normals of inner circles. More in <Ref Subsect="Section_LabelNormalsInnerCircles"/></Item>
-  <Item>(Optional) Any parameters set from the coordinates. More in <Ref Subsect="Section_LabelParameterizedCoordinates"/></Item>
+  <Item>(Optional) Any parameters used in the coordinates. More in <Ref Subsect="Section_LabelParameterizedCoordinates"/></Item>
   <Item>Enabling and moving intersection planes. More in <Ref Subsect="Subsection_IntersectionPlanes"/></Item>
 </Enum>
 
@@ -78,15 +71,15 @@ This GUI is implemented using the dat.GUI package from three.js.
 In the GUI there is the option for so called intersection planes. These are three axis aligned planes, that intersect the complete animation and only show one of the sides. <Br/>
 This allows to look inside the animation and can be very helpful for example if there are self-intersections or a complex gets fairly big.<Br/>
 To activate a plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. <Br/>
-If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. If you want more precision, either make the GUI larger by dragging on the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
-If there are coordinates which are parameterized or you want to change the range of the planes for another reason, it is possible to set them manually:
+If there are not parameterized vertex coordinates (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted so you can intersect the whole complex. In case you want more precision, either make the GUI larger by dragging on the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
+If there are coordinates which are parameterized or you want to change the range of the planes manually, it is possible with the following:
 </Subsection>
 <ManSection Label="SetPlaneRange">
   <Oper Arg="surface, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
   <Returns>the updated print record
   </Returns>
   <Description>
-  Change the range of the intersection planes by giving a list of the <A>ranges</A> in the following format: <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A>
+  Change the range of the intersection planes by giving a list of the <A>ranges</A> as floats in the following format: <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A>
   <P/>
   </Description>
 </ManSection>
@@ -96,7 +89,7 @@ If there are coordinates which are parameterized or you want to change the range
   <Returns>a list of lists
   </Returns>
   <Description>
-  Returns the plane ranges set in <A>SetPlaneRange</A> in the format <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A> or <A>fail</A> if they are not set (i.e. automatic).
+  Returns the plane ranges of the <A>printRecord</A> set with <A>SetPlaneRange</A> in the format <A>[[minX, maxX],[minY, maxY],[minZ, maxZ]]</A> or <A>fail</A> if they are not set (i.e. automatic).
   <P/>
   </Description>
 </ManSection>
@@ -111,10 +104,10 @@ Sometimes parts of the complex should be not visible. In the GUI it is possible 
   <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
 </Enum>
 By default, all faces are visible. In the GUI the vertices and edges can also be activated.
-In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made visible or not in the GUI without changing the file.<Br/>
-If however any (subset) of them are deactivated they will be skipped during the generation of the animation. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
+In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
+If however any (subset) of them are deactivated they will be skipped during the generation of the file. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
 
-We illustrade this functionality by animating an octahedron with none but the vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated
+We illustrade this functionality by animating an octahedron as before but with only vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated
 <Log><![CDATA[
 gap> oct := Octahedron();;
 gap> verticesPositions := [
@@ -128,6 +121,7 @@ gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
 gap> printRecord := DeactivateVertices(oct, printRecord);;
 gap> printRecord := ActivateVertex(oct, 2, printRecord);;
 gap> printRecord := ActivateVertex(oct, 3, printRecord);;
+gap> # check the visibility of the vertices
 gap> List([1..NumberOfVertices(oct)], i -> IsVertexActive(oct, i, printRecord));
 [ false, true, true, false, false, false ]
 gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
@@ -163,13 +157,42 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 </Returns>
  <Description>
  The method <K>DeactivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the vertex <A>i</A>.
- If a vertex is inactive, then the vertex is not shown separately.
+ If a vertex is inactive, then the vertex is not shown and will not be written in the file.
  The method <K>DeactivateVertices</K>(<A>surface</A>, <A>printRecord</A>) deactivates all vertices of <A>surface</A>.
  By default, all vertices are activated.
 <P/>
  </Description>
 </ManSection>
 
+<ManSection Label="ActivateEdges">
+  <Oper Arg="surface, printRecord" Name="ActivateEdges" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="ActivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="IsEdgeActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ The method <K>ActivateEdge</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the edge <A>i</A>.
+ If an edge is active, then the edge is shown in the animation.
+ The method <K>ActivateEdges</K>(<A>surface</A>, <A>printRecord</A>) activates all edges of <A>surface</A>.
+ By default, all edges are activated.
+<P/>
+ </Description>
+</ManSection>
+
+
+<ManSection Label="DeactivateEdges">
+  <Oper Arg="surface, printRecord" Name="DeactivateEdges" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, i, printRecord" Name="DeactivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ The method <K>DeactivateEdge</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the edge <A>i</A>.
+ If an edge is inactive, then the edge is not shown in the animation and will not be written in the file.
+ The method <K>DeactivateEdge</K>(<A>surface</A>, <A>printRecord</A>) deactivates all edges of <A>surface</A>.
+ By default, all edges are activated.
+<P/>
+ </Description>
+</ManSection>
 
 <ManSection Label="ActivateFaces">
   <Oper Arg="surface, printRecord" Name="ActivateFaces" Label="for IsTriangularComplex, IsRecord"/>
@@ -179,7 +202,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 </Returns>
  <Description>
  The method <K>ActivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the face <A>i</A>.
- If a face is active, then the face is shown in the animation as an area.
+ If a face is active, then the face is shown in the animation.
  The method <K>ActivateFaces</K>(<A>surface</A>, <A>printRecord</A>) activates all faces of <A>surface</A>.
  By default, all faces are activated.
 <P/>
@@ -194,7 +217,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 </Returns>
  <Description>
  The method <K>DeactivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the face <A>i</A>.
- If an face is inactive, then the face is not shown in the animation as an area.
+ If a face is inactive, then the face is not shown in the animation and will not be written in the file.
  The method <K>DeactivateFace</K>(<A>surface</A>, <A>printRecord</A>) deactivates all faces of <A>surface</A>.
  By default, all faces are activated.
 <P/>
@@ -777,11 +800,6 @@ gap> DrawComplexToJavascript(oct, "doc/Octahedron_ThickEdges.html", printRecord)
 <Heading>Deprecated functions</Heading>
 
 <ManSection Label="Deprecated_functions">
-  <Oper Arg="surface, printRecord" Name="ActivateEdges" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsEdgeActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, printRecord" Name="DeactivateEdges" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
   <Oper Arg="surface, face, value, printRecord" Name="SetTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsFloat, IsRecord"/>
   <Oper Arg="surface, face, printRecord" Name="RemoveTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
   <Oper Arg="surface, face, printRecord" Name="GetTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
