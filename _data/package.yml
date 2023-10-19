@@ -44,7 +44,7 @@ downloads:
 abstract: |
 
 status: dev
-doc-html: doc/html-version/chap0_mj.html
+doc-html: doc/html-version/chap0.html
 doc-pdf: doc/manual.pdf
 citeas: |
     <p class='BibEntry'>
