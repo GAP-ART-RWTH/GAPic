@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>SimplicialSurface</title>
+		<style>
+			body { margin: 0; }
+		</style>
+
+
+	</head>
+	<body>
+
+<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+
+<script type="importmap">
+	{
+		"imports": {
+			"three": "https://unpkg.com/three@0.148.0/build/three.module.js",
+			"three/addons/": "https://unpkg.com/three@0.148.0/examples/jsm/",
+			"gui": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js"
+		}
+	}
+</script>
+
+
+<script type="module">
+	import * as THREE from 'three';
+	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import { GUI } from 'gui';
+	import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+	import { Line2 } from 'three/addons/lines/Line2.js';
+	import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+	import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+
+	//start scene and camera
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100 );
+
+	const renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+
+	//Lights
+	const skyColor = 0xFFFFFF;
+	const skyIntensity = 0.3;
+	const skyLight = new THREE.AmbientLight(skyColor, skyIntensity);
+	scene.add(skyLight);
+
+	const color = 0xFFFFFF;
+	const intensity = 1;
+	const light = new THREE.PointLight(color, intensity);
+	light.position.set(0, 3, -5);
+	scene.add(light);
+
+	//create groups to add everything to
+	const meshRoot = new THREE.Group();
+	const wireRoot = new THREE.Group();
+	const vertexRoot = new THREE.Group();
+	const vertexlabelRoot = new THREE.Group();
+	const edgeRoot = new THREE.Group();
+	const ringRoot = new THREE.Group();
+	const normalsRoot = new THREE.Group();
+	const normalMeshRoot = new THREE.Group();
+
+	//parameters for the controls on the top right
+	var guiParameters = new function() { 
+		this.speedX = 0.0; 
+		this.speedY = 0.0; 
+		this.speedZ = 0.0;
+		this.transparency = 1;
+		this.edgeVisibility = false;
+		this.edgeWidth = 0.2;
+
+		this.vertexVisibility = true;
+		this.vertexlabelVisibility = false;
+		this.vertexSize = 1;
+		this.planeX = 0.0;
+		this.minX = -1.5;
+		this.maxX = 1.5;
+		this.planeXactive = false;
+		this.planeY = 0.0;
+		this.minY = -1.5;
+
+		this.maxY = 1.5;
+		this.planeYactive = false;
+		this.planeZ = 0.0;
+		this.minZ = -1.5;
+		this.maxZ = 1.5;
+		this.planeZactive = false;
+		this.normalsMaterial = false;
+		this.circleVisibility = false;
+		this.circleWidth = 0.005;
+		this.normalsVisibility = false;
+		this.normalsLength = 1;
+	} ;
+
+	//generate the plane for intersections
+	const planeX = new THREE.Plane( new THREE.Vector3( -1, 0, 0 ), guiParameters.planeX );
+	const planeY = new THREE.Plane( new THREE.Vector3( 0, -1, 0 ), guiParameters.planeY );
+	const planeZ = new THREE.Plane( new THREE.Vector3( 0, 0, -1 ), guiParameters.planeZ );
+
+	// the array which ones are currently active
+	var activePlanes = [];
+
+	//rederer for lables
+	const labelRenderer = new CSS2DRenderer();
+	labelRenderer.setSize( window.innerWidth, window.innerHeight );
+	labelRenderer.domElement.style.position = 'absolute';
+	labelRenderer.domElement.style.top = '0px';
+	document.body.appendChild( labelRenderer.domElement );
+	
+	//controls for mouse 
+	const controls = new OrbitControls( camera, labelRenderer.domElement );
+
+	//controls in the top right corner
+	var gui = new GUI();
+
+	const animationFolder = gui.addFolder("Animations");
+	animationFolder.add(guiParameters, 'speedX', 0, 5);
+	animationFolder.add(guiParameters, 'speedY', 0, 5);
+	animationFolder.add(guiParameters, 'speedZ', 0, 5);
+	animationFolder.open();
+
+	const controlFolder = gui.addFolder("Controls");
+	controlFolder.add(guiParameters, "transparency", 0, 1);
+	controlFolder.add(guiParameters, "edgeVisibility");
+	var edgeWidthGUI = controlFolder.add(guiParameters, "edgeWidth", 0.01, 2);
+	controlFolder.add(guiParameters, "vertexVisibility");
+	controlFolder.add(guiParameters, "vertexlabelVisibility");
+	controlFolder.add(guiParameters, "vertexSize", 0.1, 3);
+	controlFolder.add(guiParameters, "normalsMaterial");
+	controlFolder.add(guiParameters, "circleVisibility");
+	controlFolder.add(guiParameters, "circleWidth", 0.0001, 0.1);
+	controlFolder.add(guiParameters, "normalsVisibility");
+	controlFolder.add(guiParameters, "normalsLength", 0, 2);
+	controlFolder.open();
+
+	//generate a sphere geometry for the vertices
+	const sphereGeometry = new THREE.SphereGeometry( 0.02, 32, 16 );
+	sphereGeometry.transparent = guiParameters.vertexVisibility;
+	
+	//functions for later calculations
+
+	function calulateIncenter(A, B, C){
+		//we follow the math and variable names from here: https://math.stackexchange.com/questions/740111/incenter-of-triangle-in-3d
+		var a = Math.sqrt((B[0]-C[0])**2 + (B[1]-C[1])**2 + (B[2]-C[2])**2);
+		var b = Math.sqrt((C[0]-A[0])**2 + (C[1]-A[1])**2 + (C[2]-A[2])**2);
+		var c = Math.sqrt((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2);
+
+		var res = [];
+		res[0] = a/(a+b+c)*A[0] + b/(a+b+c)*B[0] + c/(a+b+c)*C[0];
+		res[1] = a/(a+b+c)*A[1] + b/(a+b+c)*B[1] + c/(a+b+c)*C[1];
+		res[2] = a/(a+b+c)*A[2] + b/(a+b+c)*B[2] + c/(a+b+c)*C[2];
+
+		return res;
+	}
+
+	function calulateInradius(A, B, C){
+		var a = Math.sqrt((B[0]-C[0])**2 + (B[1]-C[1])**2 + (B[2]-C[2])**2);
+		var b = Math.sqrt((C[0]-A[0])**2 + (C[1]-A[1])**2 + (C[2]-A[2])**2);
+		var c = Math.sqrt((A[0]-B[0])**2 + (A[1]-B[1])**2 + (A[2]-B[2])**2);
+
+		var s = (a+b+c)/2;
+		var inradius = Math.sqrt(((s-a)*(s-b)*(s-c)) / s );
+
+		return inradius;
+	}
+
+	// --- start of generated output --- //
+
+	// preperations for parameterized vertex coordinates 
+	const vertexParametriziation = false;
+	// generate the faces color by color 
+	const geometry1 = new THREE.BufferGeometry();
+	function setVertices1(){
+		var vertices1 = new Float32Array( [
+				0,0,1.414213562373095,
+			1,1,0,
+			1,-1,0,
+
+			1,1,0,
+			-1,1,0,
+			0,0,-1.414213562373095,
+
+			0,0,1.414213562373095,
+			1,1,0,
+			-1,1,0,
+
+			1,1,0,
+			1,-1,0,
+			0,0,-1.414213562373095,
+
+			0,0,1.414213562373095,
+			-1,-1,0,
+			-1,1,0,
+
+			1,-1,0,
+			-1,-1,0,
+			0,0,-1.414213562373095,
+
+			0,0,1.414213562373095,
+			1,-1,0,
+			-1,-1,0,
+
+			-1,-1,0,
+			-1,1,0,
+			0,0,-1.414213562373095,
+
+					] ); 
+
+		return vertices1; 
+	}
+
+	geometry1.setAttribute( 'position', new THREE.BufferAttribute( setVertices1(), 3 ) );
+
+	// generate materials in the given color and normals material for the faces 
+
+    const materialNormal1 = new THREE.MeshNormalMaterial({
+        flatShading: true,
+    });
+    materialNormal1.transparent = true;
+    materialNormal1.side = THREE.DoubleSide;
+        
+    const material1 = new THREE.MeshPhongMaterial({
+        color: 0x049EF4,
+        flatShading: true,
+    });
+    material1.transparent = true;
+    material1.side = THREE.DoubleSide;
+        
+	// generate meshes for the faces from the materials with the vertex coordinates from before 
+
+    const mesh1 = new THREE.Mesh( geometry1, material1 );
+    mesh1.castShadow = true;                         
+    mesh1.receiveShadow = true;                      
+                                
+    meshRoot.add(mesh1);
+        
+    const meshNormal1 = new THREE.Mesh( geometry1, materialNormal1 );
+    mesh1.castShadow = true;                         
+    mesh1.receiveShadow = true;                      
+                                
+    normalMeshRoot.add(meshNormal1);
+        
+	// generate the edges grouped by color
+
+    const edgeMaterial1 = new LineMaterial( {
+        color: 0x000000,
+        linewidth: 3.,
+    } );
+        
+	function getEdges1(){
+		const edges1 = new Float32Array( [
+			0,0,1.4142135623730951,
+			1,1,0,
+
+			0,0,1.4142135623730951,
+			1,-1,0,
+
+			0,0,1.4142135623730951,
+			-1,-1,0,
+
+			0,0,1.4142135623730951,
+			-1,1,0,
+
+			1,1,0,
+			1,-1,0,
+
+			1,1,0,
+			-1,1,0,
+
+			1,1,0,
+			0,0,-1.4142135623730951,
+
+			1,-1,0,
+			-1,-1,0,
+
+			1,-1,0,
+			0,0,-1.4142135623730951,
+
+			-1,-1,0,
+			-1,1,0,
+
+			-1,-1,0,
+			0,0,-1.4142135623730951,
+
+			-1,1,0,
+			0,0,-1.4142135623730951,
+
+		]);
+		return edges1;
+	}
+
+
+	// generate geometries and lines for the edges 
+
+    const edgeGeometry1 = new LineSegmentsGeometry();
+    edgeGeometry1.setPositions(getEdges1() );
+
+    const edgeLine1 = new Line2( edgeGeometry1, edgeMaterial1 );
+    edgeRoot.add(edgeLine1);
+        
+	// update function to be called every frame 
+	// generate labels and spheres for the vertices
+
+
+	function getVertex1(){
+		return [0,0,1.4142135623730951,];
+	}
+	const sphereMaterial1 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere1 = new THREE.Mesh( sphereGeometry, sphereMaterial1 );
+	vertexRoot.add(sphere1);
+	sphere1.position.set(getVertex1()[0],getVertex1()[1],getVertex1()[2]);
+
+    const lableDiv1 = document.createElement( 'div' );
+    lableDiv1.className = 'label';
+    lableDiv1.textContent = '1';
+    lableDiv1.style.marginTop = '-1em';
+
+    const vertexLabel1 = new CSS2DObject( lableDiv1 );
+    vertexLabel1.position.set(getVertex1()[0],getVertex1()[1],getVertex1()[2]);
+    vertexlabelRoot.add( vertexLabel1 );
+            
+            
+
+	function getVertex2(){
+		return [1,1,0,];
+	}
+	const sphereMaterial2 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere2 = new THREE.Mesh( sphereGeometry, sphereMaterial2 );
+	vertexRoot.add(sphere2);
+	sphere2.position.set(getVertex2()[0],getVertex2()[1],getVertex2()[2]);
+
+    const lableDiv2 = document.createElement( 'div' );
+    lableDiv2.className = 'label';
+    lableDiv2.textContent = '2';
+    lableDiv2.style.marginTop = '-1em';
+
+    const vertexLabel2 = new CSS2DObject( lableDiv2 );
+    vertexLabel2.position.set(getVertex2()[0],getVertex2()[1],getVertex2()[2]);
+    vertexlabelRoot.add( vertexLabel2 );
+            
+            
+
+	function getVertex3(){
+		return [1,-1,0,];
+	}
+	const sphereMaterial3 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere3 = new THREE.Mesh( sphereGeometry, sphereMaterial3 );
+	vertexRoot.add(sphere3);
+	sphere3.position.set(getVertex3()[0],getVertex3()[1],getVertex3()[2]);
+
+    const lableDiv3 = document.createElement( 'div' );
+    lableDiv3.className = 'label';
+    lableDiv3.textContent = '3';
+    lableDiv3.style.marginTop = '-1em';
+
+    const vertexLabel3 = new CSS2DObject( lableDiv3 );
+    vertexLabel3.position.set(getVertex3()[0],getVertex3()[1],getVertex3()[2]);
+    vertexlabelRoot.add( vertexLabel3 );
+            
+            
+
+	function getVertex4(){
+		return [-1,-1,0,];
+	}
+	const sphereMaterial4 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere4 = new THREE.Mesh( sphereGeometry, sphereMaterial4 );
+	vertexRoot.add(sphere4);
+	sphere4.position.set(getVertex4()[0],getVertex4()[1],getVertex4()[2]);
+
+    const lableDiv4 = document.createElement( 'div' );
+    lableDiv4.className = 'label';
+    lableDiv4.textContent = '4';
+    lableDiv4.style.marginTop = '-1em';
+
+    const vertexLabel4 = new CSS2DObject( lableDiv4 );
+    vertexLabel4.position.set(getVertex4()[0],getVertex4()[1],getVertex4()[2]);
+    vertexlabelRoot.add( vertexLabel4 );
+            
+            
+
+	function getVertex5(){
+		return [-1,1,0,];
+	}
+	const sphereMaterial5 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere5 = new THREE.Mesh( sphereGeometry, sphereMaterial5 );
+	vertexRoot.add(sphere5);
+	sphere5.position.set(getVertex5()[0],getVertex5()[1],getVertex5()[2]);
+
+    const lableDiv5 = document.createElement( 'div' );
+    lableDiv5.className = 'label';
+    lableDiv5.textContent = '5';
+    lableDiv5.style.marginTop = '-1em';
+
+    const vertexLabel5 = new CSS2DObject( lableDiv5 );
+    vertexLabel5.position.set(getVertex5()[0],getVertex5()[1],getVertex5()[2]);
+    vertexlabelRoot.add( vertexLabel5 );
+            
+            
+
+	function getVertex6(){
+		return [0,0,-1.4142135623730951,];
+	}
+	const sphereMaterial6 = new THREE.MeshBasicMaterial( { color: 0xF58137 } );
+	const sphere6 = new THREE.Mesh( sphereGeometry, sphereMaterial6 );
+	vertexRoot.add(sphere6);
+	sphere6.position.set(getVertex6()[0],getVertex6()[1],getVertex6()[2]);
+
+    const lableDiv6 = document.createElement( 'div' );
+    lableDiv6.className = 'label';
+    lableDiv6.textContent = '6';
+    lableDiv6.style.marginTop = '-1em';
+
+    const vertexLabel6 = new CSS2DObject( lableDiv6 );
+    vertexLabel6.position.set(getVertex6()[0],getVertex6()[1],getVertex6()[2]);
+    vertexlabelRoot.add( vertexLabel6 );
+            
+            	// generate the rings for the incircles 
+
+	var inradius1 = calulateInradius(getVertex1(), getVertex2(), getVertex3());
+	var incenter1 = calulateIncenter(getVertex1(), getVertex2(), getVertex3());
+	var ringGeometry1 = new THREE.RingGeometry((inradius1 - 0.005),inradius1, 32);
+	const ringMaterial1 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh1 = new THREE.Mesh(ringGeometry1, ringMaterial1);
+
+	function setCircleRotation1(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,1,0],[1,-1,0]);
+
+        ringMesh1.position.setX(incenter[0]);
+        ringMesh1.position.setY(incenter[1]);
+        ringMesh1.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex1(), getVertex2(), getVertex3());
+        var relRadius = inradius/inradius1;
+
+        ringMesh1.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A1 = new THREE.Vector3(0,0,1.4142135623730951);
+        const B1 = new THREE.Vector3(1,1,0);
+        const C1 = new THREE.Vector3(1,-1,0);
+
+        const normalVec1 = new THREE.Vector3();
+        normalVec1.crossVectors(B1.sub(A1), C1.sub(A1));
+        normalVec1.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal1 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation1 = new THREE.Quaternion();
+        quaternionRotation1.setFromUnitVectors(initialNormal1, normalVec1);
+
+        ringMesh1.setRotationFromQuaternion(quaternionRotation1);
+
+        return quaternionRotation1;
+    }
+
+    ringRoot.add(ringMesh1);
+            
+	var inradius2 = calulateInradius(getVertex2(), getVertex5(), getVertex6());
+	var incenter2 = calulateIncenter(getVertex2(), getVertex5(), getVertex6());
+	var ringGeometry2 = new THREE.RingGeometry((inradius2 - 0.005),inradius2, 32);
+	const ringMaterial2 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh2 = new THREE.Mesh(ringGeometry2, ringMaterial2);
+
+	function setCircleRotation2(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([1,1,0],[ -1,1,0],[0,0,-1.4142135623730951]);
+
+        ringMesh2.position.setX(incenter[0]);
+        ringMesh2.position.setY(incenter[1]);
+        ringMesh2.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex2(), getVertex5(), getVertex6());
+        var relRadius = inradius/inradius2;
+
+        ringMesh2.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A2 = new THREE.Vector3(1,1,0);
+        const B2 = new THREE.Vector3(-1,1,0);
+        const C2 = new THREE.Vector3(0,0,-1.4142135623730951);
+
+        const normalVec2 = new THREE.Vector3();
+        normalVec2.crossVectors(B2.sub(A2), C2.sub(A2));
+        normalVec2.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal2 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation2 = new THREE.Quaternion();
+        quaternionRotation2.setFromUnitVectors(initialNormal2, normalVec2);
+
+        ringMesh2.setRotationFromQuaternion(quaternionRotation2);
+
+        return quaternionRotation2;
+    }
+
+    ringRoot.add(ringMesh2);
+            
+	var inradius3 = calulateInradius(getVertex1(), getVertex2(), getVertex5());
+	var incenter3 = calulateIncenter(getVertex1(), getVertex2(), getVertex5());
+	var ringGeometry3 = new THREE.RingGeometry((inradius3 - 0.005),inradius3, 32);
+	const ringMaterial3 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh3 = new THREE.Mesh(ringGeometry3, ringMaterial3);
+
+	function setCircleRotation3(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,1,0],[-1,1,0]);
+
+        ringMesh3.position.setX(incenter[0]);
+        ringMesh3.position.setY(incenter[1]);
+        ringMesh3.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex1(), getVertex2(), getVertex5());
+        var relRadius = inradius/inradius3;
+
+        ringMesh3.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A3 = new THREE.Vector3(0,0,1.4142135623730951);
+        const B3 = new THREE.Vector3(1,1,0);
+        const C3 = new THREE.Vector3(-1,1,0);
+
+        const normalVec3 = new THREE.Vector3();
+        normalVec3.crossVectors(B3.sub(A3), C3.sub(A3));
+        normalVec3.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal3 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation3 = new THREE.Quaternion();
+        quaternionRotation3.setFromUnitVectors(initialNormal3, normalVec3);
+
+        ringMesh3.setRotationFromQuaternion(quaternionRotation3);
+
+        return quaternionRotation3;
+    }
+
+    ringRoot.add(ringMesh3);
+            
+	var inradius4 = calulateInradius(getVertex2(), getVertex3(), getVertex6());
+	var incenter4 = calulateIncenter(getVertex2(), getVertex3(), getVertex6());
+	var ringGeometry4 = new THREE.RingGeometry((inradius4 - 0.005),inradius4, 32);
+	const ringMaterial4 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh4 = new THREE.Mesh(ringGeometry4, ringMaterial4);
+
+	function setCircleRotation4(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([1,1,0],[ 1,-1,0],[0,0,-1.4142135623730951]);
+
+        ringMesh4.position.setX(incenter[0]);
+        ringMesh4.position.setY(incenter[1]);
+        ringMesh4.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex2(), getVertex3(), getVertex6());
+        var relRadius = inradius/inradius4;
+
+        ringMesh4.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A4 = new THREE.Vector3(1,1,0);
+        const B4 = new THREE.Vector3(1,-1,0);
+        const C4 = new THREE.Vector3(0,0,-1.4142135623730951);
+
+        const normalVec4 = new THREE.Vector3();
+        normalVec4.crossVectors(B4.sub(A4), C4.sub(A4));
+        normalVec4.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal4 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation4 = new THREE.Quaternion();
+        quaternionRotation4.setFromUnitVectors(initialNormal4, normalVec4);
+
+        ringMesh4.setRotationFromQuaternion(quaternionRotation4);
+
+        return quaternionRotation4;
+    }
+
+    ringRoot.add(ringMesh4);
+            
+	var inradius5 = calulateInradius(getVertex1(), getVertex4(), getVertex5());
+	var incenter5 = calulateIncenter(getVertex1(), getVertex4(), getVertex5());
+	var ringGeometry5 = new THREE.RingGeometry((inradius5 - 0.005),inradius5, 32);
+	const ringMaterial5 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh5 = new THREE.Mesh(ringGeometry5, ringMaterial5);
+
+	function setCircleRotation5(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([0,0,1.4142135623730951],[ -1,-1,0],[-1,1,0]);
+
+        ringMesh5.position.setX(incenter[0]);
+        ringMesh5.position.setY(incenter[1]);
+        ringMesh5.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex1(), getVertex4(), getVertex5());
+        var relRadius = inradius/inradius5;
+
+        ringMesh5.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A5 = new THREE.Vector3(0,0,1.4142135623730951);
+        const B5 = new THREE.Vector3(-1,-1,0);
+        const C5 = new THREE.Vector3(-1,1,0);
+
+        const normalVec5 = new THREE.Vector3();
+        normalVec5.crossVectors(B5.sub(A5), C5.sub(A5));
+        normalVec5.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal5 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation5 = new THREE.Quaternion();
+        quaternionRotation5.setFromUnitVectors(initialNormal5, normalVec5);
+
+        ringMesh5.setRotationFromQuaternion(quaternionRotation5);
+
+        return quaternionRotation5;
+    }
+
+    ringRoot.add(ringMesh5);
+            
+	var inradius6 = calulateInradius(getVertex3(), getVertex4(), getVertex6());
+	var incenter6 = calulateIncenter(getVertex3(), getVertex4(), getVertex6());
+	var ringGeometry6 = new THREE.RingGeometry((inradius6 - 0.005),inradius6, 32);
+	const ringMaterial6 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh6 = new THREE.Mesh(ringGeometry6, ringMaterial6);
+
+	function setCircleRotation6(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([1,-1,0],[ -1,-1,0],[0,0,-1.4142135623730951]);
+
+        ringMesh6.position.setX(incenter[0]);
+        ringMesh6.position.setY(incenter[1]);
+        ringMesh6.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex3(), getVertex4(), getVertex6());
+        var relRadius = inradius/inradius6;
+
+        ringMesh6.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A6 = new THREE.Vector3(1,-1,0);
+        const B6 = new THREE.Vector3(-1,-1,0);
+        const C6 = new THREE.Vector3(0,0,-1.4142135623730951);
+
+        const normalVec6 = new THREE.Vector3();
+        normalVec6.crossVectors(B6.sub(A6), C6.sub(A6));
+        normalVec6.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal6 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation6 = new THREE.Quaternion();
+        quaternionRotation6.setFromUnitVectors(initialNormal6, normalVec6);
+
+        ringMesh6.setRotationFromQuaternion(quaternionRotation6);
+
+        return quaternionRotation6;
+    }
+
+    ringRoot.add(ringMesh6);
+            
+	var inradius7 = calulateInradius(getVertex1(), getVertex3(), getVertex4());
+	var incenter7 = calulateIncenter(getVertex1(), getVertex3(), getVertex4());
+	var ringGeometry7 = new THREE.RingGeometry((inradius7 - 0.005),inradius7, 32);
+	const ringMaterial7 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh7 = new THREE.Mesh(ringGeometry7, ringMaterial7);
+
+	function setCircleRotation7(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,-1,0],[-1,-1,0]);
+
+        ringMesh7.position.setX(incenter[0]);
+        ringMesh7.position.setY(incenter[1]);
+        ringMesh7.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex1(), getVertex3(), getVertex4());
+        var relRadius = inradius/inradius7;
+
+        ringMesh7.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A7 = new THREE.Vector3(0,0,1.4142135623730951);
+        const B7 = new THREE.Vector3(1,-1,0);
+        const C7 = new THREE.Vector3(-1,-1,0);
+
+        const normalVec7 = new THREE.Vector3();
+        normalVec7.crossVectors(B7.sub(A7), C7.sub(A7));
+        normalVec7.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal7 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation7 = new THREE.Quaternion();
+        quaternionRotation7.setFromUnitVectors(initialNormal7, normalVec7);
+
+        ringMesh7.setRotationFromQuaternion(quaternionRotation7);
+
+        return quaternionRotation7;
+    }
+
+    ringRoot.add(ringMesh7);
+            
+	var inradius8 = calulateInradius(getVertex4(), getVertex5(), getVertex6());
+	var incenter8 = calulateIncenter(getVertex4(), getVertex5(), getVertex6());
+	var ringGeometry8 = new THREE.RingGeometry((inradius8 - 0.005),inradius8, 32);
+	const ringMaterial8 = new THREE.LineBasicMaterial( { color: 0x000000, side: THREE.DoubleSide } );
+	const ringMesh8 = new THREE.Mesh(ringGeometry8, ringMaterial8);
+
+	function setCircleRotation8(){
+
+        //translate ring to incenter
+        var incenter = calulateIncenter([-1,-1,0],[ -1,1,0],[0,0,-1.4142135623730951]);
+
+        ringMesh8.position.setX(incenter[0]);
+        ringMesh8.position.setY(incenter[1]);
+        ringMesh8.position.setZ(incenter[2]);
+
+        // set the size right. Is done relative to the initial value, as we can only scale the mesh
+        var inradius = calulateInradius(getVertex4(), getVertex5(), getVertex6());
+        var relRadius = inradius/inradius8;
+
+        ringMesh8.scale.set(relRadius, relRadius, relRadius);
+
+        // rotate ring to right angle
+        const A8 = new THREE.Vector3(-1,-1,0);
+        const B8 = new THREE.Vector3(-1,1,0);
+        const C8 = new THREE.Vector3(0,0,-1.4142135623730951);
+
+        const normalVec8 = new THREE.Vector3();
+        normalVec8.crossVectors(B8.sub(A8), C8.sub(A8));
+        normalVec8.normalize();
+
+        //initial normal vector of ringGeometry is (0,0,1), so we use that
+        const initialNormal8 = new THREE.Vector3(0,0,1);
+
+        const quaternionRotation8 = new THREE.Quaternion();
+        quaternionRotation8.setFromUnitVectors(initialNormal8, normalVec8);
+
+        ringMesh8.setRotationFromQuaternion(quaternionRotation8);
+
+        return quaternionRotation8;
+    }
+
+    ringRoot.add(ringMesh8);
+            	// function to update the circles every frame 
+	function updateCircles(){
+		setCircleRotation1();
+		setCircleRotation2();
+		setCircleRotation3();
+		setCircleRotation4();
+		setCircleRotation5();
+		setCircleRotation6();
+		setCircleRotation7();
+		setCircleRotation8();
+	}
+
+	// needs to be called once to be initialized 
+	updateCircles();
+
+	// function to update the circles width, that is called every frame even if the surface is not parameterized 
+	function updateCircleWidth(){
+		ringGeometry1.dispose();
+		ringGeometry1 = new THREE.RingGeometry((inradius1 - guiParameters.circleWidth),inradius1, 32);
+		ringMesh1.geometry = ringGeometry1; 
+		ringGeometry2.dispose();
+		ringGeometry2 = new THREE.RingGeometry((inradius2 - guiParameters.circleWidth),inradius2, 32);
+		ringMesh2.geometry = ringGeometry2; 
+		ringGeometry3.dispose();
+		ringGeometry3 = new THREE.RingGeometry((inradius3 - guiParameters.circleWidth),inradius3, 32);
+		ringMesh3.geometry = ringGeometry3; 
+		ringGeometry4.dispose();
+		ringGeometry4 = new THREE.RingGeometry((inradius4 - guiParameters.circleWidth),inradius4, 32);
+		ringMesh4.geometry = ringGeometry4; 
+		ringGeometry5.dispose();
+		ringGeometry5 = new THREE.RingGeometry((inradius5 - guiParameters.circleWidth),inradius5, 32);
+		ringMesh5.geometry = ringGeometry5; 
+		ringGeometry6.dispose();
+		ringGeometry6 = new THREE.RingGeometry((inradius6 - guiParameters.circleWidth),inradius6, 32);
+		ringMesh6.geometry = ringGeometry6; 
+		ringGeometry7.dispose();
+		ringGeometry7 = new THREE.RingGeometry((inradius7 - guiParameters.circleWidth),inradius7, 32);
+		ringMesh7.geometry = ringGeometry7; 
+		ringGeometry8.dispose();
+		ringGeometry8 = new THREE.RingGeometry((inradius8 - guiParameters.circleWidth),inradius8, 32);
+		ringMesh8.geometry = ringGeometry8; 
+	}
+
+	updateCircleWidth();
+
+	// generate the normals trough the incenter orthogonal to the face 
+	// getNormalsVectors generates the coordinates for the current values of the parameterized surface 
+	function getNormalsVectors(){
+		var vector1;
+		var vector2;
+
+		var normals = [];
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (1)-(0);
+		vector1[1] = (1)-(0);
+		vector1[2] = (0)-(1.414213562373095);
+
+		vector2[0] = (1)-(0);
+		vector2[1] = (-1)-(0);
+		vector2[2] = (0)-(1.414213562373095);
+
+		var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,1,0],[1,-1,0]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (-1)-(1);
+		vector1[1] = (1)-(1);
+		vector1[2] = (0)-(0);
+
+		vector2[0] = (0)-(1);
+		vector2[1] = (0)-(1);
+		vector2[2] = (-1.414213562373095)-(0);
+
+		var incenter = calulateIncenter([1,1,0],[ -1,1,0],[0,0,-1.4142135623730951]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (1)-(0);
+		vector1[1] = (1)-(0);
+		vector1[2] = (0)-(1.414213562373095);
+
+		vector2[0] = (-1)-(0);
+		vector2[1] = (1)-(0);
+		vector2[2] = (0)-(1.414213562373095);
+
+		var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,1,0],[-1,1,0]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (1)-(1);
+		vector1[1] = (-1)-(1);
+		vector1[2] = (0)-(0);
+
+		vector2[0] = (0)-(1);
+		vector2[1] = (0)-(1);
+		vector2[2] = (-1.414213562373095)-(0);
+
+		var incenter = calulateIncenter([1,1,0],[ 1,-1,0],[0,0,-1.4142135623730951]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (-1)-(0);
+		vector1[1] = (-1)-(0);
+		vector1[2] = (0)-(1.414213562373095);
+
+		vector2[0] = (-1)-(0);
+		vector2[1] = (1)-(0);
+		vector2[2] = (0)-(1.414213562373095);
+
+		var incenter = calulateIncenter([0,0,1.4142135623730951],[ -1,-1,0],[-1,1,0]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (-1)-(1);
+		vector1[1] = (-1)-(-1);
+		vector1[2] = (0)-(0);
+
+		vector2[0] = (0)-(1);
+		vector2[1] = (0)-(-1);
+		vector2[2] = (-1.414213562373095)-(0);
+
+		var incenter = calulateIncenter([1,-1,0],[ -1,-1,0],[0,0,-1.4142135623730951]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (1)-(0);
+		vector1[1] = (-1)-(0);
+		vector1[2] = (0)-(1.414213562373095);
+
+		vector2[0] = (-1)-(0);
+		vector2[1] = (-1)-(0);
+		vector2[2] = (0)-(1.414213562373095);
+
+		var incenter = calulateIncenter([0,0,1.4142135623730951],[ 1,-1,0],[-1,-1,0]);
+		normals.push([vector1, vector2, incenter]);
+
+		vector1 = [];
+		vector2 = [];
+		vector1[0] = (-1)-(-1);
+		vector1[1] = (1)-(-1);
+		vector1[2] = (0)-(0);
+
+		vector2[0] = (0)-(-1);
+		vector2[1] = (0)-(-1);
+		vector2[2] = (-1.414213562373095)-(0);
+
+		var incenter = calulateIncenter([-1,-1,0],[ -1,1,0],[0,0,-1.4142135623730951]);
+		normals.push([vector1, vector2, incenter]);
+
+	return normals;
+	}
+	// getNormalsCoordinates calculates the right coordinates for the ortogonality and fitting values from the gui 
+	function getNormalsCoordinates(){
+		var res = [];
+		var normals = getNormalsVectors(); 
+        for(var i = 0; i < normals.length; i++){
+            var plus = [];
+            var minus = [];
+
+            minus[0] = normals[i][2][0] - (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+            minus[1] = normals[i][2][1] - (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+            minus[2] = normals[i][2][2] - (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+
+            plus[0] = normals[i][2][0] + (1/2)*guiParameters.normalsLength*(normals[i][0][1]*normals[i][1][2] - normals[i][0][2]*normals[i][1][1]);
+            plus[1] = normals[i][2][1] + (1/2)*guiParameters.normalsLength*(normals[i][0][2]*normals[i][1][0] - normals[i][0][0]*normals[i][1][2]);
+            plus[2] = normals[i][2][2] + (1/2)*guiParameters.normalsLength*(normals[i][0][0]*normals[i][1][1] - normals[i][0][1]*normals[i][1][0]);
+
+            res.push(minus[0]);
+            res.push(minus[1]);
+            res.push(minus[2]);
+            res.push(plus[0]);
+            res.push(plus[1]);
+            res.push(plus[2]);
+        }
+        res = Float32Array.from(res);
+
+    
+		return res;
+	}
+
+
+    const normalsMaterial = new THREE.LineBasicMaterial( {
+        color: 0x000000,
+    } );
+    
+    const normalsGeometry = new THREE.BufferGeometry();
+    normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
+    var normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+
+    function updateNormals(){
+        normalsGeometry.setAttribute( 'position', new THREE.BufferAttribute( getNormalsCoordinates(), 3 ) );
+        normalsLine = new THREE.LineSegments( normalsGeometry, normalsMaterial );
+    }
+    
+    normalsRoot.add(normalsLine);
+
+    
+	// generate automatic ranges for the intersections if the surface is not parameterized 
+	guiParameters.maxX = 1.;
+	guiParameters.maxY = 1.;
+	guiParameters.maxZ = 1.414213562373095;
+	guiParameters.minX = -1.;
+	guiParameters.minY = -1.;
+	guiParameters.minZ = -1.414213562373095;
+
+	guiParameters.planeX = 0.;
+	guiParameters.planeY = 0.;
+	guiParameters.planeZ = 0.;
+	// --- end of generated output --- //
+
+    const planeFolder = gui.addFolder("Intersection Planes");
+    planeFolder.add(guiParameters, 'planeXactive');
+    planeFolder.add(guiParameters, 'planeX', guiParameters.minX*1.1, guiParameters.maxX*1.1);
+    planeFolder.add(guiParameters, 'planeYactive');
+    planeFolder.add(guiParameters, 'planeY', guiParameters.minY*1.1, guiParameters.maxY*1.1);
+    planeFolder.add(guiParameters, 'planeZactive');
+    planeFolder.add(guiParameters, 'planeZ', guiParameters.minZ*1.1, guiParameters.maxZ*1.1);
+    
+    camera.position.z = Math.min((1.5)*guiParameters.minZ, -1)
+    camera.lookAt(0,0,-1);
+
+    scene.background = new THREE.Color( 'white' );
+
+    // add both roots to the scene
+    scene.add( meshRoot );
+    scene.add( wireRoot );
+    scene.add( vertexRoot );
+    scene.add( vertexlabelRoot );
+    scene.add( edgeRoot );
+    scene.add( ringRoot );
+    scene.add( normalsRoot );
+    scene.add( normalMeshRoot );
+
+    //presave some current gui parameters to only update if they change
+    var currentCircleWidth = guiParameters.circleWidth;
+
+    function animate() {
+        requestAnimationFrame( animate );
+        meshRoot.rotation.x += guiParameters.speedX/100;
+        meshRoot.rotation.y += guiParameters.speedY/100;
+        meshRoot.rotation.z += guiParameters.speedZ/100;
+
+        wireRoot.rotation.x += guiParameters.speedX/100;
+        wireRoot.rotation.y += guiParameters.speedY/100;
+        wireRoot.rotation.z += guiParameters.speedZ/100;
+
+        vertexRoot.rotation.x += guiParameters.speedX/100;
+        vertexRoot.rotation.y += guiParameters.speedY/100;
+        vertexRoot.rotation.z += guiParameters.speedZ/100;
+
+        vertexlabelRoot.rotation.x += guiParameters.speedX/100;
+        vertexlabelRoot.rotation.y += guiParameters.speedY/100;
+        vertexlabelRoot.rotation.z += guiParameters.speedZ/100;
+
+        edgeRoot.rotation.x += guiParameters.speedX/100;
+        edgeRoot.rotation.y += guiParameters.speedY/100;
+        edgeRoot.rotation.z += guiParameters.speedZ/100;
+
+        ringRoot.rotation.x += guiParameters.speedX/100;
+        ringRoot.rotation.y += guiParameters.speedY/100;
+        ringRoot.rotation.z += guiParameters.speedZ/100;
+
+        normalsRoot.rotation.x += guiParameters.speedX/100;
+        normalsRoot.rotation.y += guiParameters.speedY/100;
+        normalsRoot.rotation.z += guiParameters.speedZ/100;
+
+        normalMeshRoot.rotation.x += guiParameters.speedX/100;
+        normalMeshRoot.rotation.y += guiParameters.speedY/100;
+        normalMeshRoot.rotation.z += guiParameters.speedZ/100;
+
+        //update the light when the camera moves (with orbitcontrols)
+        light.position.set(camera.position.x, camera.position.y, camera.position.z);
+
+        planeX.constant = guiParameters.planeX;
+        planeY.constant = guiParameters.planeY;
+        planeZ.constant = guiParameters.planeZ;
+
+        activePlanes = [];
+        if(guiParameters.planeXactive){
+            activePlanes.push(planeX);
+        }
+        if(guiParameters.planeYactive){
+            activePlanes.push(planeY);
+        }
+        if(guiParameters.planeZactive){
+            activePlanes.push(planeZ);
+        }
+
+        if(vertexParametriziation){
+            updateFaceCoordinates();
+            if(guiParameters.edgeVisibility){
+                updateEdgeCoordinates();
+            }
+            if(guiParameters.vertexlabelVisibility || guiParameters.vertexVisibility){
+                updateVertexCoordinates();
+            }
+            if(guiParameters.circleVisibility){
+                updateCircles();
+            }
+        }                
+
+        //update stuff that changes from the gui
+        meshRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.opacity = guiParameters.transparency;
+                node.material.clippingPlanes = activePlanes;
+                if(guiParameters.normalsMaterial){
+                    node.material.opacity = 0;
+                }
+            }
+        } );
+
+        normalMeshRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.opacity = guiParameters.transparency;
+                node.material.clippingPlanes = activePlanes;
+                if(!guiParameters.normalsMaterial){
+                    node.material.opacity = 0;
+                }
+            }
+        } );
+
+        edgeRoot.traverse( function( node ) {
+            if ( node instanceof Line2 ) {
+                node.material.visible = guiParameters.edgeVisibility;
+                node.material.linewidth = guiParameters.edgeWidth/100;
+            }
+            if ( node instanceof THREE.LineSegments ) {
+                node.material.visible = guiParameters.edgeVisibility;
+            }
+        } );
+
+        vertexRoot.traverse( function( node ) {
+            if ( node instanceof THREE.Mesh ) {
+                node.material.visible = guiParameters.vertexVisibility;
+                node.scale.setScalar(guiParameters.vertexSize);
+            }
+        } );
+
+        vertexlabelRoot.traverse( function( node ) {
+            if( node instanceof CSS2DObject) {
+                node.visible = guiParameters.vertexlabelVisibility;
+            }
+        } );
+
+        ringRoot.traverse( function( node ) {
+            if( node instanceof THREE.Mesh) {
+                node.visible = guiParameters.circleVisibility;
+            }
+        } );
+
+        normalsRoot.traverse( function( node ) {
+            if( node instanceof THREE.LineSegments) {
+                node.visible = guiParameters.normalsVisibility;
+            }
+        } );
+
+        // update the circle width
+        if(guiParameters.circleVisibility && currentCircleWidth != guiParameters.circleWidth){
+            updateCircleWidth();
+            currentCircleWidth = guiParameters.circleWidth;
+        }
+
+        //update the normals length 
+        if(guiParameters.normalsVisibility){
+            updateNormals();
+        }
+
+        controls.update();
+
+        renderer.localClippingEnabled = true;
+
+        renderer.render( scene, camera );
+        labelRenderer.render( scene, camera );
+    }
+    animate();
+
+    //resize of window size changes
+    window.addEventListener( 'resize', onWindowResize );
+    function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        labelRenderer.setSize( window.innerWidth, window.innerHeight );
+    }
+</script>
+
+</body>
+</html>

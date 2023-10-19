@@ -536,11 +536,91 @@ Consider the example from before:
 </Section>
 
 
-<!-- <Section Label="Section_ParameterizedCoordinates">
+<Section Label="Section_ParameterizedCoordinates">
 <Heading>Parameterised Coordinates</Heading>
-It is possible to 
+It is possible to have the coordinates of the animation parameterized, i.e. they depend on a parameter that then gets controlled by the GUI. For this consider the following example:
 
-</Section> -->
+<Log><![CDATA[
+gap> tet := Tetrahedron();;
+gap> verticesPositions := [ [ "a*b", -1/Sqrt(3.), -1/Sqrt(6.) ], 
+> [ "b**(1/2)", -1/Sqrt(3.), -1/Sqrt(6.) ], 
+> [ 0, 2/Sqrt(3.) , -1/Sqrt(6.) ], 
+> [ 0, 0, 3/Sqrt(6.) ] ];;
+
+gap> printRecord := SetVertexCoordinatesParameterized(tet, verticesPositions, rec());
+gap> params := [["a", 0, [-1,1]], ["b", 5, [0,10]]];
+gap> printRecord := SetVertexParameters(tet, params, printRecord);
+
+gap> DrawComplexToJavaScript(tet, "tet-param-lines.html", printRecord);
+]]></Log>
+
+There are two steps to set up such an animation:
+<Enum>
+  <Item>Set the coordinates via the <A>SetVertexCoordinatesParameterized</A> command</Item>
+  <Item>Set the range(s) of the parameters that should be available in the GUI via <A>SetVertexParameters</A></Item>
+</Enum>
+Note: as the computations are performed on a JavaScript level the appropriate syntax has to be used.
+
+<ManSection Label="SetVertexCoordinatesParameterized">
+  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats or strings in case of parameters. This does not check for correctness.
+<P/>
+ </Description>
+</ManSection>
+
+<ManSection Label="SetVertexParameters">
+  <Oper Arg="surface, parameters, printRecord" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ Save the given list of ranges of the parameters. They have to be provided in the format <A>[["nameofParameterA", initialValue, [minA, maxA]], ["nameofParameterB", initialValue, [minB, maxB]]]</A>
+<P/>
+ </Description>
+</ManSection>
+
+</Section>
+
+<Section Label="Section_LineThickness">
+<Heading>Variable Line Width</Heading>
+Sometimes the width of the edges should be different from the default one. For this there are three simple commands that enable the function in the GUI. <Br/>
+Note: this can be computationally hard, so if the performance drops it might be good to disable it.
+
+<ManSection Label="SetVertexParameters">
+  <Oper Arg="surface, printRecord" Name="ActivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, printRecord" Name="DeactivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="surface, printRecord" Name="IsLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ (De-)activate the variable line width, controllable by the GUI. 
+<P/>
+ </Description>
+</ManSection>
+
+For this, consider the following example:
+
+<Log><![CDATA[
+gap> oct := Octahedron();;
+gap> verticesPositions := [
+> [ 0, 0, Sqrt(2.) ],
+> [ 1, 1, 0 ],
+> [ 1, -1, 0 ],
+> [ -1, -1, 0 ],
+> [ -1, 1, 0 ],
+> [ 0, 0, -Sqrt(2.) ] ];;
+gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
+gap> printRecord := ActivateLineWidth(oct, printRecord);;
+gap> DrawComplexToJavaScript(oct, "octahedron_lineWidth.html", printRecord);;
+]]></Log>
+
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_LineWidth.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_LineWidth.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_LineWidth.png]</Alt><Br/>
+
+</Section>
 
 </Chapter>
 
