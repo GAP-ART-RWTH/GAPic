@@ -127,8 +127,8 @@ gap> List([1..NumberOfVertices(oct)], i -> IsVertexActive(oct, i, printRecord));
 gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt><Br/>
 
 </Subsection>
@@ -223,6 +223,18 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
  </Description>
 </ManSection>
 
+<Subsection Label="Section_NormalsMaterial">
+<Heading>NormalsMaterial</Heading>
+There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the color of any face in real time with regards to it's normal vector towards the camera. That way we get a different color if two faces have different normals.
+To enable the material, just toggle the corresponding box in the GUI.
+Consider the following example from before:
+
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_normalsMaterial.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt><Br/>
+
+</Subsection>
+
 </Section>
 
 
@@ -304,8 +316,8 @@ rec( edgeThickness := 0.03,
 ]]></Example>
 
 <P/>
-<Alt Only="HTML">&lt;img src="../images/OneFace_animated.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/OneFace_animated.png}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/OneFace_animated.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/OneFace_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/OneFace_animated.png]</Alt>
 
 </Section>
@@ -340,8 +352,8 @@ gap> List([1..NumberOfVertices(oct)], i -> GetVertexColour(oct, i, printRecord))
 gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;img src="../images/Octahedron_EdgeColors.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_EdgeColors.png}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_EdgeColors.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_EdgeColors.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_EdgeColors.png]</Alt><Br/>
 
 
@@ -427,8 +439,8 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <P/>
  As an example, consider the octahedron generated as before:
 
-<Alt Only="HTML">&lt;img src="../images/Octahedron_InnerCircle.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_InnerCircle.png}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt><Br/>
 
 <ManSection Label="ActivateInnerCircles">
@@ -492,8 +504,8 @@ It is also possible to set colours for the innercircles. This can be done with t
 By default the normals of inner circles are active but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
 
 Consider the example from before:
-<Alt Only="HTML">&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_NormalsOfInnerCircle.png}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_NormalsOfInnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_NormalsOfInnerCircle.png]</Alt><Br/>
 
 <ManSection Label="ActivateNormalOfInnerCircles">
@@ -520,34 +532,6 @@ Consider the example from before:
  </Description>
 </ManSection>
 
-
-</Section>
-
-
-<Section Label="Section_NormalsMaterial">
-<Heading>NormalsMaterial</Heading>
-There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the color of any face in real time with regards to it's normal vector towards the camera. That way we get a different color if two faces have different normals.
-<P/>
-It is also possible to change to the normalsMaterial in the GUI, as it will be generated as well. The following is mostly to set a default or change only a (subset) of faces.
-<P/>
- Consider the following example:
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := SetFaceColour(oct, "normal", printRecord);
-gap> DrawComplexToJavaScript(oct, "doc/Octahedron_NormalMaterial.html", printRecord);;
-]]></Log>
-
-<Alt Only="HTML">&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_normalsMaterial.png}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt><Br/>
 
 </Section>
 
