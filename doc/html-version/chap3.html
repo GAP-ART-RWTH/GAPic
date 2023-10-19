@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GAP (GAPic) - Chapter 3: Drawing a graph</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chap3"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"></p>
+<p><a id="X7B1C2FCF7C909BDE" name="X7B1C2FCF7C909BDE"></a></p>
+<div class="ChapSects"><a href="chap3.html#X7B1C2FCF7C909BDE">3 <span class="Heading">Drawing a graph</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X7CB8B7FB7CDFF5F7">3.1 <span class="Heading">Plane embedding of a planar graph</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X78CAAA7884586337">3.1-1 DrawStraightPlanarDigraphToTikz</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X872AD1E785C7EB03">3.1-2 <span class="Heading">Faces</span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X85C29C71800AB1F1">3.1-3 <span class="Heading">Appearance</span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X801FE64F853E34FA">3.1-4 <span class="Heading">Output control</span></a>
+</span>
+</div></div>
+</div>
+
+<h3>3 <span class="Heading">Drawing a graph</span></h3>
+
+<p><a id="X7CB8B7FB7CDFF5F7" name="X7CB8B7FB7CDFF5F7"></a></p>
+
+<h4>3.1 <span class="Heading">Plane embedding of a planar graph</span></h4>
+
+<p>Any planar digraph (see Digraphs package reference 6.6-1) can be embedded in the plane in such a way that its edges do not intersect and that its edges are straight lines. Since straight lines often are the most simple and aesthatical pleasing we want our embeddings of planar graphs to have straight edges. Therefore, one can use the following method:</p>
+
+<p><a id="X78CAAA7884586337" name="X78CAAA7884586337"></a></p>
+
+<h5>3.1-1 DrawStraightPlanarDigraphToTikz</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; DrawStraightPlanarDigraphToTikz</code>( <var class="Arg">graph</var>, <var class="Arg">file</var>, <var class="Arg">printRecord</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: a record</p>
+
+<p>Draw the given planar digraph into a tex-file (using TikZ). If <code class="keyw">graph</code> is a planar connected digraph (and one defines the faces the graph has <a href="chap3.html#X872AD1E785C7EB03"><span class="RefLink">3.1-2</span></a>), then the drawing printed into <code class="keyw">file</code> is a plane embedding of <code class="keyw">graph</code> with straight edges which do not intersect. The drawing algorithm constructs the embedding by successively manipulating a convex drawing drawing plane and calculating new vertex coordinates. Trying to use the function for a digraph that is not planar and connected results in returning <code class="keyw">fail</code>.</p>
+
+
+<ul>
+<li><p>If the given <code class="keyw">file</code> does not end in <var class="Arg">.tex</var> the ending <var class="Arg">.tex</var> will be added to it.</p>
+
+</li>
+<li><p>The given file will be overwritten without asking if it already exists. If you do not have permission to write in that file, this method will throw an error.</p>
+
+</li>
+<li><p>The particulars of the drawing are determined by the given <code class="keyw">printRecord</code>.</p>
+
+</li>
+<li><p>The printRecord will be modified and returned by this method. It contains the data to recreate the drawing of the graph.</p>
+
+</li>
+</ul>
+<p>There are parameters to change the output of this method. There are the following classes of parameters:</p>
+
+
+<ul>
+<li><p><var class="Arg">Faces</var> (<a href="chap3.html#X872AD1E785C7EB03"><span class="RefLink">3.1-2</span></a>): Define the faces the planar graph has. One parameter is obligatory to be changed. Otherwise the method throws an error.</p>
+
+</li>
+<li><p><var class="Arg">Appearance</var> (<a href="chap3.html#X85C29C71800AB1F1"><span class="RefLink">3.1-3</span></a>): These parameters control the appearance of the drawing.</p>
+
+</li>
+<li><p><var class="Arg">Output control</var> (<a href="chap3.html#X801FE64F853E34FA"><span class="RefLink">3.1-4</span></a>): Modify how the LaTeX-output behaves and how much information is printed to the console.</p>
+
+</li>
+</ul>
+<p><a id="X872AD1E785C7EB03" name="X872AD1E785C7EB03"></a></p>
+
+<h5>3.1-2 <span class="Heading">Faces</span></h5>
+
+<p>This subsection covers the parameters that define the faces of the graph which should be drawn. Since the method is still working in process the user has to manually define all the faces the graph has characterised by their surrounding nodes. The parameters are:</p>
+
+
+<ul>
+<li><p><var class="Arg">nodesOfFaces</var>: Define all faces the graph has characterised by their surrounding nodes.</p>
+
+</li>
+<li><p><var class="Arg">infiniteFace</var>: Define the infinite face characterised by its surrounding nodes. The nodes of the infinite face will form the outer ring of the embedding.</p>
+
+</li>
+</ul>
+<p>We will exemplify them with the following graph in order to make clear how the parameters work:</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">[1,5,6], [2,5,6]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsPlanarDigraph(graph);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsConnectedDigraph(graph);</span>
+true
+</pre></div>
+
+<p>This graph is as seen above a planar connected graph and thus can be drawn with the method. Therefore, one must define the the graph's faces inside of a record. The file name will simply be <code class="keyw">graph_embedding</code>.</p>
+
+
+<ul>
+<li><p><var class="Arg">nodesOfFaces</var>: The faces that have to be defined are characterised by its surrounding nodes. That means that a face can be seen as a cycle of nodes. For <var class="Arg">nodesOfFaces</var> one has to give a list of lists where on of these lists is a cycle when going around that face in any direction.</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3], </span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">[2,3,5,8], [5,8,6,7], [2,4,6,8], [1,3,5,7]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph.png"></img></p>
+
+</li>
+<li><p><var class="Arg">infiniteFace</var>: One can change the face that will be the infinite face. Any face can be chosen. If <var class="Arg">infiniteFace</var> is not set up by the user one face with the most nodes will be used as a default. Using the same printRecord from previous example results in:</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord.infiniteFace := [1,4,2,3];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png"></img></p>
+
+</li>
+</ul>
+<p><a id="X85C29C71800AB1F1" name="X85C29C71800AB1F1"></a></p>
+
+<h5>3.1-3 <span class="Heading">Appearance</span></h5>
+
+<p>This subsection covers the parameters that control the appearance of the drawing. The parameters are:</p>
+
+
+<ul>
+<li><p><var class="Arg">scale</var>: Globally scales the picture. The default is 2.</p>
+
+</li>
+<li><p><var class="Arg">spread</var>: Changes the amount of spread, i.e. how the nodes are distributed inside the graph.</p>
+
+</li>
+</ul>
+<p>We will exemplify them with the following graph in order to make clear how the parameters work:</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">[1,5,6], [2,5,6]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3], </span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">[2,3,5,8], [5,8,6,7], [2,4,6,8], [1,3,5,7]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph.png"></img></p>
+
+
+<ul>
+<li><p><var class="Arg">scale</var>: By default the scale is set to 2. Now one can change it by:</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord.scale := 3;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph_scale.png"></img></p>
+
+</li>
+<li><p><var class="Arg">spread</var>: Modifies the position of the nodes. The spread parameter can be chosen as a float in the interval (0, 1). Choosing the parameter outside the interval results in an error. Choosing a number close to 1 modifies the nodes such that they tend torwards the outer ring of the face graph. Choosing a number close to 0 modifies the nodes such that they tend torwards the middle of the graph. The default spread is set at 0.5. Here are two examples with spreads 0.3 and 0.7:</p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord.spread := 0.3;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png"></img></p>
+
+
+<div class="example"><pre> 
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">printRecord.spread := 0.7;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">printRecord);;</span>
+</pre></div>
+
+<p><img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png"></img></p>
+
+</li>
+</ul>
+<p><a id="X801FE64F853E34FA" name="X801FE64F853E34FA"></a></p>
+
+<h5>3.1-4 <span class="Heading">Output control</span></h5>
+
+<p>This subsection contains miscellaneous parameters to control the output of <code class="keyw">DrawStraightPlanarDigraphToTikz</code> <a href="chap3.html#X78CAAA7884586337"><span class="RefLink">3.1-1</span></a>. It contains the following options:</p>
+
+
+<ul>
+<li><p><var class="Arg">compileLatex</var>: If this parameter is <code class="keyw">true</code> (the default is <code class="keyw">false</code>) the generated tex-file will be automatically compiled with <code class="keyw">pdflatex</code>. In rare cases the compilation might run into a problem and stop. To abort such a computation, type 'x' and hit ENTER (this command is passed to pdflatex). If this happens, please notify the developers so it can be fixed in a later version.</p>
+
+</li>
+<li><p><var class="Arg">latexDocumentclass</var>: Defines which documentclass is used for the output. The default is <code class="keyw">article</code>. If the picture should not be cropped (and not be printed), <code class="keyw">standalone</code> is recom- mended.</p>
+
+</li>
+<li><p><var class="Arg">noOutput</var>: If this parameter is <code class="keyw">true</code> (the default is <code class="keyw">false</code>) the method <code class="keyw">DrawStraightPlanarDigraphToTikz</code> will produce no output on the console.</p>
+
+</li>
+<li><p><var class="Arg">onlyTikzpicture</var>: If this parameter is <code class="keyw">true</code> (the default is <code class="keyw">false</code>) the generated tex-file will only consist of a <code class="keyw">tikzpicture</code> without header (it is not possible to compile it on its own).</p>
+
+</li>
+</ul>
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>
