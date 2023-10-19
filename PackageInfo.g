@@ -10,8 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "GAPic",
 Subtitle := "GAP image creator, for visualizing structures",
-Version := "0.1",
-Date := "22/04/2023", # dd/mm/yyyy format
+Version := "0.1-beta",
+Date := "20/10/2023", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
