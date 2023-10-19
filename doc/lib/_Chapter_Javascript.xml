@@ -5,7 +5,7 @@
 
 <P/>
 This chapter describes animating simplicial surfaces via Javascript using three.js, see <URL>https://threejs.org/</URL>. Currently this uses r148.
-<Section Label="Section_LabelIntroductionAndQuickStartAnimating">
+<Section Label="Section_QuickStart">
 <Heading>Quick Start</Heading>
 
 This section contains a minimal example by animating an octahedron. To construct an octahedron, we need to specify the 3D-coordinates of its vertices. After this, we can already generate an animation.
@@ -179,7 +179,6 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  </Description>
 </ManSection>
 
-
 <ManSection Label="DeactivateEdges">
   <Oper Arg="surface, printRecord" Name="DeactivateEdges" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="surface, i, printRecord" Name="DeactivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
@@ -227,25 +226,63 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 </Section>
 
 
-<Section Label="Section_LabelCoordinatesAndCoreFunctionality">
-<Heading>Coordinates and Core Functionality</Heading>
+<Section Label="Section_basicCommands">
+<Heading>Basic Commands</Heading>
+In this section the options that can be defined by the <A>printRecord</A> will be described. The most important one is how to set coordinates.
 
- This section describes the animation method and how to define vertex coordinates.
- Before the animation (see <K>DrawComplexToJavascript</K> <Ref Subsect="DrawComplexToJavascript"/>) can be drawn,
- it is necessary to specify the 3D-coordinates (which means, the [x,y,z] coordinates) of all vertices
- of the surface which should be animated (see <K>SetVertexCoordinates3D</K> <Ref Subsect="SetVertexCoordinates3D"/>).
+<ManSection Label="SetVertexCoordinates3D">
+  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsList, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats. If the format of the <A>coordinates</A> is not correct, an error is shown. The NC-version does not check the coordinate format.
 <P/>
- After setting the vertex coordinates, the location of the edges in <M>\mathbb{R}^3</M> has to be derived.
- By default, the method <K>DrawComplexToJavascript</K>(<Ref Subsect="DrawComplexToJavascript"/>)
- always calculates the edge locations depending on the current vertices positions.
- If you want to avoid that, you can use the method <K>DrawComplexToJavascriptCalculate</K>(<Ref Subsect="DrawComplexToJavascript"/>)
- and set the last parameter to false. In this case, only the first call of the method computes the edge locations.
- Using this method can make the animation inconsistent if the coordinates of the vertices have changed but the edge locations have stayed the same.
+ </Description>
+</ManSection>
+Note: for using parameterised vertex coordinates see <Ref Subsect="Section_LabelParameterizedCoordinates"/>.
+
+<ManSection Label="GetVertexCoordinates3D">
+  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3D" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+ <Returns>a list of lists with three floats
+</Returns>
+ <Description>
+ Extract the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>surface</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record.
 <P/>
- The animation draws all faces and a wireframe for them individually. This wireframe can be enabled and disabled in the user interface.
- The vertices will be drawn as small spheres, with the corresponding number is displayed above the vertex. 
- These will be only drawn if they are active, see  <K>ActivateVertices</K> <Ref Subsect="ActivateVertices"/>
-<P/>
+ </Description>
+</ManSection>
+
+As decribed before the next important method is the one generating the animations.
+<ManSection Label="DrawComplexToJavascript">
+  <Oper Arg="surface, filename, printRecord" Name="DrawComplexToJavascript" Label="for IsTriangularComplex, IsString, IsRecord"/>
+  <Returns>
+    the print record
+  </Returns>
+  <Description>
+  This method animates the <A>surface</A> as an .html file <A>filename</A> into the working directory.</Br>
+  An introduction to the use of this method with an example can be found at the start of section <Ref Sect="Section_QuickStart"/>.
+  <P/>
+  Note:
+  <List>
+    <Item>
+      If the given <A>fileName</A> does not end in <E>.html</E> the ending
+      <E>.html</E> will be added to it.
+    </Item>
+    <Item>
+      The given file will be overwritten without asking if it already exists. If you don't have permission to write in that file, this method will throw an error.
+    </Item>
+    <Item>
+      The animation is determined by the given <A>printRecord</A>.
+    </Item>
+  </List>
+  <P/>
+  To use these methods it is necessary to set the 3D-coordinates 
+  of the vertices of the surface (see <K>SetVertexCoordinates3D</K>).
+  <P/>
+  </Description>
+</ManSection>
+
  Note, it is also possible to animate simplicial surfaces whose vertices,
  edges and faces are not given by a dense list <K>[1..n]</K>.
  For example the function <K>SetVertexCoordinates3D</K> allows a list of
@@ -266,154 +303,23 @@ rec( edgeThickness := 0.03,
  vertexCoordinates3D := [ ,, [ 1, 0, 0 ],,,, [ 0, 1, 0 ],,, [ 0, 0, 1 ] ] )
 ]]></Example>
 
-
 <P/>
 <Alt Only="HTML">&lt;img src="../images/OneFace_animated.png">&lt;/img></Alt>
 <Alt Only="LaTeX">\includegraphics{../images/OneFace_animated.png}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/OneFace_animated.png]</Alt>
 
-<P/>
-<ManSection Label="SetVertexCoordinates3D">
-  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsList, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record.
- The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats.
- If the format of the <A>coordinates</A> is not correct, then an error is shown.
- The NC-version does not check the coordinate format.
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="GetVertexCoordinates3D">
-  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3D" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>a list
-</Returns>
- <Description>
- Extract the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>surface</A>.
- The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>.
- If the format of the <A>coordinates</A> is not correct, then an error is shown.
- This can happen, if the NC version is used to store the 3D-coordinates.
- The NC-version does not check the coordinate format saved in the print record.
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="DrawComplexToJavascript">
-  <Oper Arg="surface, filename, printRecord" Name="DrawComplexToJavascript" Label="for IsTriangularComplex, IsString, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- These methods animate the <A>surface</A> as a html file <A>filename</A> in JavaScript into the working directory.
- The animation can be opened and watched with most browsers.
- An introduction to the use of this method with an example
- can be found at the start of section
- <Ref Sect="Section_LabelIntroductionAndQuickStartAnimating"/>.
-<P/>
-<List>
-<Item>
-If the given <A>fileName</A> does not end in <E>.html</E> the ending
-   <E>.html</E> will be added to it.
-</Item>
-<Item>
-The given file will be overwritten without asking if it already exists.
-   If you don't have permission to write in that file, this method will
-   throw an error.
-</Item>
-<Item>
-The particulars of the drawing are determined by the
-   given <A>printRecord</A>.
-</Item>
-</List>
-<P/>
- To use these methods it is necessary to set the 3D-coordinates 
- of the vertices of the surface (see <K>SetVertexCoordinates3D</K>).
-<P/>
- There are two parameters to change the output of this method.
- There are the following classes of parameters:
-<List>
-<Item>
-<E>Visibility</E>
-   (<Ref Subsect="Section_Visibility"/>): Change the
-   visibility of vertices, edges and faces.
-</Item>
-<Item>
-<E>Colours</E>
-   (<Ref Subsect="Section_LabelColouring"/>): Change the
-   colours of vertices, edges and faces.
-</Item>
-</List>
-<P/>
- There are also options for inner circles (<Ref Subsect="Section_LabelInnerCirclesAnimating"/>)
- and normals of inner circles (<Ref Subsect="Section_LabelNormalsInnerCirclesAnimating"/>).
-<P/>
- </Description>
-</ManSection>
-
-
-<ManSection Label="CalculateParametersOfEdges">
-  <Oper Arg="surface, printRecord" Name="CalculateParametersOfEdges" Label="for IsSimplicialSurface, IsRecord"/>
- <Returns>the updated print record
-</Returns>
- <Description>
- This method calculates the parameters of the edges (centre, length, angles relative to x-direction) based on the
- coordinates of the vertices and saves those to the print record.
- </Description>
-</ManSection>
-
-
 </Section>
 
-
-
-
-
-<Section Label="Section_LabelColouring">
+<Section Label="Section_Colouring">
 <Heading>Colouring</Heading>
 
  In this section, we describe how to colour the animation. The colours are stored in hexadecimal format, which starts with 0x.
  The following possibilities are available:
  <Enum>
    <Item>Vertices (The default colour is 0xF58137, an orange hue. See <Ref Subsect="SetVertexColours"/>)</Item>
+   <Item>Edges (The default colour is 0x000000, black. See <Ref Subsect="SetEdgeColours"/>)</Item>
    <Item>Faces (The default colour is 0x049EF4, a light blue hue. See <Ref Subsect="SetFaceColours"/>)</Item>
  </Enum>
- Some colours can also be referred to by strings, namely:
-<List>
-<Item>
-Black = 0x000000
-</Item>
-<Item>
-Blue = 0x0000FF
-</Item>
-<Item>
-Brown = 0xA52A2A
-</Item>
-<Item>
-Green = 0x008000
-</Item>
-<Item>
-Orange = 0xFFA500
-</Item>
-<Item>
-Purple = 0x800080
-</Item>
-<Item>
-Pink = 0xFFC0CB
-</Item>
-<Item>
-Red = 0xFF0000
-</Item>
-<Item>
-White = 0xFFFFFF
-</Item>
-<Item>
-Yellow = 0xFFFF00
-</Item>
 </List>
  Here is a brief colouring example:
 <Log><![CDATA[
@@ -445,12 +351,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>.
- The method <K>SetVertexColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>surface</A>.
- That means the method set the colour of vertex <A>j</A> to <A>newColoursList[j]</A>.
- The default colour for all vertices is 0xF58137, an orange hue. This color will be shown as a small sphere around the vertex.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
+ The method <K>SetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>. The method <K>SetVertexColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>surface</A>. That means the method set the colour of vertex <A>j</A> to <A>newColoursList[j]</A>. The default colour for all vertices is 0xF58137, an orange hue. This color will be shown as a small sphere around the vertex with the option in the GUI to change the radius.
 <P/>
  </Description>
 </ManSection>
@@ -462,12 +363,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a (list) of color values in the format explained here: <Ref Subsect="Section_LabelColouring"/>
 </Returns>
  <Description>
- The method <K>GetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of vertex <A>i</A>.
- The method <K>GetVertexColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all vertices of <A>surface</A>
- as a list <A>colours</A>, where the colour of vertex <A>j</A> is <A>colours[j]</A>.
- The default colour for all vertices is 0xF58137, an orange hue.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
+ The method <K>GetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of vertex <A>i</A>. The method <K>GetVertexColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all vertices of <A>surface</A> as a list <A>colours</A>, where the colour of vertex <A>j</A> is <A>colours[j]</A>. The default colour for all vertices is 0xF58137, an orange hue.
 <P/>
  </Description>
 </ManSection>
@@ -479,12 +375,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of edge <A>i</A> to <A>colour</A>.
- The method <K>SetEdgeColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all edges of <A>surface</A>.
- That means the method set the colour of edge <A>j</A> to <A>newColoursList[j]</A>.
- The default colour for all edges is 0x000000, black.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
+ The method <K>SetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of edge <A>i</A> to <A>colour</A>. The method <K>SetEdgeColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all edges of <A>surface</A>. That means the method set the colour of edge <A>j</A> to <A>newColoursList[j]</A>. The default colour for all edges is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
@@ -496,12 +387,8 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>GetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of edge <A>i</A>.
- The method <K>GetEdgeColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all edges of <A>surface</A>
- as a list <A>colours</A>, where the colour of edge <A>j</A> is <A>colours[j]</A>.
+ The method <K>GetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of edge <A>i</A>. The method <K>GetEdgeColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all edges of <A>surface</A> as a list <A>colours</A>, where the colour of edge <A>j</A> is <A>colours[j]</A>.
  The default colour for all edges is 0x000000, black.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
 <P/>
  </Description>
 </ManSection>
@@ -513,12 +400,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>.
- The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>.
- That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>.
- The default colour for all faces is 0x049EF4, a light blue hue.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
+ The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>. That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.</Br>
  It is also possible to set the color to a so called normalsMaterial, more in <Ref Subsect="Section_NormalsMaterial"/>.
 <P/>
  </Description>
@@ -531,16 +413,10 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a (list) of color values in the format explained here: <Ref Subsect="Section_LabelColouring"/>
 </Returns>
  <Description>
- The method <K>GetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of face <A>i</A>.
- The method <K>GetFaceColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all faces of <A>surface</A>
- as a list <A>colours</A>, where the colour of face <A>j</A> is <A>colours[j]</A>.
- The default colour for all faces is 0x049EF4, a light blue hue.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- For more information look at the start of the section <Ref Subsect="Section_LabelColouring"/>.
+ The method <K>GetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of face <A>i</A>. The method <K>GetFaceColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all faces of <A>surface</A> as a list <A>colours</A>, where the colour of face <A>j</A> is <A>colours[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.
 <P/>
  </Description>
 </ManSection>
-
 
 </Section>
 
