@@ -61,7 +61,7 @@ It includes options for the following:
   <Item>Visibility of the inner circles. More in <Ref Subsect="Section_LabelInnerCircles"/></Item>
   <Item>Width of the inner circles.</Item>
   <Item>Visibility of the normals of inner circles. More in <Ref Subsect="Section_LabelNormalsInnerCircles"/></Item>
-  <Item>(Optional) Any parameters used in the coordinates. More in <Ref Subsect="Section_LabelParameterizedCoordinates"/></Item>
+  <Item>(Optional) Any parameters used in the coordinates. More in <Ref Subsect="Section_ParameterizedCoordinates"/></Item>
   <Item>Enabling and moving intersection planes. More in <Ref Subsect="Subsection_IntersectionPlanes"/></Item>
 </Enum>
 
@@ -260,7 +260,7 @@ As decribed before the next important method is the one generating the animation
     the print record
   </Returns>
   <Description>
-  This method animates the <A>surface</A> as an .html file <A>filename</A> into the working directory.</Br>
+  This method animates the <A>surface</A> as an .html file <A>filename</A> into the working directory.<Br/>
   An introduction to the use of this method with an example can be found at the start of section <Ref Sect="Section_QuickStart"/>.
   <P/>
   Note:
@@ -319,9 +319,8 @@ rec( edgeThickness := 0.03,
    <Item>Vertices (The default colour is 0xF58137, an orange hue. See <Ref Subsect="SetVertexColours"/>)</Item>
    <Item>Edges (The default colour is 0x000000, black. See <Ref Subsect="SetEdgeColours"/>)</Item>
    <Item>Faces (The default colour is 0x049EF4, a light blue hue. See <Ref Subsect="SetFaceColours"/>)</Item>
-   <Item>Innercircles. See <Ref Subsect="Section_InnerCircles"></Item>
+   <Item>Innercircles. See <Ref Subsect="Section_InnerCircles"/></Item>
  </Enum>
-</List>
  Here is a brief colouring example:
 <Log><![CDATA[
 gap> oct := Octahedron();;
@@ -401,7 +400,7 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>. That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.</Br>
+ The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>. That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.<Br/>
  It is also possible to set the color to a so called normalsMaterial, more in <Ref Subsect="Section_NormalsMaterial"/>.
 <P/>
  </Description>
