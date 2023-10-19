@@ -319,6 +319,7 @@ rec( edgeThickness := 0.03,
    <Item>Vertices (The default colour is 0xF58137, an orange hue. See <Ref Subsect="SetVertexColours"/>)</Item>
    <Item>Edges (The default colour is 0x000000, black. See <Ref Subsect="SetEdgeColours"/>)</Item>
    <Item>Faces (The default colour is 0x049EF4, a light blue hue. See <Ref Subsect="SetFaceColours"/>)</Item>
+   <Item>Innercircles. See <Ref Subsect="Section_InnerCircles"></Item>
  </Enum>
 </List>
  Here is a brief colouring example:
@@ -421,49 +422,15 @@ gap> DrawComplexToJavascript(oct, "octahedron.html", printRecord);;
 </Section>
 
 
-<Section Label="Section_LabelInnerCircles">
+<Section Label="Section_InnerCircles">
 <Heading>Inner Circles</Heading>
-
+ Inner circles are defined for triangular faces. In the animation, they are circles within the face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be toggled on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
 <P/>
- Inner circles are defined for triangular faces.
- In the animation, they are circles within the face that touch each edge in exactly one point.
-<P/>
- The functionality concerning the inner circles is completely similar to the functionality concerning the edges.
-<P/>
- By default, the inner circles are inactive.
-<P/>
- The following options are implemented for inner circles:
- <Enum>
-   <Item>Activate and deactivate inner circles. If an inner circle is active, then it is shown in the animation.
-         (See <Ref Subsect="ActivateInnerCircles"/>)</Item>
-   <Item>Set colours of inner circles for the animation. (See <Ref Subsect="SetCircleColours"/>)</Item>
- </Enum>
- For example, consider the octahedron:
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := ActivateInnerCircles(oct,printRecord);;
-gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
-]]></Log>
+ As an example, consider the octahedron generated as before:
 
 <Alt Only="HTML">&lt;img src="../images/Octahedron_InnerCircle.png">&lt;/img></Alt>
 <Alt Only="LaTeX">\includegraphics{../images/Octahedron_InnerCircle.png}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt><Br/>
-
-
- Consider the same example if we increased the transparency of the faces:
-
-<Alt Only="HTML">&lt;img src="../images/Octahedron_InnerCircleWithoutFaces.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\includegraphics{../images/Octahedron_InnerCircleWithoutFaces.png}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircleWithoutFaces.png]</Alt><Br/>
-
 
 <ManSection Label="ActivateInnerCircles">
   <Oper Arg="surface, printRecord" Name="ActivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
@@ -472,11 +439,7 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>.
- The method <K>ActivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all inner circles of <A>surface</A>.
- If an inner circle is active, then it is shown in the animation.
- By default, the inner circles are deactivated.
- For the description of inner circles look at <Ref Sect="Section_LabelInnerCirclesAnimating"/>.
+ The method <K>ActivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>. The method <K>ActivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all inner circles of <A>surface</A>. If an inner circle is active, then it is shown in the animation. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
@@ -488,29 +451,19 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>.
- The method <K>DeactivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all inner circles of <A>surface</A>.
- If an inner circle is deactivated, then it is not shown in the animation.
- By default, the inner circles are deactivated.
- For the description of inner circles look at <Ref Sect="Section_LabelInnerCirclesAnimating"/>.
+ The method <K>DeactivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>. The method <K>DeactivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all inner circles of <A>surface</A>. If an inner circle is deactivated, then it is not shown in the animation and will not be written into the file. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
 
-
+It is also possible to set colours for the innercircles. This can be done with the following:
 <ManSection Label="SetCircleColours">
   <Oper Arg="surface, newColoursList, printRecord" Name="SetCircleColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
   <Oper Arg="surface, i, colour, printRecord" Name="SetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>.
- The method <K>SetCircleColours</K>(<A>surface</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>surface</A>.
- That means the method set the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>.
- The default colour is 0x000000, an black hue.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- Compare Section <Ref Sect="Section_LabelColouring"/> for a list of default colours.
- For the description of inner circles look at <Ref Sect="Section_LabelInnerCirclesAnimating"/>.
+ The method <K>SetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>. The method <K>SetCircleColours</K>(<A>surface</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>surface</A>. That means the method set the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>. The default colour is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
@@ -522,13 +475,7 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>GetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour for the inner circle of face <A>i</A>.
- The method <K>GetCircleColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colour for all inner circles of <A>surface</A>
- as a list <A>colours</A>, where the colour of the inner circle of face <A>j</A> is <A>colours[j]</A>.
- The default colour is 0x000000, an black hue.
- Colours are stored in the format 0xABCDEF where A,B,C,D,E,F are elements of the hexadecimal code.
- Compare Section <Ref Sect="Section_LabelColouring"/> for a list of default colours.
- For the description of inner circles look at <Ref Sect="Section_LabelInnerCirclesAnimating"/>.
+ The method <K>GetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour for the inner circle of face <A>i</A>. The method <K>GetCircleColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colour for all inner circles of <A>surface</A> as a list <A>colours</A>, where the colour of the inner circle of face <A>j</A> is <A>colours[j]</A>. The default colour is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
@@ -537,51 +484,18 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
 </Section>
 
 
-<Section Label="Section_LabelNormalsInnerCircles">
+<Section Label="Section_NormalsInnerCircles">
 <Heading>Normals of Inner Circles</Heading>
 
 <P/>
- A normal of an inner circle (compare Section <Ref Sect="Section_LabelInnerCirclesAnimating"/>) is a line
- intersecting the center of the incircle orthogonally or to say in other words it intersects the incenter and extends orthogonally w.r.t. the face in both directions.
+ A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the center of the incircle orthogonally or to say in other words it intersects the incenter and extends orthogonally w.r.t. the face in both directions.
 <P/>
- The normal vectors of inner circles can be (de-)activated like vertices, edges, and faces.
- If the are active, they have the colour of the corresponding inner circle.
- For example, consider the octahedron:
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := ActivateNormalOfInnerCircles(oct,printRecord);;
-gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
-]]></Log>
+By default the normals of inner circles are active but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
 
+Consider the example from before:
 <Alt Only="HTML">&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img></Alt>
 <Alt Only="LaTeX">\includegraphics{../images/Octahedron_NormalsOfInnerCircle.png}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_NormalsOfInnerCircle.png]</Alt><Br/>
-
-
- Consider the octahedron if the faces are deactivated:
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord := DeactivateFaces(oct,printRecord);;
-gap> printRecord := ActivateNormalOfInnerCircles(oct,printRecord);;
-gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
-]]></Log>
-
 
 <ManSection Label="ActivateNormalOfInnerCircles">
   <Oper Arg="surface, printRecord" Name="ActivateNormalOfInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
@@ -590,11 +504,7 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>.
- The method <K>ActivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all normals of the inner circles of <A>surface</A>.
- If a normal is active, then the normal is shown in the animation.
- By default, the normals of inner circles are deactivated.
- For the description of normals of inner circles look at <Ref Sect="Section_LabelNormalsInnerCirclesAnimating"/>.
+ The method <K>ActivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all normals of the inner circles of <A>surface</A>. If a normal is active, then the normal is written to the file.
 <P/>
  </Description>
 </ManSection>
@@ -606,11 +516,7 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>.
- The method <K>DeactivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>surface</A>.
- If a normal is deactivated, then the normal is not shown in the animation.
- By default, the normals of inner circles are deactivated.
- For the description of normals inner circles look at <Ref Sect="Section_LabelNormalsInnerCirclesAnimating"/>.
+ The method <K>DeactivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>. The method <K>DeactivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>surface</A>. If a normal is deactivated, then the normal is not shown in the animation.
 <P/>
  </Description>
 </ManSection>
@@ -621,9 +527,9 @@ gap> DrawComplexToJavascript(oct, "Octahedron_InnerCircle.html", printRecord);;
 
 <Section Label="Section_NormalsMaterial">
 <Heading>NormalsMaterial</Heading>
-
- Currently there is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the color of any face live 
- with regards to it's normal vector towards the camera. That way we get a different color if two faces are not in the same orientation.
+There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the color of any face in real time with regards to it's normal vector towards the camera. That way we get a different color if two faces have different normals.
+<P/>
+It is also possible to change to the normalsMaterial in the GUI, as it will be generated as well. The following is mostly to set a default or change only a (subset) of faces.
 <P/>
  Consider the following example:
 <Log><![CDATA[
@@ -640,54 +546,13 @@ gap> printRecord := SetFaceColour(oct, "normal", printRecord);
 gap> DrawComplexToJavascript(oct, "doc/Octahedron_NormalMaterial.html", printRecord);;
 ]]></Log>
 
+<Alt Only="HTML">&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img></Alt>
+<Alt Only="LaTeX">\includegraphics{../images/Octahedron_normalsMaterial.png}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt><Br/>
 
 </Section>
 
 
-<Section Label="Section_AdditionalParameters">
-<Heading>Additional Parameters</Heading>
-
- <E> This is currently not working, check https://github.com/schnellecom/SimplicialSurfaces/issues/14 </E> 
-<P/>
- The printRecord can have optional parameters to modify the output in the html file.
- In large examples it can be a hard to recognize the edges.
- For this, one can change the parameter <A>edgeThickness</A>. The default value is set to <Math>0.03</Math>. We recommend choosing a value in the range <Math>0.01-0.05</Math>.
- If the value is not set, it will be set to the default in the printRecord when <K>DrawComplexToJavascriptCalculate</K>(<Ref Subsect="DrawComplexToJavascript"/>) is called.
- An image of an octahedron with thicker edges which is produced by the following code is shown below.
-<Log><![CDATA[
-gap> oct := Octahedron();;
-gap> verticesPositions := [
-> [ 0, 0, Sqrt(2.) ],
-> [ 1, 1, 0 ],
-> [ 1, -1, 0 ],
-> [ -1, -1, 0 ],
-> [ -1, 1, 0 ],
-> [ 0, 0, -Sqrt(2.) ] ];;
-gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
-gap> printRecord.edgeThickness:=0.05;
-gap> DrawComplexToJavascript(oct, "doc/Octahedron_ThickEdges.html", printRecord);;
-]]></Log>
-
-
-</Section>
-
-
-<Section Label="Section_Deprecated_functions">
-<Heading>Deprecated functions</Heading>
-
-<ManSection Label="Deprecated_functions">
-  <Oper Arg="surface, face, value, printRecord" Name="SetTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsFloat, IsRecord"/>
-  <Oper Arg="surface, face, printRecord" Name="RemoveTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, face, printRecord" Name="GetTransparencyJava" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, printRecord" Name="CalculateParametersOfInnerCircle" Label="for IsTriangularComplex, IsRecord"/>
- <Description>
- There are several methods which are deprecated with the switch to the new three.js version, they are listed below:
-<P/>
- </Description>
-</ManSection>
-
-
-</Section>
 
 
 </Chapter>
