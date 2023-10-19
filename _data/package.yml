@@ -1,7 +1,7 @@
 name: GAPic
-version: "0.1"
+version: "0.1-beta"
 license: "GPL-2.0-or-later"
-date: 2023-04-22
+date: 2023-10-20
 description: |
     GAP image creator, for visualizing structures
 
@@ -39,18 +39,18 @@ packageinfo: https://github.com/GAP-ART-RWTH/GAPic/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/GAP-ART-RWTH/GAPic/GAPic-0.1.tar.gz
+      url: https://github.com/GAP-ART-RWTH/GAPic/releases/download/v0.1-beta/GAPic-0.1-beta.tar.gz
 
 abstract: |
 
 status: dev
-doc-html: doc/html-version/chap0.html
+doc-html: doc/html-version/chap0_mj.html
 doc-pdf: doc/manual.pdf
 citeas: |
     <p class='BibEntry'>
     [<span class='BibKey'>NBAGWS23</span>]   <b class='BibAuthor'>Niemeyer, A., Baumeister, M., Akpanya, R., Görtzen, T., Weiß, M. and Schnelle, L.</b>,
      <i class='BibTitle'>GAPic, GAP image creator, for visualizing structures,
-             Version 0.1</i>
+             Version 0.1-beta</i>
      (<span class='BibYear'>2023</span>)<br />
     (<span class='BibNote'>GAP package</span>),
     <span class='BibHowpublished'><a href="https://github.com/GAP-ART-RWTH/GAPic">https://github.com/GAP-ART-RWTH/GAPic</a></span>.
@@ -58,15 +58,18 @@ citeas: |
     
 
 bibtex: |
-    @misc{ GAPic0.1,
-      author =           {Niemeyer,  A.  and  Baumeister,  M.  and  Akpanya, R. and G{\"o}rtzen, T. and Wei{\ss}, M. and
-                          Schnelle, L.},
-      title =            {{GAPic}, GAP image creator, for visualizing structures, {V}ersion 0.1},
-      month =            {Apr},
+    @misc{ GAPic0.1-beta,
+      author =           {Niemeyer,  A.  and  Baumeister, M. and Akpanya, R. and
+                          G{\"o}rtzen, T. and Wei{\ss}, M. and Schnelle, L.},
+      title =            {{GAPic},    GAP   image   creator,   for   visualizing
+                          structures, {V}ersion 0.1-beta},
+      month =            {Oct},
       year =             {2023},
       note =             {GAP package},
-      howpublished =     {\href    {https://github.com/GAP-ART-RWTH/GAPic}   {\texttt{https://github.com/}\discretionary
-                          {}{}{}\texttt{GAP-ART-RWTH/}\discretionary {}{}{}\texttt{GAPic}}},
+      howpublished =     {\href          {https://github.com/GAP-ART-RWTH/GAPic}
+                          {\texttt{https://github.com/}\discretionary
+                          {}{}{}\texttt{GAP-ART-RWTH/}\discretionary
+                          {}{}{}\texttt{GAPic}}},
       printedkey =       {NBAGWS23}
     }
 

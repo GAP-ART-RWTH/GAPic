@@ -10,8 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "GAPic",
 Subtitle := "GAP image creator, for visualizing structures",
-Version := "0.1",
-Date := "22/04/2023", # dd/mm/yyyy format
+Version := "0.1-beta",
+Date := "20/10/2023", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
@@ -92,7 +92,8 @@ IssueTrackerURL := "https://github.com/GAP-ART-RWTH/GAPic/issues",
 PackageWWWHome := "https://github.com/GAP-ART-RWTH/GAPic",
 PackageInfoURL := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
 README_URL     := Concatenation( ~.PackageWWWHome, "/README.md" ),
-ArchiveURL     := Concatenation( ~.PackageWWWHome,
+ArchiveURL      := Concatenation( ~.SourceRepository.URL,
+                                 "/releases/download/v", ~.Version,
                                  "/", ~.PackageName, "-", ~.Version ),
 
 ArchiveFormats := ".tar.gz",
@@ -112,7 +113,7 @@ AbstractHTML   :=  "",
 PackageDoc := rec(
   BookName  := "GAPic",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/html-version/chap0.html",
+  HTMLStart := "doc/html-version/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/build/manual.six",
   LongTitle := "GAP image creator, for visualizing structures",
@@ -131,6 +132,23 @@ TestFile := "tst/testall.g",
 
 #Keywords := [ "TODO" ],
 
+Extensions := [
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/javascript/draw.gd",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/javascript/draw.gi",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/tikz/drawing.gd",
+  ),
+  rec(
+    needed := [ ["SimplicialSurfaces", "0.6"] ],
+    filename := "./gap/tikz/drawing.gi",
+  )
+],
+
 ));
-
-
