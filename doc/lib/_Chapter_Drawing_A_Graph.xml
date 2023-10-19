@@ -122,7 +122,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
                <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
                <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}</Alt>
-               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt><Br/>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
          </Item>
          <Item>
             <A>infiniteFace</A>: One can change the face that will be the infinite face. Any face can be chosen.
@@ -137,7 +137,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
             <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png">&lt;/img></Alt>
             <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.pdf}</Alt>
-            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png]</Alt><Br/>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png]</Alt>
          </Item>
       </List>
    </Subsection>
@@ -165,7 +165,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
       <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
       <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}</Alt>
-      <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt><Br/>
+      <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
       <List>
          <Item>
             <A>scale</A>: By default the scale is set to 2. Now one can change it by:
@@ -176,7 +176,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
             <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_scale.png">&lt;/img></Alt>
             <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_scale.pdf}</Alt>
-            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_scale.png]</Alt><Br/>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_scale.png]</Alt>
          </Item>
 
          <Item>
@@ -193,7 +193,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
             <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png">&lt;/img></Alt>
             <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_spread_low.pdf}</Alt>
-            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png]</Alt><Br/>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png]</Alt>
 
 <Log><![CDATA[ 
 gap> printRecord.spread := 0.7;;
@@ -202,7 +202,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 ]]></Log>
             <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png">&lt;/img></Alt>
             <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.pdf}</Alt>
-            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png]</Alt><Br/>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png]</Alt>
          </Item>
       </List>
    </Subsection>
