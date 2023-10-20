@@ -572,7 +572,7 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
 </ManSection>
 
 <ManSection Label="SetVertexParameters">
-  <Oper Arg="surface, parameters, printRecord" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="surface, parameters, printRecord" Name="SetVertexParameters" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
@@ -588,7 +588,7 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
 Sometimes the width of the edges should be different from the default one. For this there are three simple commands that enable the function in the GUI. <Br/>
 Note: this can be computationally hard, so if the performance drops it might be good to disable it.
 
-<ManSection Label="SetVertexParameters">
+<ManSection Label="LineWidth">
   <Oper Arg="surface, printRecord" Name="ActivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="surface, printRecord" Name="DeactivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="surface, printRecord" Name="IsLineWidth" Label="for IsTriangularComplex, IsRecord"/>
