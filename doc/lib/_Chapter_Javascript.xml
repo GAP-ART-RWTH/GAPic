@@ -225,7 +225,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 <Subsection Label="Section_NormalsMaterial">
 <Heading>NormalsMaterial</Heading>
-There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the color of any face in real time with regards to it's normal vector towards the camera. That way we get a different color if two faces have different normals.
+There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the colour of any face in real time with regards to it's normal vector towards the camera. That way we get a different colour if two faces have different normals.
 To enable the material, just toggle the corresponding box in the GUI.
 Consider the following example from before:
 
@@ -352,9 +352,9 @@ gap> List([1..NumberOfVertices(oct)], i -> GetVertexColour(oct, i, printRecord))
 gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_EdgeColors.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_EdgeColors.png}\end{center}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_EdgeColors.png]</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_Edgecolours.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_Edgecolours.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_Edgecolours.png]</Alt>
 
 
 <ManSection Label="SetVertexColours">
@@ -363,7 +363,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>. The method <K>SetVertexColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>surface</A>. That means the method set the colour of vertex <A>j</A> to <A>newColoursList[j]</A>. The default colour for all vertices is 0xF58137, an orange hue. This color will be shown as a small sphere around the vertex with the option in the GUI to change the radius.
+ The method <K>SetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>. The method <K>SetVertexColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>surface</A>. That means the method set the colour of vertex <A>j</A> to <A>newColoursList[j]</A>. The default colour for all vertices is 0xF58137, an orange hue. This colour will be shown as a small sphere around the vertex with the option in the GUI to change the radius.
 <P/>
  </Description>
 </ManSection>
@@ -372,7 +372,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <ManSection Label="GetVertexColours">
   <Oper Arg="surface, printRecord" Name="GetVertexColours" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="surface, i, printRecord" Name="GetVertexColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>a (list) of color values in the format explained here: <Ref Subsect="Section_Colouring"/>
+ <Returns>a (list) of colour values in the format explained here: <Ref Subsect="Section_Colouring"/>
 </Returns>
  <Description>
  The method <K>GetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of vertex <A>i</A>. The method <K>GetVertexColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all vertices of <A>surface</A> as a list <A>colours</A>, where the colour of vertex <A>j</A> is <A>colours[j]</A>. The default colour for all vertices is 0xF58137, an orange hue.
@@ -413,7 +413,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 </Returns>
  <Description>
  The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>. That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.<Br/>
- It is also possible to set the color to a so called normalsMaterial, more in <Ref Subsect="Section_NormalsMaterial"/>.
+ It is also possible to set the colour to a so called normalsMaterial, more in <Ref Subsect="Section_NormalsMaterial"/>.
 <P/>
  </Description>
 </ManSection>
@@ -422,7 +422,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <ManSection Label="GetFaceColours">
   <Oper Arg="surface, printRecord" Name="GetFaceColours" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="surface, i, printRecord" Name="GetFaceColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
- <Returns>a (list) of color values in the format explained here: <Ref Subsect="Section_Colouring"/>
+ <Returns>a (list) of colour values in the format explained here: <Ref Subsect="Section_Colouring"/>
 </Returns>
  <Description>
  The method <K>GetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of face <A>i</A>. The method <K>GetFaceColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all faces of <A>surface</A> as a list <A>colours</A>, where the colour of face <A>j</A> is <A>colours[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.
