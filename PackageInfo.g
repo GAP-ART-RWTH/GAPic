@@ -34,17 +34,6 @@ Persons := [
   ),
   rec(
     IsAuthor := true,
-    IsMaintainer := false,
-    FirstNames := "Markus",
-    LastName := "Baumeister",
-    WWWHome := "https://markusbaumeister.github.io/",
-    Email := "baumeister@mathb.rwth-aachen.de",
-    PostalAddress := "--",
-    Place := "Aachen",
-    Institution := "",
-  ),
-  rec(
-    IsAuthor := true,
     IsMaintainer := true,
     FirstNames := "Reymond",
     LastName := "Akpanya",
