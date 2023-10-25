@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Chapter Label="Chapter_Drawing_A_Graph">
-<Heading>Drawing a graph</Heading>
+<Chapter Label="Chapter_Drawing_A_Planar_Graph">
+<Heading>Drawing a planar graph</Heading>
 
-<!-- <Section Label="Draw_A_Digraph">
-   <Heading>Draw a digraph</Heading>
-   
-   <P/>
-
-</Section> -->
-
+Recall that a directed graph, or digraph for short, is a tuple <M>(V,E)</M>, where <M>V</M>
+is a set and <M>E</M> is a subset of the cartesian product of <M>V</M> 
+with itself. The elements of <M>V</M> are henceforth called <A>nodes</A> and the elements 
+of <M>E</M> <A>Edges</A>. We will only consider simple digraphs, i.e. there are no loops 
+contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
 
 <Section Label="Section_Plane_Embedding">
 <Heading>Plane embedding of a planar graph</Heading>
 
 <P/>
    Any planar digraph (see Digraphs package reference 6.6-1) can be embedded
-   in the plane in such a way that its edges do not intersect and that its
-   edges are straight lines. Since straight lines often are the most simple
-   and aesthatical pleasing we want our embeddings of planar graphs to have 
-   straight edges. Therefore, one can use the following method:
+   in the plane in such a way that edges only only intersect in nodes.
+   Removing the edges of the embedded planar graph from the plane <M>&RR;^2</M>
+   divides the plane into several bounded and one unbounded regions. We call these
+   regions the <A>faces</A> of the graph. It can be shown that a planar graph can
+   be drawn in such a way that all edges are straight lines and edges only intersect
+   in nodes. Since straight lines often are the most simple
+   and aesthatical pleasing we would like our embeddings of planar graphs to have 
+   straight edges. To obtain such a drawing, one can use the following method:
 <P/>
    <ManSection Label="DrawStraightPlanarDigraphToTikz"> 
       <Prop Name="DrawStraightPlanarDigraphToTikz" Arg="graph, file, printRecord"
