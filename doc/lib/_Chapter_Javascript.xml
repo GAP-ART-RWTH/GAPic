@@ -74,7 +74,7 @@ If the vertex coordinates are not parameterised (<Ref Subsect="Section_Parameter
 If there are coordinates which are parameterized or you want to change the range of the planes manually, it is possible with the following:
 </Subsection>
 <ManSection Label="SetPlaneRange">
-  <Oper Arg="surface, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
   <Returns>the updated print record
   </Returns>
   <Description>
@@ -84,7 +84,7 @@ If there are coordinates which are parameterized or you want to change the range
 </ManSection>
 
 <ManSection Label="GetPlaneRange">
-  <Oper Arg="surface, printRecord" Name="GetPlaneRange" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="GetPlaneRange" Label="for IsTriangularComplex, IsRecord"/>
   <Returns>a list of lists
   </Returns>
   <Description>
@@ -134,15 +134,15 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 
 <ManSection Label="ActivateVertices">
-  <Oper Arg="surface, printRecord" Name="ActivateVertices" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsVertexActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateVertices" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="ActivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="IsVertexActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>ActivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the vertex <A>i</A>.
+ The method <K>ActivateVertex</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the vertex <A>i</A>.
  If a vertex is active, then the vertex is shown in the animation as a node with the number <A>i</A>.
- The method <K>ActivateVertices</K>(<A>surface</A>, <A>printRecord</A>) activates all vertices of <A>surface</A>.
+ The method <K>ActivateVertices</K>(<A>complex</A>, <A>printRecord</A>) activates all vertices of <A>complex</A>.
  By default, all vertices are activated.
 <P/>
  </Description>
@@ -150,58 +150,58 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 
 <ManSection Label="DeactivateVertices">
-  <Oper Arg="surface, printRecord" Name="DeactivateVertices" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateVertices" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="DeactivateVertex" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>DeactivateVertex</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the vertex <A>i</A>.
+ The method <K>DeactivateVertex</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the vertex <A>i</A>.
  If a vertex is inactive, then the vertex is not shown and will not be written in the file.
- The method <K>DeactivateVertices</K>(<A>surface</A>, <A>printRecord</A>) deactivates all vertices of <A>surface</A>.
+ The method <K>DeactivateVertices</K>(<A>complex</A>, <A>printRecord</A>) deactivates all vertices of <A>complex</A>.
  By default, all vertices are activated.
 <P/>
  </Description>
 </ManSection>
 
 <ManSection Label="ActivateEdges">
-  <Oper Arg="surface, printRecord" Name="ActivateEdges" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsEdgeActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateEdges" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="ActivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="IsEdgeActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>ActivateEdge</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the edge <A>i</A>.
+ The method <K>ActivateEdge</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the edge <A>i</A>.
  If an edge is active, then the edge is shown in the animation.
- The method <K>ActivateEdges</K>(<A>surface</A>, <A>printRecord</A>) activates all edges of <A>surface</A>.
+ The method <K>ActivateEdges</K>(<A>complex</A>, <A>printRecord</A>) activates all edges of <A>complex</A>.
  By default, all edges are activated.
 <P/>
  </Description>
 </ManSection>
 
 <ManSection Label="DeactivateEdges">
-  <Oper Arg="surface, printRecord" Name="DeactivateEdges" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateEdges" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="DeactivateEdge" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>DeactivateEdge</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the edge <A>i</A>.
+ The method <K>DeactivateEdge</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the edge <A>i</A>.
  If an edge is inactive, then the edge is not shown in the animation and will not be written in the file.
- The method <K>DeactivateEdge</K>(<A>surface</A>, <A>printRecord</A>) deactivates all edges of <A>surface</A>.
+ The method <K>DeactivateEdge</K>(<A>complex</A>, <A>printRecord</A>) deactivates all edges of <A>complex</A>.
  By default, all edges are activated.
 <P/>
  </Description>
 </ManSection>
 
 <ManSection Label="ActivateFaces">
-  <Oper Arg="surface, printRecord" Name="ActivateFaces" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsFaceActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateFaces" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="ActivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="IsFaceActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>ActivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the face <A>i</A>.
+ The method <K>ActivateFace</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the face <A>i</A>.
  If a face is active, then the face is shown in the animation.
- The method <K>ActivateFaces</K>(<A>surface</A>, <A>printRecord</A>) activates all faces of <A>surface</A>.
+ The method <K>ActivateFaces</K>(<A>complex</A>, <A>printRecord</A>) activates all faces of <A>complex</A>.
  By default, all faces are activated.
 <P/>
  </Description>
@@ -209,14 +209,14 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 
 <ManSection Label="DeactivateFaces">
-  <Oper Arg="surface, printRecord" Name="DeactivateFaces" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateFaces" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="DeactivateFace" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- The method <K>DeactivateFace</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the face <A>i</A>.
- If a face is inactive, then the face is not shown in the animation and will not be written in the file.
- The method <K>DeactivateFace</K>(<A>surface</A>, <A>printRecord</A>) deactivates all faces of <A>surface</A>.
+ The method <K>DeactivateFace</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the face <A>i</A>.
+ If a face is deactivated, then the face is not shown in the animation and will not be written in the file.
+ The method <K>DeactivateFace</K>(<A>complex</A>, <A>printRecord</A>) deactivates all faces of <A>complex</A>.
  By default, all faces are activated.
 <P/>
  </Description>
@@ -242,64 +242,58 @@ Consider the following example from before:
 In this section the options that can be defined by the <A>printRecord</A> will be described. The most important one is how to set coordinates.
 
 <ManSection Label="SetVertexCoordinates3D">
-  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats. If the format of the <A>coordinates</A> is not correct, an error is shown. The NC-version does not check the coordinate format.
+ Let <A>complex</A> be a triagonal complex and <A>coordinates</A> a list of lists, where <A>coordinates[i] = [x,y,z]</A> for floats <A>x, y, z</A>. The optional argument <A>printRecord</A> has to be a record. This function saves the given list of 3D-coordinates <A>coordinates</A> in the given print record or a new one if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats. If the format of the <A>coordinates</A> is not correct, an error is shown. The NC-version does not check the coordinate format.
 <P/>
  </Description>
 </ManSection>
 Note: for using parameterised vertex coordinates see <Ref Subsect="Section_ParameterizedCoordinates"/>.
 
 <ManSection Label="GetVertexCoordinates3D">
-  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3D" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, vertex, printRecord" Name="GetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, vertex, printRecord" Name="GetVertexCoordinates3D" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, vertex, printRecord" Name="GetVertexCoordinates3DNC" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a list of lists with three floats
 </Returns>
  <Description>
- Extract the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>surface</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record.
+This function returns the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>complex</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record.
 <P/>
  </Description>
 </ManSection>
 
 As decribed before the next important method is the one generating the animations.
 <ManSection Label="DrawComplexToJavaScript">
-  <Oper Arg="surface, filename, printRecord" Name="DrawComplexToJavaScript" Label="for IsTriangularComplex, IsString, IsRecord"/>
+  <Oper Arg="complex, filename, printRecord" Name="DrawComplexToJavaScript" Label="for IsTriangularComplex, IsString, IsRecord"/>
   <Returns>
     the print record
   </Returns>
   <Description>
-  This method animates the <A>surface</A> as an .html file <A>filename</A> into the working directory.<Br/>
-  An introduction to the use of this method with an example can be found at the start of section <Ref Sect="Section_QuickStart"/>.
+  This method writes the provided data to animate the triangular complex in an <A>.html</A> file called <A>filename</A> into the current working directory. This animation of the complex can be viewed via a browser that in turn runs JavaScript.<Br/>
+  An introduction how to use this method with an example can be found at the start of Section <Ref Sect="Section_QuickStart"/>. 
   <P/>
   Note:
   <List>
     <Item>
-      If the given <A>fileName</A> does not end in <E>.html</E> the ending
+      If the given string <A>fileName</A> does not end in <E>.html</E> the ending
       <E>.html</E> will be added to it.
     </Item>
     <Item>
-      The given file will be overwritten without asking if it already exists. If you don't have permission to write in that file, this method will throw an error.
+      If a file named <A>filename</A> already exists in the current working directory, it will be overwritten without asking. If you do not have permission to write in that file, this method will throw an error.
     </Item>
     <Item>
-      The animation is determined by the given <A>printRecord</A>.
+      The animation is determined by the given <A>printRecord</A>, which has to be a record.
     </Item>
   </List>
   <P/>
-  To use these methods it is necessary to set the 3D-coordinates 
-  of the vertices of the surface (see <K>SetVertexCoordinates3D</K>).
+  To use these methods it is necessary to set the 3D-coordinates of the vertices of the surface (see <K>SetVertexCoordinates3D</K>) otherwise the function will throw an error that the coordinates are not in the right format.
   <P/>
   </Description>
 </ManSection>
 
- Note, it is also possible to animate simplicial surfaces whose vertices,
- edges and faces are not given by a dense list <K>[1..n]</K>.
- For example the function <K>SetVertexCoordinates3D</K> allows a list of
- 3D-coordinates as input that is not dense. But this only works in the case 
- that the 3D-coordinate of vertex <K>i</K> is stored in the <K>i</K>-th
- position of the given list.
+Note, it is also possible to animate simplicial surfaces whose vertices, edges and faces are not given by a dense list <K>[1..n]</K>. For example the function <K>SetVertexCoordinates3D</K> allows a list of 3D-coordinates as input that is not dense. But the usage of non-dense lists only works in the case that the 3D-coordinate of vertex <K>i</K> is stored in the <K>i</K>-th position of the given list.
 <P/>
 <Example><![CDATA[
 gap> oneFace:=SimplicialSurfaceByDownwardIncidence([,[3,7],,[7,10],,[3,10]],
@@ -324,8 +318,8 @@ rec( edgeThickness := 0.03,
 <Section Label="Section_Colouring">
 <Heading>Colouring</Heading>
 
- In this section, we describe how to colour the animation. The colours are stored in hexadecimal format, which starts with 0x.
- The following possibilities are available:
+ In this section, we describe how to colour the animation of a triangular complex. The colours are stored in hexadecimal format, which starts with 0x.
+ The following objects can be coloured:
  <Enum>
    <Item>Vertices (The default colour is 0xF58137, an orange hue. See <Ref Subsect="SetVertexColours"/>)</Item>
    <Item>Edges (The default colour is 0x000000, black. See <Ref Subsect="SetEdgeColours"/>)</Item>
@@ -344,61 +338,61 @@ gap> verticesPositions := [
 > [ 0, 0, -Sqrt(2.) ] ];;
 gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
 gap> printRecord := SetVertexColours(oct,
-> ListWithIdenticalEntries(NumberOfVertices(oct), "green"), printRecord);;
-gap> printRecord := SetVertexColour(oct, 3, "red", printRecord);;
+> ListWithIdenticalEntries(NumberOfVertices(oct), "0x00FF00"), printRecord);;
+gap> printRecord := SetVertexColour(oct, 3, "0xFF0000", printRecord);;
 gap> List([1..NumberOfVertices(oct)], i -> GetVertexColour(oct, i, printRecord));
-[ "green", "green", "red", "green", "green", "green" ]
-gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
+[ "0x00FF00", "0x00FF00", "0xFF0000", "0x00FF00", "0x00FF00", "0x00FF00" ]
+gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_Edgecolours.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_Edgecolours.png}\end{center}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_Edgecolours.png]</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_VertexColors.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_VertexColors.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_VertexColors.png]</Alt>
 
 
 <ManSection Label="SetVertexColours">
-  <Oper Arg="surface, newColoursList, printRecord" Name="SetVertexColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, i, colour, printRecord" Name="SetVertexColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
+  <Oper Arg="complex, newColoursList, printRecord" Name="SetVertexColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, i, colour, printRecord" Name="SetVertexColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>. The method <K>SetVertexColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>surface</A>. That means the method set the colour of vertex <A>j</A> to <A>newColoursList[j]</A>. The default colour for all vertices is 0xF58137, an orange hue. This colour will be shown as a small sphere around the vertex with the option in the GUI to change the radius.
+ The method <K>SetVertexColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of vertex <A>i</A> to <A>colour</A>. The method <K>SetVertexColours</K>(<A>complex</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all vertices of <A>complex</A>. That means the method sets the colour of vertex <A>j</A> to <A>newColoursList[j]</A>. The default colour for all vertices is 0xF58137, an orange hue. This colour is shown as a small sphere around the vertex with the option in the GUI to change the radius.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="GetVertexColours">
-  <Oper Arg="surface, printRecord" Name="GetVertexColours" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="GetVertexColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="GetVertexColours" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="GetVertexColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a (list) of colour values in the format explained here: <Ref Subsect="Section_Colouring"/>
 </Returns>
  <Description>
- The method <K>GetVertexColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of vertex <A>i</A>. The method <K>GetVertexColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all vertices of <A>surface</A> as a list <A>colours</A>, where the colour of vertex <A>j</A> is <A>colours[j]</A>. The default colour for all vertices is 0xF58137, an orange hue.
+ The method <K>GetVertexColour</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) returns the colour of vertex <A>i</A>. The method <K>GetVertexColours</K>(<A>complex</A>, <A>printRecord</A>) returns the colours for all vertices of <A>complex</A> as a list <A>colours</A>, where the colour of vertex <A>j</A> is <A>colours[j]</A>. The default colour for all vertices is 0xF58137, an orange hue.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="SetEdgeColours">
-  <Oper Arg="surface, newColoursList, printRecord" Name="SetEdgeColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, i, colour, printRecord" Name="SetEdgeColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
+  <Oper Arg="complex, newColoursList, printRecord" Name="SetEdgeColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, i, colour, printRecord" Name="SetEdgeColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of edge <A>i</A> to <A>colour</A>. The method <K>SetEdgeColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all edges of <A>surface</A>. That means the method set the colour of edge <A>j</A> to <A>newColoursList[j]</A>. The default colour for all edges is 0x000000, black.
+ The method <K>SetEdgeColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of edge <A>i</A> to <A>colour</A>. The method <K>SetEdgeColours</K>(<A>complex</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all edges of <A>complex</A>. That means the method sets the colour of edge <A>j</A> to <A>newColoursList[j]</A>. The default colour for all edges is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="GetEdgeColours">
-  <Oper Arg="surface, printRecord" Name="GetEdgeColours" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="GetEdgeColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="GetEdgeColours" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="GetEdgeColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>GetEdgeColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of edge <A>i</A>. The method <K>GetEdgeColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all edges of <A>surface</A> as a list <A>colours</A>, where the colour of edge <A>j</A> is <A>colours[j]</A>.
+ The method <K>GetEdgeColour</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) returns the colour of edge <A>i</A>. The method <K>GetEdgeColours</K>(<A>complex</A>, <A>printRecord</A>) returns the colours for all edges of <A>complex</A> as a list <A>colours</A>, where the colour of edge <A>j</A> is <A>colours[j]</A>.
  The default colour for all edges is 0x000000, black.
 <P/>
  </Description>
@@ -406,25 +400,25 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 
 <ManSection Label="SetFaceColours">
-  <Oper Arg="surface, newColoursList, printRecord" Name="SetFaceColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, i, colour, printRecord" Name="SetFaceColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
+  <Oper Arg="complex, newColoursList, printRecord" Name="SetFaceColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, i, colour, printRecord" Name="SetFaceColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>surface</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>surface</A>. That means the method set the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.<Br/>
- It is also possible to set the colour to a so called normalsMaterial, more in <Ref Subsect="Section_NormalsMaterial"/>.
+ The method <K>SetFaceColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>complex</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>complex</A>. That means the method sets the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.<Br/>
+ It is also possible to set the colour to a so called <A>normalsMaterial</A>, Section <Ref Subsect="Section_NormalsMaterial"/> for an explanation.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="GetFaceColours">
-  <Oper Arg="surface, printRecord" Name="GetFaceColours" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="GetFaceColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="GetFaceColours" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="GetFaceColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a (list) of colour values in the format explained here: <Ref Subsect="Section_Colouring"/>
 </Returns>
  <Description>
- The method <K>GetFaceColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour of face <A>i</A>. The method <K>GetFaceColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colours for all faces of <A>surface</A> as a list <A>colours</A>, where the colour of face <A>j</A> is <A>colours[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.
+ The method <K>GetFaceColour</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) returns the colour of face <A>i</A>. The method <K>GetFaceColours</K>(<A>complex</A>, <A>printRecord</A>) returns the colours for all faces of <A>complex</A> as a list <A>colours</A>, where the colour of face <A>j</A> is <A>colours[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.
 <P/>
  </Description>
 </ManSection>
@@ -443,49 +437,49 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt>
 
 <ManSection Label="ActivateInnerCircles">
-  <Oper Arg="surface, printRecord" Name="ActivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsInnerCircleActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="ActivateInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="IsInnerCircleActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>. The method <K>ActivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all inner circles of <A>surface</A>. If an inner circle is active, then it is shown in the animation. By default, the inner circles are activated.
+ The method <K>ActivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>. The method <K>ActivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all inner circles of <A>complex</A>. If an inner circle is active, then it is shown in the animation. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="DeactivateInnerCircles">
-  <Oper Arg="surface, printRecord" Name="DeactivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="DeactivateInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>. The method <K>DeactivateInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all inner circles of <A>surface</A>. If an inner circle is deactivated, then it is not shown in the animation and will not be written into the file. By default, the inner circles are activated.
+ The method <K>DeactivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>. The method <K>DeactivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all inner circles of <A>complex</A>. If an inner circle is deactivated, then it is not shown in the animation and will not be written into the file. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
 
 It is also possible to set colours for the innercircles. This can be done with the following:
 <ManSection Label="SetCircleColours">
-  <Oper Arg="surface, newColoursList, printRecord" Name="SetCircleColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
-  <Oper Arg="surface, i, colour, printRecord" Name="SetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
+  <Oper Arg="complex, newColoursList, printRecord" Name="SetCircleColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, i, colour, printRecord" Name="SetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>. The method <K>SetCircleColours</K>(<A>surface</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>surface</A>. That means the method set the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>. The default colour is 0x000000, black.
+ The method <K>SetCircleColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>. The method <K>SetCircleColours</K>(<A>complex</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>complex</A>. That means the method set the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>. The default colour is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="GetCircleColours">
-  <Oper Arg="surface, printRecord" Name="GetCircleColours" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="GetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="GetCircleColours" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="GetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>GetCircleColour</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) returns the colour for the inner circle of face <A>i</A>. The method <K>GetCircleColours</K>(<A>surface</A>, <A>printRecord</A>) returns the colour for all inner circles of <A>surface</A> as a list <A>colours</A>, where the colour of the inner circle of face <A>j</A> is <A>colours[j]</A>. The default colour is 0x000000, black.
+ The method <K>GetCircleColour</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) returns the colour for the inner circle of face <A>i</A>. The method <K>GetCircleColours</K>(<A>complex</A>, <A>printRecord</A>) returns the colour for all inner circles of <A>complex</A> as a list <A>colours</A>, where the colour of the inner circle of face <A>j</A> is <A>colours[j]</A>. The default colour is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
@@ -508,25 +502,25 @@ Consider the example from before:
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_NormalsOfInnerCircle.png]</Alt>
 
 <ManSection Label="ActivateNormalOfInnerCircles">
-  <Oper Arg="surface, printRecord" Name="ActivateNormalOfInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="ActivateNormalOfInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="IsNormalOfInnerCircleActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateNormalOfInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="ActivateNormalOfInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="IsNormalOfInnerCircleActive" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) activates all normals of the inner circles of <A>surface</A>. If a normal is active, then the normal is written to the file.
+ The method <K>ActivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all normals of the inner circles of <A>complex</A>. If a normal is active, then the normal is written to the file.
 <P/>
  </Description>
 </ManSection>
 
 
 <ManSection Label="DeactivateNormalOfInnerCircles">
-  <Oper Arg="surface, printRecord" Name="DeactivateNormalOfInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, i, printRecord" Name="DeactivateNormalOfInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateNormalOfInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, i, printRecord" Name="DeactivateNormalOfInnerCircle" Label="for IsTriangularComplex, IsPosInt, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateNormalOfInnerCircles</K>(<A>surface</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>. The method <K>DeactivateNormalOfInnerCircle</K>(<A>surface</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>surface</A>. If a normal is deactivated, then the normal is not shown in the animation.
+ The method <K>DeactivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>. The method <K>DeactivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>complex</A>. If a normal is deactivated, then the normal is not shown in the animation.
 <P/>
  </Description>
 </ManSection>
@@ -561,7 +555,7 @@ There are two steps to set up such an animation:
 Note: as the computations are performed on a JavaScript level the appropriate syntax has to be used.
 
 <ManSection Label="SetVertexCoordinatesParameterized">
-  <Oper Arg="surface, coordinates[, printRecord]" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
@@ -571,7 +565,7 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
 </ManSection>
 
 <ManSection Label="SetVertexParameters">
-  <Oper Arg="surface, parameters, printRecord" Name="SetVertexParameters" Label="for IsTriangularComplex, IsList, IsRecord"/>
+  <Oper Arg="complex, parameters, printRecord" Name="SetVertexParameters" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
@@ -588,9 +582,9 @@ Sometimes the width of the edges should be different from the default one. For t
 Note: this can be computationally hard, so if the performance drops it might be good to disable it.
 
 <ManSection Label="LineWidth">
-  <Oper Arg="surface, printRecord" Name="ActivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, printRecord" Name="DeactivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
-  <Oper Arg="surface, printRecord" Name="IsLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="ActivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="IsLineWidth" Label="for IsTriangularComplex, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
