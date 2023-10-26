@@ -224,8 +224,8 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 <Subsection Label="Section_NormalsMaterial">
 <Heading>NormalsMaterial</Heading>
-There is the possibility to render the surface with not the normal material but a so called normalsMaterial. This material computes the colour of any face in real time with regards to it's normal vector towards the camera. That way we get a different colour if two faces have different normals.
-To enable the material, just toggle the corresponding box in the GUI.
+There is the possibility to render the faces of the surface with not in the usual way but by a so called normalsMaterial. If switched on this material computes the colour of any face in real time with regards to its normal vector towards the camera. This means it computes the angle between the normal of the considered face and the camera and maps it to a smooth colour transition. As a result usually differently coloured faces have different normals. This can especially help when studying complexes with intersecting faces.
+To turn this material on, just toggle the corresponding box in the GUI.
 Consider the following example from before:
 
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
@@ -428,13 +428,20 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
 
 <Section Label="Section_InnerCircles">
 <Heading>Inner Circles</Heading>
- Inner circles are defined for triangular faces. In the animation, they are circles within the face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be toggled on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
+Inner circles are defined for triangular faces. In the animation, they are circles within the face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be toggled on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
 <P/>
- As an example, consider the octahedron generated as before:
+Note that it is possible to activate and deactivate the innercircles of individual faces. Additionally it is possible to colour any (sub-)set of the circles other than the default, which is black. In the GUI there is an option to change the width of the drawn circles.
+<P/>
+As an example, consider the octahedron generated as before:
 
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt>
+
+Or it is possible to make all other objects invisible via the GUI and only show the innercircles as done here:
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle_transparent.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle_transparent.png]</Alt>
 
 <ManSection Label="ActivateInnerCircles">
   <Oper Arg="complex, printRecord" Name="ActivateInnerCircles" Label="for IsTriangularComplex, IsRecord"/>
@@ -443,7 +450,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>. The method <K>ActivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all inner circles of <A>complex</A>. If an inner circle is active, then it is shown in the animation. By default, the inner circles are activated.
+ The method <K>ActivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the inner circle of face <A>i</A>. The method <K>ActivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all inner circles of <A>complex</A>. If an inner circle is active, then it is displayed in the animation. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
@@ -460,14 +467,14 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
  </Description>
 </ManSection>
 
-It is also possible to set colours for the innercircles. This can be done with the following:
+It is also possible to set colours for (subsets of) innercircles. This can be done with the following:
 <ManSection Label="SetCircleColours">
   <Oper Arg="complex, newColoursList, printRecord" Name="SetCircleColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
   <Oper Arg="complex, i, colour, printRecord" Name="SetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>SetCircleColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>. The method <K>SetCircleColours</K>(<A>complex</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>complex</A>. That means the method set the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>. The default colour is 0x000000, black.
+ The method <K>SetCircleColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour for the inner circle of face <A>i</A>. The method <K>SetCircleColours</K>(<A>complex</A>, <A>newColoursList</A>, <A>printRecord</A>) sets the colour for all inner circles of <A>complex</A>. That means the method sets the colour of the inner circle of face <A>j</A> to <A>newColoursList[j]</A>. The default colour is 0x000000, black.
 <P/>
  </Description>
 </ManSection>
@@ -492,7 +499,7 @@ It is also possible to set colours for the innercircles. This can be done with t
 <Heading>Normals of Inner Circles</Heading>
 
 <P/>
- A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the center of the incircle orthogonally or to say in other words it intersects the incenter and extends orthogonally w.r.t. the face in both directions.
+A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the the incenter of a triangular face orthogonally and extends orthogonally w.r.t. the face in both directions.
 <P/>
 By default the normals of inner circles are active but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
 
@@ -508,7 +515,7 @@ Consider the example from before:
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all normals of the inner circles of <A>complex</A>. If a normal is active, then the normal is written to the file.
+ The method <K>ActivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all normals of all inner circles of <A>complex</A>. If a normal is active, then the normal is written to the file.
 <P/>
  </Description>
 </ManSection>
@@ -578,7 +585,7 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
 
 <Section Label="Section_LineThickness">
 <Heading>Variable Line Width</Heading>
-Sometimes the width of the edges should be different from the default one. For this there are three simple commands that enable the function in the GUI. <Br/>
+Sometimes the width of the edges should be different from the default one. For this there are three simple commands that enable this functionality in the GUI. <Br/>
 Note: this can be computationally hard, so if the performance drops it might be good to disable it.
 
 <ManSection Label="LineWidth">
