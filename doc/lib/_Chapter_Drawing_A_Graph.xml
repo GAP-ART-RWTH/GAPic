@@ -14,13 +14,13 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
 
 <P/>
    Any planar digraph (see Digraphs package reference 6.6-1) can be embedded
-   in the plane in such a way that edges only only intersect in nodes.
+   in the plane in such a way that edges only intersect in nodes.
    Removing the edges of the embedded planar graph from the plane <M>&RR;^2</M>
    divides the plane into several bounded and one unbounded regions. We call these
    regions the <A>faces</A> of the graph. It can be shown that a planar graph can
    be drawn in such a way that all edges are straight lines and edges only intersect
    in nodes. Since straight lines often are the most simple
-   and aesthatical pleasing we would like our embeddings of planar graphs to have 
+   and aesthetical pleasing we would like our embeddings of planar graphs to have 
    straight edges. To obtain such a drawing, one can use the following method:
 <P/>
    <ManSection Label="DrawStraightPlanarDigraphToTikz"> 
@@ -28,15 +28,18 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
          Label="for IsPlanarDigraph, IsString, IsRecord"/>
       <Returns>a record</Returns>
       <Description>
-         Draw the given planar digraph into a tex-file (using TikZ). If <K>graph</K>
-         is a planar connected digraph (and one defines the faces the graph has 
+         This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
+         <K>graph</K> is a planar, connected digraph (and one defines the faces of the graph 
          <Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>), 
-         then the drawing printed into <K>file</K> is a plane
-         embedding of <K>graph</K> with straight edges which do not intersect. 
+         then <K>file</K> encodes a drawing of a plane embedding of <K>graph</K> with 
+         straight edges which only intersect in Nodes 
          The drawing algorithm constructs the embedding by successively manipulating
-         a convex drawing drawing plane and calculating new vertex coordinates. Trying 
+         a convex drawing plane by updating vertex coordinates. Trying 
          to use the function for a digraph that is not planar and connected results in
-         returning <K>fail</K>. 
+         returning <K>fail</K>. Remark: Since the method is work in progress all edges, 
+         in particular the directed ones, will be shown as undirected edges in the
+         embedding. That directed edges will be drawn as directed arrows in the embedding
+         will be updated soon.
       </Description>
    </ManSection>
    <List>
@@ -46,15 +49,16 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    </Item>
    <Item>
       The given file will be overwritten without asking if it already exists. If
-      you do not have permission to write in that file, this method will throw an
+      you do not have permission to write to that file, this method will raise an
       error.
    </Item>
    <Item>
-      The particulars of the drawing are determined by the given <K>printRecord</K>.
+      The particulars of the drawing are determined by the argument <K>printRecord</K>, 
+      which is a record.
       <!-- If this is not given, the default settings are used. -->
    </Item>
    <Item>
-      The printRecord will be modified and returned by this method. It contains the
+      The record <K>printRecord</K> will be modified and returned by this method. It contains the
       data to recreate the drawing of the graph.
    </Item>
    </List>
@@ -65,8 +69,8 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    <List>
       <Item>
          <A>Faces</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>):
-         Define the faces the planar graph has. One parameter is obligatory to be
-         changed. Otherwise the method throws an error.
+         Define the faces of the planar graph. The parameter <A>nodesOfFaces</A> is obligatory
+         to be changed, otherwise the method raises an error.
       </Item>
       <Item>
          <A>Appearance</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Appearance"/>): 
@@ -74,7 +78,7 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
       </Item>
       <Item>
          <A>Output control</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Output"/>):
-         Modify how the LaTeX-output behaves and how much information is printed to the console.
+         Modify the behaviour of the LaTeX-output and how much information is printed to the console.
       </Item>
    </List>         
    
@@ -82,12 +86,12 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    <Subsection Label="Subsection_DrawStraightPlanarDigraphToTikz_Faces">
       <Heading>Faces</Heading>
       This subsection covers the parameters that define the faces of the graph which
-      should be drawn. Since the method is still working in process the user has to
-      manually define all the faces the graph has characterised by their surrounding 
+      should be drawn. Since the method is still work in process the user has to
+      manually define all the faces of the graph by characterising their surrounding 
       nodes. The parameters are:
       <List>
          <Item>
-            <A>nodesOfFaces</A>: Define all faces the graph has characterised by their
+            <A>nodesOfFaces</A>: Define all faces of the graph as characterised by their
             surrounding nodes.
          </Item>
          <Item>
@@ -95,7 +99,7 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
             nodes. The nodes of the infinite face will form the outer ring of the embedding.
          </Item>
       </List>
-      We will exemplify them with the following graph in order to make clear how the parameters
+      We will exemplify them with the following graph in order to clarify how the parameters
       work:
 <Log><![CDATA[ 
 gap> graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],
@@ -105,15 +109,15 @@ true
 gap> IsConnectedDigraph(graph);
 true
 ]]></Log>
-      This graph is as seen above a planar connected graph and thus can be drawn with the method.
+      This graph is a planar, connected graph and thus can be drawn with the method <K>DrawStraightPlanarDigraphToTikz</K>.
       Therefore, one must define the the graph's faces inside of a record. The file name will simply be
       <K>graph_embedding</K>.
       <List>
          <Item>
-            <A>nodesOfFaces</A>: The faces that have to be defined are characterised by its surrounding
+            <A>nodesOfFaces</A>: The faces that have to be defined are characterised by their surrounding
             nodes. That means that a face can be seen as a cycle of nodes. For <A>nodesOfFaces</A>
-            one has to give a list of lists where on of these lists is a cycle when going around that face
-            in any direction.
+            one has to give a list of lists where <K>nodesOfFaces[i]</K> contains the nodes of face <K>i</K>
+            ordered in a cycle as they occur when transversing the boundary of the face clockwise or anticlockwise.
 
             <P/>
 <Log><![CDATA[ 
@@ -127,9 +131,10 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt><Br/>
          </Item>
          <Item>
-            <A>infiniteFace</A>: One can change the face that will be the infinite face. Any face can be chosen.
-            If <A>infiniteFace</A> is not set up by the user one face with the most nodes will be used as a default.
-            Using the same printRecord from previous example results in:
+            <A>infiniteFace</A>: The infinite face of a plane embedding is the face whose area in the plane <M>&RR;^2</M> is infinite. 
+            One can change the face that will be considered to be the infinite face. Any face can be chosen
+            as the infinite face. If <A>infiniteFace</A> is not set up by the user one face with the most nodes will be used as a default.
+            Using the same <K>printRecord</K> from previous example results in:
 
             <P/>
 <Log><![CDATA[ 
@@ -152,10 +157,10 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             <A>scale</A>: Globally scales the picture. The default is 2.
          </Item>
          <Item>
-            <A>spread</A>: Changes the amount of spread, i.e. how the nodes are distributed inside the graph.
+            <A>spread</A>: Changes the amount of spread, i.e. how far apart the nodes are distributed inside the graph.
          </Item>
       </List>
-      We will exemplify them with the following graph in order to make clear how the parameters
+      We will exemplify them with the following graph in order to clarify how the parameters
       work:
 <Log><![CDATA[ 
 gap> graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],
@@ -185,9 +190,9 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             <A>spread</A>: Modifies the position of the nodes.
             The spread parameter can be chosen as a float in the interval (0, 1). 
             Choosing the parameter outside the interval results in an error. Choosing a number close
-            to 1 modifies the nodes such that they tend torwards the outer ring of the face graph.
-            Choosing a number close to 0 modifies the nodes such that they tend torwards the
-            middle of the graph. The default spread is set at 0.5. Here are two examples with spreads 0.3 and 0.7:
+            to 1 modifies the nodes such that they tend to be placed torwards the boundary of the infinite face of the graph.
+            Choosing a number close to 0 modifies the nodes such that they tend to be placed torwards the
+            centre of the graph. The default spread is set at 0.5. Here are two examples with spreads 0.3 and 0.7:
 <Log><![CDATA[ 
 gap> printRecord.spread := 0.3;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
@@ -212,13 +217,14 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
    <Subsection Label="Subsection_DrawStraightPlanarDigraphToTikz_Output">
          <Heading>Output control</Heading>
          This subsection contains miscellaneous parameters to control the output of <K>DrawStraightPlanarDigraphToTikz</K>
-         <Ref Sect="DrawStraightPlanarDigraphToTikz"/>. It contains the following options:
+         <Ref Sect="DrawStraightPlanarDigraphToTikz"/>. In order to modify the settings one has to change the following 
+         parameters inside the argument <K>printRecord</K> which is a record. It contains the following options:
          <List>
             <Item>
                <A>compileLatex</A>: If this parameter is <K>true</K> (the default is <K>false</K>) the generated tex-file will be
                automatically compiled with <K>pdflatex</K>. In rare cases the compilation might run into a problem
                and stop. To abort such a computation, type 'x' and hit ENTER (this command is passed to
-               pdflatex). If this happens, please notify the developers so it can be fixed in a later version.
+               <K>pdflatex</K>). If this happens, please notify the developers so it can be fixed in a later version.
             </Item>
             <Item>
                <A>latexDocumentclass</A>: Defines which documentclass is used for the output. The default is
@@ -231,7 +237,8 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             </Item>
             <Item>
                <A>onlyTikzpicture</A>: If this parameter is <K>true</K> (the default is <K>false</K>) the generated
-               tex-file will only consist of a <K>tikzpicture</K> without header (it is not possible to compile it on its own).
+               tex-file will only consist of a <K>tikzpicture</K> without header (it is not possible to compile it 
+               with LaTeX on its own).
             </Item>
          </List>
    </Subsection>
