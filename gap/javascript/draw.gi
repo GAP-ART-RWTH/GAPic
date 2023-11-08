@@ -1,11 +1,14 @@
 BindGlobal( "__GAPIC__IsCoordinates3D",
     function(surface, coordinates)
-        local coord,i, j;
-        if Filtered([1..Length(coordinates)],i->IsBound(coordinates[i])) <> Vertices(surface) then
-            return [false, i];
+        local coord,i, j, diff;
+
+        # check if every vertex has a coordinate set
+        diff := Difference(Vertices(surface), Filtered([1..Length(coordinates)],i->IsBound(coordinates[i])));
+        if not IsEmpty(diff) then
+            return [false, diff];
 	    fi;
 
-        # Check whether all coordinates are 3D-coordinates
+        # Check whether all coordinates are dense lists of 3 floats or ints
         for coord in coordinates do
             if not IsDenseList(coord) then
                 return [false, Position(coordinates, coord), coord];
@@ -35,7 +38,7 @@ InstallMethod( SetVertexCoordinates3D,
         if IsBound(error[3]) then
             Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
         else
-	        Error( "invalid, coordinate ", error[2] , " is not set\n");
+            Error( "invalid, coordinates not set for vertices ", error[2] , "\n");
         fi;
 	fi;
 	return SetVertexCoordinates3DNC(surface, coordinates, printRecord);
@@ -88,7 +91,7 @@ InstallMethod( GetVertexCoordinates3D,
         if IsBound(error[3]) then
             Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
         else
-	        Error( "invalid, coordinate ", error[2] , " is not set\n");
+            Error( "invalid, coordinates not set for vertices ", error[2] , "\n");
         fi;
 	fi;
 	return GetVertexCoordinates3DNC(surface, vertex, printRecord);
@@ -885,9 +888,9 @@ InstallMethod( DrawComplexToJavaScript,
         error := __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D);
         if not error[1] then
             if IsBound(error[3]) then
-            Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+                Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
             else
-                Error( "invalid, coordinate ", error[2] , " is not set\n");
+               Error( "invalid, coordinates not set for vertices ", error[2] , "\n");
             fi; 
         fi;
     fi;
