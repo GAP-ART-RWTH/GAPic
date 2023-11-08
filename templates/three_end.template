@@ -1,3 +1,6 @@
+    const center = new THREE.Vector3(guiParameters.planeX, guiParameters.planeY, guiParameters.planeZ);
+    controls.target = center;
+    
     const planeFolder = gui.addFolder("Intersection Planes");
     planeFolder.add(guiParameters, 'planeXactive');
     planeFolder.add(guiParameters, 'planeX', guiParameters.minX*1.1, guiParameters.maxX*1.1);
@@ -6,8 +9,10 @@
     planeFolder.add(guiParameters, 'planeZactive');
     planeFolder.add(guiParameters, 'planeZ', guiParameters.minZ*1.1, guiParameters.maxZ*1.1);
     
-    camera.position.z = Math.min((1.5)*guiParameters.minZ, -1)
-    camera.lookAt(0,0,-1);
+    camera.position.x = Math.min((1.1)*Math.abs(guiParameters.minX), -1)
+    camera.position.y = Math.min((1.1)*Math.abs(guiParameters.minY), -1)
+    camera.position.z = Math.min((1.1)*Math.abs(guiParameters.minZ), -1)
+    camera.lookAt(guiParameters.planeX,guiParameters.planeY,guiParameters.planeZ);
 
     scene.background = new THREE.Color( 'white' );
 

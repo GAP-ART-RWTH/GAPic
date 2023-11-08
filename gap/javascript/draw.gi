@@ -1438,13 +1438,13 @@ InstallMethod( DrawComplexToJavaScript,
         AppendTo(output, "\tguiParameters.minZ = ",range[3][1],";\n\n");
     else
         if not IsParameterizedVertices(surface, printRecord) then
-            # calculate maximal values in all directions for intersection plane slider 
-            maxXcoord := 0.0;
-            maxYcoord := 0.0;
-            maxZcoord := 0.0;
-            minXcoord := 0.0;
-            minYcoord := 0.0;
-            minZcoord := 0.0;
+            # calculate maximal values in all directions for intersection plane slider and automatic camera position
+            maxXcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[1]);
+            maxYcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[2]);
+            maxZcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[3]);
+            minXcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[1]);
+            minYcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[2]);
+            minZcoord := Float(GetVertexCoordinates3DNC(surface, Vertices(surface)[1], printRecord)[3]);
             for vertex in Vertices(surface) do
                 x := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]);
                 y := Float(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]);
