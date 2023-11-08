@@ -259,7 +259,7 @@ Note: for using parameterised vertex coordinates see <Ref Subsect="Section_Param
  <Returns>a list of lists with three floats
 </Returns>
  <Description>
-This function returns the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>complex</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record.
+This function returns the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>complex</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record. For using parameterised coordinates (see <Ref Subsect="Section_ParameterizedCoordinates"/>) it is necessary to use the NC version, as the parameterized coordinates are store in GAP as strings.
 <P/>
  </Description>
 </ManSection>

@@ -33,9 +33,9 @@ InstallMethod( SetVertexCoordinates3D,
     error := __GAPIC__IsCoordinates3D(surface, coordinates);
 	if not error[1] then
         if IsBound(error[3]) then
-            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+            Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
         else
-	        Error( " invalid, coordinate ", error[2] , " is not set\n");
+	        Error( "invalid, coordinate ", error[2] , " is not set\n");
         fi;
 	fi;
 	return SetVertexCoordinates3DNC(surface, coordinates, printRecord);
@@ -86,9 +86,9 @@ InstallMethod( GetVertexCoordinates3D,
     error := __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D);
 	if not error[1] then
         if IsBound(error[3]) then
-            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+            Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
         else
-	        Error( " invalid, coordinate ", error[2] , " is not set\n");
+	        Error( "invalid, coordinate ", error[2] , " is not set\n");
         fi;
 	fi;
 	return GetVertexCoordinates3DNC(surface, vertex, printRecord);
@@ -885,9 +885,9 @@ InstallMethod( DrawComplexToJavaScript,
         error := __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D);
         if not error[1] then
             if IsBound(error[3]) then
-            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+            Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
             else
-                Error( " invalid, coordinate ", error[2] , " is not set\n");
+                Error( "invalid, coordinate ", error[2] , " is not set\n");
             fi; 
         fi;
     fi;
