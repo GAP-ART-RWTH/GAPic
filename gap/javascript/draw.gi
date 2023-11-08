@@ -2,26 +2,26 @@ BindGlobal( "__GAPIC__IsCoordinates3D",
     function(surface, coordinates)
         local coord,i, j;
         if Filtered([1..Length(coordinates)],i->IsBound(coordinates[i])) <> Vertices(surface) then
-            return false;
-	fi;
+            return [false, i];
+	    fi;
 
         # Check whether all coordinates are 3D-coordinates
         for coord in coordinates do
             if not IsDenseList(coord) then
-                return false;
+                return [false, Position(coordinates, coord), coord];
             fi;
             if Length(coord) <> 3 then
-                return false;
+                return [false, Position(coordinates, coord), coord];
             fi;
             for j in coord do
                 if not IsFloat(j) then
                     if not IsInt(j) then
-                        return false;
+                        return [false, Position(coordinates, coord), j];
                     fi;
                 fi;
             od;
         od;
-        return true;
+        return [true];
     end
 );
 
@@ -29,8 +29,14 @@ InstallMethod( SetVertexCoordinates3D,
     "for a simplicial surface, a list of coordinates and a record",
     [IsTriangularComplex, IsList, IsRecord],
     function(surface, coordinates, printRecord)
-	if not __GAPIC__IsCoordinates3D(surface, coordinates) then
-	    Error( " invalid coordinate format " );
+    local error;
+    error := __GAPIC__IsCoordinates3D(surface, coordinates);
+	if not error[1] then
+        if IsBound(error[3]) then
+            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+        else
+	        Error( " invalid, coordinate ", error[2] , " is not set\n");
+        fi;
 	fi;
 	return SetVertexCoordinates3DNC(surface, coordinates, printRecord);
     end
@@ -76,9 +82,15 @@ InstallMethod( GetVertexCoordinates3D,
     "for a simplicial surface, a vertex and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, vertex, printRecord)
-	if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
-	    Error( " invalid coordinate format " );
+	local error;
+    error := __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D);
+	if not error[1] then
+        if IsBound(error[3]) then
+            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+        else
+	        Error( " invalid, coordinate ", error[2] , " is not set\n");
         fi;
+	fi;
 	return GetVertexCoordinates3DNC(surface, vertex, printRecord);
     end
 );
@@ -843,7 +855,7 @@ InstallMethod( DrawComplexToJavaScript,
         faces, coordinateStringA, coordinateStringB, coordinateStringC, edgeVertexA, edgeVertexB, edgeColors, uniqueEdgeColors,
         incenter,inradius, normal, a, b, c, material, vertexParameters, p, vertexParameterNames, vertexParameterString,
         maxXcoord, maxYcoord, maxZcoord, minXcoord, minYcoord, minZcoord, x, y, z, range, vertexA, vertexB, vertexC,
-        uniqueEdgeColorsActive, delete, pos;
+        uniqueEdgeColorsActive, delete, pos, error;
 
     # make sure the defaults are set
     printRecord := __GAPIC__InitializePrintRecordDrawSurfaceToJavascript(surface, printRecord);
@@ -870,8 +882,13 @@ InstallMethod( DrawComplexToJavaScript,
 
     # Check if surface is in 3d coords to use NC versions later
     if not IsParameterizedVertices(surface, printRecord) then
-        if not __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D) then
-            Error( " invalid coordinate format " );
+        error := __GAPIC__IsCoordinates3D(surface, printRecord.vertexCoordinates3D);
+        if not error[1] then
+            if IsBound(error[3]) then
+            Error( " invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
+            else
+                Error( " invalid, coordinate ", error[2] , " is not set\n");
+            fi; 
         fi;
     fi;
 
