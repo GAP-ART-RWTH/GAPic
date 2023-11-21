@@ -80,6 +80,10 @@ DeclareOperation( "ActivateLineWidth", [IsTriangularComplex, IsRecord]);
 DeclareOperation( "DeactivateLineWidth", [IsTriangularComplex, IsRecord]);
 DeclareOperation( "IsLineWidth", [IsTriangularComplex, IsRecord]);
 
+DeclareOperation( "ActivatePerformanceOverlay", [IsTriangularComplex, IsRecord]);
+DeclareOperation( "DeactivatePerformanceOverlay", [IsTriangularComplex, IsRecord]);
+DeclareOperation( "IsPerformanceOverlay", [IsTriangularComplex, IsRecord]);
+
 
 DeclareOperation( "SetTransparencyJava", [IsTriangularComplex, IsPosInt, IsFloat, IsRecord] );
 

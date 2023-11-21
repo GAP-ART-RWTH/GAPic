@@ -784,7 +784,36 @@ InstallMethod( IsLineWidth,
         return false;
     fi;
  
-	return true;
+	return printRecord.linewidth;
+    end
+);
+
+InstallMethod( ActivatePerformanceOverlay,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.performanceOverlay := true;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( DeactivatePerformanceOverlay,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    printRecord.performanceOverlay := false;
+ 
+	return printRecord;
+    end
+);
+
+InstallMethod( IsPerformanceOverlay,
+    [IsTriangularComplex, IsRecord],
+    function(surface,printRecord)
+    if not IsBound(printRecord.performanceOverlay) then
+        return false;
+    fi;
+    
+	return printRecord.performanceOverlay;
     end
 );
 
@@ -1483,6 +1512,18 @@ InstallMethod( DrawComplexToJavaScript,
         fi;
     fi;
 
+    # enable performance overlay if enabled
+    AppendTo(output, "\tvar performanceOverlayEnabled = false;\n");
+    if IsPerformanceOverlay(surface, printRecord) then
+        AppendTo(output, """
+        // add performance overlay
+        import Stats from 'three/addons/libs/stats.module';
+
+        const stats = new Stats();
+        document.body.appendChild(stats.dom);    
+        performanceOverlayEnabled = true;
+        """);
+    fi;
 
     AppendTo(output, "\t// --- end of generated output --- //\n\n");
 
