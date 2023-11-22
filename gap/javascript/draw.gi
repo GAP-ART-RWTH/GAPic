@@ -919,7 +919,7 @@ InstallMethod( DrawComplexToJavaScript,
             if IsBound(error[3]) then
                 Error( "invalid coordinate format at coordinate: ", error[2], " and with content: ", error[3], " \n");
             else
-               Error( "invalid, coordinates not set for vertices ", error[2] , "\n");
+                Error( "invalid, coordinates not set for vertices ", error[2] , "\n");
             fi; 
         fi;
     fi;
@@ -1188,22 +1188,24 @@ InstallMethod( DrawComplexToJavaScript,
         fi;
     od;
 
+    # generate a string with the coordinates for later use
+    for vertex in Vertices(surface) do
+        coordinateString := "";
+        Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]));
+        Append(coordinateString, ",");
+        Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]));
+        Append(coordinateString, ",");
+        Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
+        Append(coordinateString, ",");
+
+        AppendTo(output, "\n\n\tfunction getVertex",vertex,"(",vertexParameterNames,"){\n");
+        AppendTo(output, "\t\treturn [",coordinateString,"];\n\t}\n");
+    od;
+
     # add spheres and lables on all vertices if they are active
     AppendTo(output, "\t// generate labels and spheres for the vertices\n");
     for vertex in Vertices(surface) do
-        if IsVertexActive(surface, vertex, printRecord) then                
-            # generate a string with the coordinates for later use
-            coordinateString := "";
-            Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[1]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[2]));
-            Append(coordinateString, ",");
-            Append(coordinateString, String(GetVertexCoordinates3DNC(surface, vertex, printRecord)[3]));
-            Append(coordinateString, ",");
-
-            AppendTo(output, "\n\n\tfunction getVertex",vertex,"(",vertexParameterNames,"){\n");
-            AppendTo(output, "\t\treturn [",coordinateString,"];\n\t}\n");
-
+        if IsVertexActive(surface, vertex, printRecord) then
             # add spheres with radius edgeThickness around the active vertices
             AppendTo(output, "\tconst sphereMaterial",vertex," = new THREE.MeshBasicMaterial( { color: ",GetVertexColour(surface, vertex, printRecord)," } );\n");
             AppendTo(output, "\tconst sphere",vertex," = new THREE.Mesh( sphereGeometry, sphereMaterial",vertex," );\n");
