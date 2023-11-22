@@ -938,6 +938,44 @@ InstallMethod( DrawComplexToJavaScript,
 
     AppendTo(output, "\n\t// --- start of generated output --- //\n\n");
 
+    # write the incidence, colours and coordinates in a single place to reduce storage later
+    # all the numbers are going to be relative to a dense list of [1..NumberOfVertices(surface)] as to make adressing them easy in JS
+    # vertices:=Vertices(surface);
+    # AppendTo(output, "\tconst numberOfVertices = ", NumberOfVertices(surface), ";\n\n");
+
+    # AppendTo(output, "\tconst coordinates = [\n");
+    # for vertex in [1..NumberOfVertices(surface)] do
+    #     AppendTo(output, "\t\t", GetVertexCoordinates3DNC(surface, vertices[vertex], printRecord), ",\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\tconst edges = [\n");
+    # for edge in Edges(surface) do
+    #     AppendTo(output, "\t\t[", Position(vertices, VerticesOfEdge(surface, edge)[1]), ", ", Position(vertices, VerticesOfEdge(surface, edge)[2]), "],\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\tconst faces = [\n");
+    # for face in Faces(surface) do
+    #     AppendTo(output, "\t\t[", Position(vertices, VerticesOfFace(surface, face)[1]), ", ", 
+    #                                 Position(vertices, VerticesOfFace(surface, face)[2]),", ", 
+    #                                 Position(vertices, VerticesOfFace(surface, face)[3]), "],\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\tconst uniqueFaceColors = [\n");
+    # for colour in uniqueFaceColors do
+    #     AppendTo(output, "\t\t\"", colour ,"\",\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\t// the face colours w.r.t. the uniqueFaceColours defined before so face[i] has uniqueFaceColour[faceColour[i]]\n");
+    # AppendTo(output, "\tconst faceColors = [");
+    # for face in Faces(surface) do
+    #     AppendTo(output, Position(uniqueFaceColors, GetFaceColour(oct, face, printRecord)) ,", ");
+    # od;
+    # AppendTo(output, "];\n\n");
+
     # preperations for parameterized vertex coordinates
     AppendTo(output, "\t// preperations for parameterized vertex coordinates \n");
     vertexParameterNames := "";
