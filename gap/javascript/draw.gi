@@ -928,11 +928,21 @@ InstallMethod( DrawComplexToJavaScript,
     # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the root group
     faceColors := GetFaceColours(surface, printRecord);
 
-    # generate a list of all unique colors of the faces
+    # generate a list of all unique colors of the edges and faces
     uniqueFaceColors := [];
     for color in faceColors do
         if not color in uniqueFaceColors then
             Add(uniqueFaceColors, color);
+        fi; 
+    od;
+
+    edgeColors := GetEdgeColours(surface, printRecord);
+
+    uniqueEdgeColors := [];
+    uniqueEdgeColorsActive := [];
+    for color in edgeColors do
+        if not color in uniqueEdgeColors then
+            Add(uniqueEdgeColors, color);
         fi; 
     od;
 
@@ -954,6 +964,19 @@ InstallMethod( DrawComplexToJavaScript,
     #     AppendTo(output, "\t\t[", Position(vertices, VerticesOfEdge(surface, edge)[1]), ", ", Position(vertices, VerticesOfEdge(surface, edge)[2]), "],\n");
     # od;
     # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\tconst uniqueEdgeColors = [\n");
+    # for colour in uniqueEdgeColors do
+    #     AppendTo(output, "\t\t\"", colour ,"\",\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\t// the edge colours w.r.t. the uniqueEdgeColours defined before so edge[i] has uniqueEdgeColour[edgeColour[i]]\n");
+    # AppendTo(output, "\tconst edgeColors = [");
+    # for edge in Edges(surface) do
+    #     AppendTo(output, Position(uniqueEdgeColors, GetEdgeColour(oct, edge, printRecord)) ,", ");
+    # od;
+    # AppendTo(output, "];\n\n");
 
     # AppendTo(output, "\tconst faces = [\n");
     # for face in Faces(surface) do
@@ -1097,16 +1120,6 @@ InstallMethod( DrawComplexToJavaScript,
     # add edges to geometry by iterating over all colors
     # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the edgeRoot group
     AppendTo(output, "\n\t// generate the edges grouped by color\n");
-    edgeColors := GetEdgeColours(surface, printRecord);
-
-    # generate a list of all unique colors of the faces
-    uniqueEdgeColors := [];
-    uniqueEdgeColorsActive := [];
-    for color in edgeColors do
-        if not color in uniqueEdgeColors then
-            Add(uniqueEdgeColors, color);
-        fi; 
-    od;
 
     for color in uniqueEdgeColors do
         delete := true;
