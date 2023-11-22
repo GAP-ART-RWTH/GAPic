@@ -622,5 +622,47 @@ gap> DrawComplexToJavaScript(oct, "octahedron_lineWidth.html", printRecord);;
 
 </Section>
 
+<Section Label="Section_PerformanceOverlay">
+<Heading>Performance Overlay</Heading>
+When running big animations and especially when features like the variable line width are enabled, the performance of the animation can become a problem. To get more precise information about the current performance and memory usage there is the option to show it in the corner. If clicked it switches trough the following modes: FPS (Frames per second), milliseconds it took to render the last frame and megabytes of memory used to show the current simulation. It looks as following:
+
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/PerformanceOverlay-FPS.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/PerformanceOverlay-FPS.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/PerformanceOverlay-FPS.png]</Alt>
+
+As this option is mainly used for debugging it is disabled by default and can be enabled with the following commands:
+
+<ManSection Label="LineWidth">
+  <Oper Arg="complex, printRecord" Name="ActivatePerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="DeactivatePerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
+  <Oper Arg="complex, printRecord" Name="IsPerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
+ <Returns>the updated print record
+</Returns>
+ <Description>
+ (De-)activate the performance overlay, displayed in the corner of the animation. 
+<P/>
+ </Description>
+</ManSection>
+
+Here is a simple example how to use the functionality:
+
+<Log><![CDATA[
+gap> oct := Octahedron();;
+gap> verticesPositions := [
+> [ 0, 0, Sqrt(2.) ],
+> [ 1, 1, 0 ],
+> [ 1, -1, 0 ],
+> [ -1, -1, 0 ],
+> [ -1, 1, 0 ],
+> [ 0, 0, -Sqrt(2.) ] ];;
+gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
+gap> printRecord := ActivatePerformanceOverlay(oct, printRecord);;
+gap> DrawComplexToJavaScript(oct, "octahedron_performanceOverlay.html", printRecord);;
+]]></Log>
+The output will have the graph as shown in the pictures above in the top left corner.<Br/>
+For this function we use the <A>stats.js</A> extension for <A>three.js</A> which can be found here: <URL>https://github.com/mrdoob/stats.js</URL>.
+
+</Section>
+
 </Chapter>
 
