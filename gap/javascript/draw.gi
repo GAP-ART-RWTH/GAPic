@@ -924,25 +924,28 @@ InstallMethod( DrawComplexToJavaScript,
         fi;
     fi;
 
-    # add faces to geometry by iterating over all colors
-    # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the root group
-    faceColors := GetFaceColours(surface, printRecord);
-
     # generate a list of all unique colors of the edges and faces
+    vertexColors := GetVertexColours(surface, printRecord);
+    uniqueVertexColors := [];
+    for color in vertexColors do
+        if not color in uniqueVertexColors then
+            Add(uniqueVertexColors, color);
+        fi; 
+    od;
+    
+    edgeColors := GetEdgeColours(surface, printRecord);
+    uniqueEdgeColors := [];
+    for color in edgeColors do
+        if not color in uniqueEdgeColors then
+            Add(uniqueEdgeColors, color);
+        fi; 
+    od;
+    
+    faceColors := GetFaceColours(surface, printRecord);
     uniqueFaceColors := [];
     for color in faceColors do
         if not color in uniqueFaceColors then
             Add(uniqueFaceColors, color);
-        fi; 
-    od;
-
-    edgeColors := GetEdgeColours(surface, printRecord);
-
-    uniqueEdgeColors := [];
-    uniqueEdgeColorsActive := [];
-    for color in edgeColors do
-        if not color in uniqueEdgeColors then
-            Add(uniqueEdgeColors, color);
         fi; 
     od;
 
@@ -958,6 +961,19 @@ InstallMethod( DrawComplexToJavaScript,
     #     AppendTo(output, "\t\t", GetVertexCoordinates3DNC(surface, vertices[vertex], printRecord), ",\n");
     # od;
     # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\tconst uniqueVertexColors = [\n");
+    # for colour in uniqueVertexColors do
+    #     AppendTo(output, "\t\t\"", colour ,"\",\n");
+    # od;
+    # AppendTo(output, "\t];\n\n");
+
+    # AppendTo(output, "\t// the vertex colours w.r.t. the uniqueVertexColours defined before so vertex[i] has uniqueVertexColour[vertexColour[i]]\n");
+    # AppendTo(output, "\tconst vertexColors = [");
+    # for vertex in Vertices(surface) do
+    #     AppendTo(output, Position(uniqueVertexColors, GetVertexColour(oct, vertex, printRecord)) ,", ");
+    # od;
+    # AppendTo(output, "];\n\n");
 
     # AppendTo(output, "\tconst edges = [\n");
     # for edge in Edges(surface) do
@@ -1036,6 +1052,8 @@ InstallMethod( DrawComplexToJavaScript,
         AppendTo(output, "\tconst vertexParametriziation = false;\n");
     fi;
 
+    # add faces to geometry by iterating over all colors
+    # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the root group
     # for each of the unique colors add the faces to a gemeometry and generate a mesh with corresponding color from it
     # also generate a wireframe which can be made visible via the gui
     AppendTo(output, "\t// generate the faces color by color \n");
@@ -1121,6 +1139,7 @@ InstallMethod( DrawComplexToJavaScript,
     # for each color there is a new geometry and material generated. these are then combined into a mesh and added to the edgeRoot group
     AppendTo(output, "\n\t// generate the edges grouped by color\n");
 
+    uniqueEdgeColorsActive := [];
     for color in uniqueEdgeColors do
         delete := true;
         colorPositions := Positions(edgeColors, color);
