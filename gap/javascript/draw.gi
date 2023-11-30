@@ -925,13 +925,13 @@ InstallMethod( DrawComplexToJavaScript,
     fi;
 
     # generate a list of all unique colors of the edges and faces
-    vertexColors := GetVertexColours(surface, printRecord);
-    uniqueVertexColors := [];
-    for color in vertexColors do
-        if not color in uniqueVertexColors then
-            Add(uniqueVertexColors, color);
-        fi; 
-    od;
+    # vertexColors := GetVertexColours(surface, printRecord);
+    # uniqueVertexColors := [];
+    # for color in vertexColors do
+    #     if not color in uniqueVertexColors then
+    #         Add(uniqueVertexColors, color);
+    #     fi; 
+    # od;
     
     edgeColors := GetEdgeColours(surface, printRecord);
     uniqueEdgeColors := [];
