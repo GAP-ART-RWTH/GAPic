@@ -576,7 +576,7 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
  <Returns>the updated print record
 </Returns>
  <Description>
- Save the given list of ranges of the parameters. They have to be provided in the format <A>[["nameofParameterA", initialValue, [minA, maxA]], ["nameofParameterB", initialValue, [minB, maxB]]]</A>
+ Save the given list of ranges of the parameters. They have to be provided in the format <A>[["nameofParameterA", initialValueOfA, [minA, maxA]], ["nameofParameterB", initialValueOfB, [minB, maxB]]]</A>
 <P/>
  </Description>
 </ManSection>

@@ -832,8 +832,19 @@ InstallMethod( SetVertexCoordinatesParameterized,
 InstallMethod( SetVertexParameters,
     [IsTriangularComplex, IsList, IsRecord],
     function(surface, parameters, printRecord)
+    local param;
     
-    #TODO: check if sensible list is given
+    for param in parameters do
+        if not Size(param) = 3 then
+            Error("in parameter ", param, " is not in the right format should be [name, initialValue, [minValue, maxValue]], missing at least one of them.\n");
+        fi;
+        if not IsString(param[1]) then
+            Error("in parameter ", param, " name is not a string, should be [name, initialValue, [minValue, maxValue]]\n");
+        fi;
+        if not IsList(param[3]) then
+            Error("in parameter ", param, " minValue/maxValue range is not a list, should be [name, initialValue, [minValue, maxValue]]\n");
+        fi;
+    od;
     printRecord.vertexParameters := parameters;
  
 	return printRecord;
