@@ -241,26 +241,36 @@ BindGlobal( "__GAPIC__PrintRecordDrawEdge",
     function( printRecord, graph, edge, vertexTikzCoord) # Caution: The argument 'edge' is given as an integer from the numbering of the edges of 'graph'
         local res;
         if Length(Positions(List(DigraphEdges(graph), e -> Set(e)), Set(DigraphEdges(graph)[edge]))) = 2 then
-            if Set(DigraphEdges(graph)[edge]) = DigraphEdges(graph)[edge] then
-                res := "\\draw[latex-latex, edge";
-            else
-                return "";
+            res := "\\draw[-latex, edge";
+
+            if IsBound( printRecord!.edgeColours[edge] ) then
+                res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
             fi;
+
+            res := Concatenation(res, "] let \\p1=($(", vertexTikzCoord[2], ")-(", vertexTikzCoord[1], ")$), \\n1={atan2(\\y1,\\x1)+20},\\n2={atan2(\\y1,\\x1)+180-20} in (", vertexTikzCoord[1], " name.\\n1) -- node[auto, edgeLabel] {$");
+            
+            if IsBound(printRecord!.edgeLabels[edge]) then
+            Append(res, printRecord!.edgeLabels[edge]);
+            else
+                Append( res, String(edge) );
+            fi;
+
+            res := Concatenation(res, "$} (", vertexTikzCoord[2], " name.\\n2);\n" );
         else
             res := "\\draw[-latex, edge";
-        fi;
-        if IsBound( printRecord!.edgeColours[edge] ) then
-            res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
-        fi;
+            if IsBound( printRecord!.edgeColours[edge] ) then
+                res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+            fi;
 
-        res := Concatenation(res, "] (", vertexTikzCoord[1], " name) -- node[edgeLabel] {$");
-        if IsBound(printRecord!.edgeLabels[edge]) then
-            Append(res, printRecord!.edgeLabels[edge]);
-        else
-            Append( res, String(edge) );
+            res := Concatenation(res, "] (", vertexTikzCoord[1], " name) -- node[edgeLabel] {$");
+            if IsBound(printRecord!.edgeLabels[edge]) then
+                Append(res, printRecord!.edgeLabels[edge]);
+            else
+                Append( res, String(edge) );
+            fi;
+            res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
         fi;
-        res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
-
+        
         return res;
     end
 );
@@ -396,17 +406,17 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     #             printRecord.faceColours:=[];
     #     fi;
 
-    #     if IsBound(printRecord.vertexColours) then
-    #         if IsString(printRecord.vertexColours) then
-    #             colour:=printRecord.vertexColours;
-    #             printRecord.vertexColours:=[];
-    #             for v in Vertices(surface) do
-    #                 printRecord.vertexColours[v]:=colour;
-    #             od;
-    #         fi;
-    #     else
-    #             printRecord.vertexColours:=[];
-    #     fi;
+        if IsBound(printRecord.vertexColours) then
+            if IsString(printRecord.vertexColours) then
+                colour:=printRecord.vertexColours;
+                printRecord.vertexColours:=[];
+                for v in DigraphVertices(graph) do
+                    printRecord.vertexColours[v]:=colour;
+                od;
+            fi;
+        else
+                printRecord.vertexColours:=[];
+        fi;
         if not IsBound(printRecord.compileLaTeX) then
 	        printRecord.compileLaTeX :=false;
 	    fi;
