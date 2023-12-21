@@ -125,6 +125,8 @@ BindGlobal( "__GAPIC__PrintRecordInit",
 
 
         # drawing options
+        __GAPIC__PrintRecordInitBool(printRecord, "directedEdgesActive", true);
+
         __GAPIC__PrintRecordInitBool( printRecord, "vertexLabelsActive", true );
         __GAPIC__PrintRecordInitStringList( printRecord, "vertexLabels", 
             DigraphVertices(graph) );
@@ -132,13 +134,13 @@ BindGlobal( "__GAPIC__PrintRecordInit",
         __GAPIC__PrintRecordInitBool( printRecord, "edgeLabelsActive", true );
         __GAPIC__PrintRecordInitStringList( printRecord, "edgeLabels", [1..Length(DigraphEdges(graph))] );
 
-        __GAPIC__PrintRecordInitBool( printRecord, "faceLabelsActive", true );
-        __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", [1..Length(printRecord!.nodesOfFaces)] );
+        # __GAPIC__PrintRecordInitBool( printRecord, "faceLabelsActive", true );
+        # __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", [1..Length(printRecord!.nodesOfFaces)] );
         
         if not IsBound( printRecord!.scale ) then
             printRecord!.scale := 2;
         fi;
-        __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
+        # __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
 
         # colours
         __GAPIC__PrintRecordInitStringList(printRecord, "vertexColours", 
@@ -219,7 +221,7 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
         local res;
 
         res := "\\vertexLabelR";
-        if IsBound( printRecord!.vertexColours[vertex] ) then
+        if IsBound( printRecord!.vertexColours[vertex] ) and (not printRecord!.vertexColours[vertex]=[]) then
             res := Concatenation(res, "[", printRecord!.vertexColours[vertex],"]");
         fi;
 
@@ -240,25 +242,40 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
 BindGlobal( "__GAPIC__PrintRecordDrawEdge",
     function( printRecord, graph, edge, vertexTikzCoord) # Caution: The argument 'edge' is given as an integer from the numbering of the edges of 'graph'
         local res;
-        if Length(Positions(List(DigraphEdges(graph), e -> Set(e)), Set(DigraphEdges(graph)[edge]))) = 2 then
-            res := "\\draw[-latex, edge";
+        if printRecord!.directedEdgesActive = true then
+            if Length(Positions(List(DigraphEdges(graph), e -> Set(e)), Set(DigraphEdges(graph)[edge]))) = 2 then
+                res := "\\draw[-latex, edge";
 
-            if IsBound( printRecord!.edgeColours[edge] ) then
-                res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
-            fi;
+                if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+                    res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+                fi;
 
-            res := Concatenation(res, "] let \\p1=($(", vertexTikzCoord[2], ")-(", vertexTikzCoord[1], ")$), \\n1={atan2(\\y1,\\x1)+20},\\n2={atan2(\\y1,\\x1)+180-20} in (", vertexTikzCoord[1], " name.\\n1) -- node[auto, edgeLabel] {$");
-            
-            if IsBound(printRecord!.edgeLabels[edge]) then
-            Append(res, printRecord!.edgeLabels[edge]);
+                res := Concatenation(res, "] let \\p1=($(", vertexTikzCoord[2], ")-(", vertexTikzCoord[1], ")$), \\n1={atan2(\\y1,\\x1)+20},\\n2={atan2(\\y1,\\x1)+180-20} in (", vertexTikzCoord[1], " name.\\n1) -- node[auto, edgeLabel] {$");
+                
+                if IsBound(printRecord!.edgeLabels[edge]) then
+                Append(res, printRecord!.edgeLabels[edge]);
+                else
+                    Append( res, String(edge) );
+                fi;
+
+                res := Concatenation(res, "$} (", vertexTikzCoord[2], " name.\\n2);\n" );
             else
-                Append( res, String(edge) );
-            fi;
+                res := "\\draw[-latex, edge";
+                if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+                    res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+                fi;
 
-            res := Concatenation(res, "$} (", vertexTikzCoord[2], " name.\\n2);\n" );
+                res := Concatenation(res, "] (", vertexTikzCoord[1], " name) -- node[edgeLabel] {$");
+                if IsBound(printRecord!.edgeLabels[edge]) then
+                    Append(res, printRecord!.edgeLabels[edge]);
+                else
+                    Append( res, String(edge) );
+                fi;
+                res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
+            fi;
         else
-            res := "\\draw[-latex, edge";
-            if IsBound( printRecord!.edgeColours[edge] ) then
+            res := "\\draw[edge";
+            if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
                 res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
             fi;
 
@@ -337,8 +354,7 @@ BindGlobal( "__GAPIC__IsCoordinates2D",
 
 
   
-    ## this functions manipulates the printRecord so that functionalities of 
-    ## DrawSurfaceToTikZ can be used 
+    ## this functions manipulates the printRecord
 
 BindGlobal( "__GAPIC__InitializePrintRecord",
     function(graph ,printRecord)
@@ -349,6 +365,7 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	if not IsBound(printRecord.latexDocumentclass) then
 	    printRecord.latexDocumentclass := "article";
 	fi;
+    __GAPIC__PrintRecordInitBool(printRecord, "directedEdgesActive", true);
 	if not IsBound(printRecord.edgeLabelsActive) then
 	    printRecord.edgeLabelsActive := true; 
 	fi;
@@ -491,7 +508,7 @@ InstallMethod(DrawDigraphToTikz,
         for node in DigraphVertices(graph) do
             faceCoordTikZ[node]:=Concatenation("V",String(node));
         od;
-        ##define face coordinates
+        ##define node coordinates
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
             printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
@@ -499,7 +516,7 @@ InstallMethod(DrawDigraphToTikz,
         od;
 
         for v in DigraphVertices(graph) do
-            AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
+            # AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
             AppendTo(output, __GAPIC__PrintRecordDrawVertex(printRecord, v, faceCoordTikZ[v]));
         od;
 
