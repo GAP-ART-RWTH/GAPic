@@ -692,27 +692,32 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
                     case_deciding_neighbours := Difference(neighbours, [cur[2][1], cur[Length(cur)][1]]);
                     if Length(Intersection(Deabstract1(cur), case_deciding_neighbours)) = 0 then    # conquer case
                         to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
-                        to_be_positioned_nodes_ordered := [];
-                        seen_nodes := [];
-                        correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[1], nodes_of_embedding, x));
-                        # Error();
-                        next_node_in_order := Intersection(to_be_positioned_nodes, correct_nodes_of_face[1])[1];
-                        Add(to_be_positioned_nodes_ordered, next_node_in_order);
-                        Add(seen_nodes, next_node_in_order);
-                        # Error();
-                        for i in [2..Length(to_be_positioned_nodes)] do
+                        if to_be_positioned_nodes = [] then # All neighbours have been positioned already
+                            Remove(cur, 1);
+                            return [[cur], embedding];
+                        else
+                            to_be_positioned_nodes_ordered := [];
+                            seen_nodes := [];
+                            correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[1], nodes_of_embedding, x));
                             # Error();
-                            correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
-                            next_node_in_order := Difference(Intersection(to_be_positioned_nodes, correct_nodes_of_face[1]), seen_nodes)[1];
+                            next_node_in_order := Intersection(to_be_positioned_nodes, correct_nodes_of_face[1])[1];
                             Add(to_be_positioned_nodes_ordered, next_node_in_order);
                             Add(seen_nodes, next_node_in_order);
-                        od;
-                        # Error();
-                        embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
-                        cur := Concatenation(cur, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
-                        Remove(cur, 1);
-                        # Error();
-                        return [[cur], embedding];
+                            # Error();
+                            for i in [2..Length(to_be_positioned_nodes)] do
+                                # Error();
+                                correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
+                                next_node_in_order := Difference(Intersection(to_be_positioned_nodes, correct_nodes_of_face[1]), seen_nodes)[1];
+                                Add(to_be_positioned_nodes_ordered, next_node_in_order);
+                                Add(seen_nodes, next_node_in_order);
+                            od;
+                            # Error();
+                            embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
+                            cur := Concatenation(cur, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
+                            Remove(cur, 1);
+                            # Error();
+                            return [[cur], embedding];
+                        fi;
                     else                                                                            # divide case
                         to_split_vertex := Intersection(Deabstract1(cur), case_deciding_neighbours)[1];
                         to_split_vertex_pos := Position(Deabstract1(cur), to_split_vertex);
