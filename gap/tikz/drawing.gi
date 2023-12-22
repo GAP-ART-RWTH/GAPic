@@ -138,7 +138,7 @@ BindGlobal( "__GAPIC__PrintRecordInit",
         # __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", [1..Length(printRecord!.nodesOfFaces)] );
         
         if not IsBound( printRecord!.scale ) then
-            printRecord!.scale := 2;
+            printRecord!.scale := 3;
         fi;
         # __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
 
@@ -373,7 +373,7 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	    printRecord.faceLabelsActive := false;
 	fi;
 	if not IsBound(printRecord.scale) then
-	    printRecord.scale :=2;
+	    printRecord.scale :=3;
 	fi;
 	if IsBound(printRecord.edgeColours) then
 	    if IsString(printRecord.edgeColours) then

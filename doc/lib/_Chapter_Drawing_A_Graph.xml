@@ -102,8 +102,7 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
       We will exemplify them with the following graph in order to clarify how the parameters
       work:
 <Log><![CDATA[ 
-gap> graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],
-> [1,5,6], [2,5,6]]);;
+gap> graph := Digraph([[3,4,7], [3,4,8], [], [6], [3,7,8], [7,8], [], []]);;
 gap> IsPlanarDigraph(graph);
 true
 gap> IsConnectedDigraph(graph);
@@ -159,12 +158,14 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
          <Item>
             <A>spread</A>: Changes the amount of spread, i.e. how far apart the nodes are distributed inside the graph.
          </Item>
+         <Item>
+            <A>directedEdgesActive</A>: Toggle between directed or undirected representation of the graph. 
+         </Item>
       </List>
       We will exemplify them with the following graph in order to clarify how the parameters
       work:
 <Log><![CDATA[ 
-gap> graph := Digraph([[3,4,7], [3,4,8], [1,2,5], [1,2,6], [3,7,8], [4,7,8],
-> [1,5,6], [2,5,6]]);;
+gap> graph := Digraph([[3,4,7], [3,4,8], [], [6], [3,7,8], [7,8], [], []]);;
 gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3], 
 > [2,3,5,8], [5,8,6,7], [2,4,6,8], [1,3,5,7]]);;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
@@ -175,9 +176,10 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
       <List>
          <Item>
-            <A>scale</A>: By default the scale is set to 2. Now one can change it by:
+            <A>scale</A>: Scales the produced TikZ-picture by <K>scale</K>. By default <K>scale</K> is set to 3. 
+            Now one can change, to 4 for example, by:
 <Log><![CDATA[ 
-gap> printRecord.scale := 3;;
+gap> printRecord.scale := 4;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
@@ -188,11 +190,11 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 
          <Item>
             <A>spread</A>: Modifies the position of the nodes.
-            The spread parameter can be chosen as a float in the interval (0, 1). 
+            The <K>spread</K> parameter can be chosen as a float in the interval (0, 1). 
             Choosing the parameter outside the interval results in an error. Choosing a number close
             to 1 modifies the nodes such that they tend to be placed torwards the boundary of the infinite face of the graph.
             Choosing a number close to 0 modifies the nodes such that they tend to be placed torwards the
-            centre of the graph. The default spread is set at 0.5. Here are two examples with spreads 0.3 and 0.7:
+            centre of the graph. The default <K>spread</K> is set at 0.5. Here are two examples with <K>spread</K>s 0.3 and 0.7:
 <Log><![CDATA[ 
 gap> printRecord.spread := 0.3;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
@@ -210,6 +212,42 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png">&lt;/img></Alt>
             <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.pdf}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png]</Alt>
+         </Item>
+
+         <Item>
+            <A>directedEdgesActive</A>: By default <K>directedEdgesActive</K> is <K>true</K>. That means that edges will be
+            represented as directed arrows as seen in the pictures. In the case that two nodes <K>i</K> and <K>j</K> are
+            doubly connected with directed edges, i.e. <K>[i,j]</K> and <K>[j,i]</K> are edges of <K>graph</K>, the embedding
+            shows two separated arrows from <K>i</K> to <K>j</K> and the other way around. <P/>
+            If <K>directedEdgesActive</K> is set to <K>false</K> edges are represented as plane lines without any direction.
+            In this case it is recommended to choose the graph <K>graph</K> in such a way that no pair of nodes is doubly 
+            connected with directed edges (see above). The reason is that in this case the double edges will be represented 
+            as one single plane line. This means that the drawing settings of one of the directed edges will be ignored.
+            Let us look at the following examples:
+<Log><![CDATA[ 
+gap> graph := Digraph([[3,4,7], [3,4,8], [1], [6], [3,7,8], [4,7,8], 
+> [], []]);;
+gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3], 
+> [2,3,5,8], [5,8,6,7], [2,4,6,8], [1,3,5,7]]);;
+gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.png]</Alt>
+            <P/> 
+            Now, we toggle <K>directedEdgesActive</K> off and we get
+<Log><![CDATA[ 
+gap> printRecord.directedEdgesActive := false;;
+gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.png]</Alt>
+            <P/>
+            Here, we can see that the edges numbered 8 and 1 vanished. That is because we are looking at the undirected
+            representation while having pairs of doubly connected nodes, namely <K>(1,3)</K> and <K>(4,6)</K>.
          </Item>
       </List>
    </Subsection>
