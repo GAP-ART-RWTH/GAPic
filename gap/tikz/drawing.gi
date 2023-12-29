@@ -127,8 +127,8 @@ BindGlobal( "__GAPIC__PrintRecordInit",
         # drawing options
         __GAPIC__PrintRecordInitBool(printRecord, "directedEdgesActive", true);
 
-        __GAPIC__PrintRecordInitBool( printRecord, "vertexLabelsActive", true );
-        __GAPIC__PrintRecordInitStringList( printRecord, "vertexLabels", 
+        __GAPIC__PrintRecordInitBool( printRecord, "nodeLabelsActive", true );
+        __GAPIC__PrintRecordInitStringList( printRecord, "nodeLabels", 
             DigraphVertices(graph) );
 
         __GAPIC__PrintRecordInitBool( printRecord, "edgeLabelsActive", true );
@@ -226,8 +226,8 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
         fi;
 
         res := Concatenation( res, "{", vertexTikzCoord, "}{left}{$");
-        if IsBound(printRecord!.vertexLabels[vertex]) then
-            Append(res, printRecord!.vertexLabels[vertex]);
+        if IsBound(printRecord!.nodeLabels[vertex]) then
+            Append(res, printRecord!.nodeLabels[vertex]);
         else
             #Append( res, "v_{" );
             Append( res, String(vertex) );
@@ -299,7 +299,7 @@ BindGlobal( "__GAPIC__PrintRecordTikzOptions",
         res := "";
         # Add the vertex style
         Append( res, "vertexBall" );
-        if printRecord!.vertexLabelsActive = false then
+        if printRecord!.nodeLabelsActive = false then
             Append( res, "=nolabels" );
         fi;
         Append( res, ", " );
@@ -359,8 +359,8 @@ BindGlobal( "__GAPIC__IsCoordinates2D",
 BindGlobal( "__GAPIC__InitializePrintRecord",
     function(graph ,printRecord)
 	local g,colour,e,f,v, node;
-	if not IsBound(printRecord.vertexLabelsActive) then
-	    printRecord.vertexLabelsActive := true;
+	if not IsBound(printRecord.nodeLabelsActive) then
+	    printRecord.nodeLabelsActive := true;
 	fi;
 	if not IsBound(printRecord.latexDocumentclass) then
 	    printRecord.latexDocumentclass := "article";
@@ -392,8 +392,8 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
         # if not IsBound(printRecord.faceLabels) then
         #     printRecord.faceLabels := [];
         # fi;
-    if not IsBound(printRecord.vertexLabels) then
-        printRecord.vertexLabels := [];
+    if not IsBound(printRecord.nodeLabels) then
+        printRecord.nodeLabels := [];
     fi;
 	
 	if printRecord.edgeLabelsActive and printRecord.edgeLabels=[] then
@@ -406,9 +406,9 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     #             printRecord.faceLabels[f]:=String(f);
     #         od;
     #     fi;
-        if printRecord.vertexLabelsActive and printRecord.vertexLabels=[] then
+        if printRecord.nodeLabelsActive and printRecord.nodeLabels=[] then
             for node in DigraphVertices(graph) do
-                printRecord.vertexLabels[node]:=String(node);
+                printRecord.nodeLabels[node]:=String(node);
             od;
         fi;
     #     if IsBound(printRecord.faceColours) then
