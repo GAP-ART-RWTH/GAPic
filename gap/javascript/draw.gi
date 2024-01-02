@@ -19,7 +19,9 @@ BindGlobal( "__GAPIC__IsCoordinates3D",
             for j in coord do
                 if not IsFloat(j) then
                     if not IsInt(j) then
-                        return [false, Position(coordinates, coord), j];
+                        if not IsRat(j) then
+                            return [false, Position(coordinates, coord), j];
+                        fi;
                     fi;
                 fi;
             od;
