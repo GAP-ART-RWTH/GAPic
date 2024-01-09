@@ -591,8 +591,8 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
     "for a planar digraph, a file name and a record",
     [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
-        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition, InFilterFunc,
-                IntersectionFilterFunc, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
+        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition,
+                TwoWeightedCentric, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
                 DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face, node;
 
         if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
@@ -636,40 +636,50 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             return [res1, res2];
         end;
 
-        InFilterFunc := function(cur1, cur2, list) # help function
-            if cur1 in list and cur2 in list then
+        # InFilterFunc := function(cur1, cur2, list) # help function
+        #     if cur1 in list and cur2 in list then
+        #         return true;
+        #     else
+        #         return false;
+        #     fi;
+        # end;
+
+        # IntersectionFilterFunc := function(cur1, embedding, list) # help function
+        #     # Error();
+        #     if not IsEmpty(Difference(Intersection(embedding, list), [cur1])) then
+        #         return true;
+        #     else 
+        #         # Error();
+        #         return false;
+        #     fi;
+        # end;
+
+        CorrectNodesOfFaceFilter := function(pred, cur, succ, face) # help function
+            if IsSubset(face, [pred, cur, succ]) then
                 return true;
             else
                 return false;
             fi;
         end;
 
-        IntersectionFilterFunc := function(embedding, list) # help function
-            if not IsEmpty(Intersection(embedding, list)) then
-                return true;
-            else 
-                return false;
-            fi;
-        end;
-
-        CorrectNodesOfFaceFilter := function(cur1, cur2, embedding, list) # help function
-            return InFilterFunc(cur1, cur2, list) and IntersectionFilterFunc(embedding, list);
-        end;
-
-        MultipleWeightedCentricParameters := function(list, main_anchor, start_anchor, end_anchor, p) # help function
+        MultipleWeightedCentricParameters := function(nodes, main_anchor, start_anchor, end_anchor, p) # help function
             local res, n, i;
             res := [];
-            n := Length(list) + 1;
-            for i in [1..Length(list)] do
-                Add(res, [list[i], p*main_anchor + (1-p)*(Float((n-i)/n)*start_anchor + Float(i/n)*end_anchor)]);
+            n := Length(nodes) + 1;
+            for i in [1..Length(nodes)] do
+                Add(res, [nodes[i], p*main_anchor + (1-p)*(Float((n-i)/n)*start_anchor + Float(i/n)*end_anchor)]);
             od;
             return res;
+        end;
+
+        TwoWeightedCentric := function(nodes, start_anchor, end_anchor)
+            return MultipleWeightedCentricParameters(nodes, [0,0], start_anchor, end_anchor, 0);
         end;
 
         MainHelp := function(graph, currents, embedding, spread, nodes_of_faces)
             local cur, res, i, main_help_i, cur_i, neighbours, nodes_of_embedding, case_deciding_neighbours, to_be_positioned_nodes,
                 to_be_positioned_nodes_ordered, node, correct_nodes_of_face, next_node_in_order, to_split_vertex, to_split_vertex_pos,
-                seen_nodes;
+                remaining_nodes_pos, seen_faces, neighbouring_faces_of_tbp_nodes, next_node_in_order_pos, neighbouring_faces_of_pred;
             if Length(currents) >= 2 then   # multiple convex areas
                 # Error();
                 res := [];
@@ -683,41 +693,92 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             else                            # only one convex area
                 # Error();
                 cur := currents[1];
-                if Length(cur) < 2 then  # trivial convex area
+                if Length(cur) < 2 then   # trivial convex area
                     # Error();
                     return [[[]], embedding];
-                else                    # non-trivial convex area
+                elif Length(cur) = 2 then # area is a line between the 2 nodes inside curv
+                    neighbours := NeighboursOfVertex(graph, cur[1][1]);
+                    nodes_of_embedding := Deabstract1(embedding);
+                    to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
+                    if to_be_positioned_nodes = [] then # All neighbours have been positioned already
+                       Remove(cur, 1);
+                       return [[cur], embedding];
+                    fi;
+                    if not Length(to_be_positioned_nodes) = 1 then # Not sure if this case can occur. In case it does, one has to modify this here somehow.
+                        Error(); 
+                    fi;
+                    next_node_in_order := to_be_positioned_nodes[1];
+                    to_be_positioned_nodes_ordered := [next_node_in_order];
+                    while true do
+                        neighbours := NeighboursOfVertex(graph, next_node_in_order);
+                        next_node_in_order := Difference(neighbours, Union(nodes_of_embedding, [next_node_in_order, cur[Length(cur)][1]]));
+                        if IsEmpty(next_node_in_order) then
+                            break;
+                        fi;
+                        if Length(next_node_in_order) = 1 then
+                            next_node_in_order := next_node_in_order[1];
+                        else # Not sure if this case can occur. In case it does, one has to modify this here somehow.
+                            Error();
+                        fi;
+                        Add(to_be_positioned_nodes_ordered, next_node_in_order);
+                    od;
+                    embedding := Concatenation(embedding, TwoWeightedCentric(to_be_positioned_nodes_ordered, cur[1][2], cur[2][2]));
+                    cur := Concatenation(cur, TwoWeightedCentric(to_be_positioned_nodes_ordered, cur[1][2], cur[2][2]));
+                    Remove(cur, 1);
+                    return [[cur], embedding];
+                else                      # non-trivial convex area
                     neighbours := NeighboursOfVertex(graph, cur[1][1]);
                     nodes_of_embedding := Deabstract1(embedding);
                     case_deciding_neighbours := Difference(neighbours, [cur[2][1], cur[Length(cur)][1]]);
                     if Length(Intersection(Deabstract1(cur), case_deciding_neighbours)) = 0 then    # conquer case
                         to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
+                        # Error();
                         if to_be_positioned_nodes = [] then # All neighbours have been positioned already
                             Remove(cur, 1);
                             return [[cur], embedding];
-                        else
-                            to_be_positioned_nodes_ordered := [];
-                            seen_nodes := [];
-                            correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[1], nodes_of_embedding, x));
-                            # Error();
-                            next_node_in_order := Intersection(to_be_positioned_nodes, correct_nodes_of_face[1])[1];
-                            Add(to_be_positioned_nodes_ordered, next_node_in_order);
-                            Add(seen_nodes, next_node_in_order);
-                            # Error();
-                            for i in [2..Length(to_be_positioned_nodes)] do
-                                # Error();
-                                correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
-                                next_node_in_order := Difference(Intersection(to_be_positioned_nodes, correct_nodes_of_face[1]), seen_nodes)[1];
-                                Add(to_be_positioned_nodes_ordered, next_node_in_order);
-                                Add(seen_nodes, next_node_in_order);
-                            od;
-                            # Error();
-                            embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
-                            cur := Concatenation(cur, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
-                            Remove(cur, 1);
-                            # Error();
-                            return [[cur], embedding];
                         fi;
+                        neighbouring_faces_of_tbp_nodes := List(to_be_positioned_nodes, n -> Filtered(nodes_of_faces, f -> IsSubset(f, [cur[1][1], n]))); # "tbp" stands for "to be positoned"
+                        to_be_positioned_nodes_ordered := [];
+                        seen_faces := [];
+                        remaining_nodes_pos := [1..Length(to_be_positioned_nodes)];
+                        # Error();
+                        neighbouring_faces_of_pred := Filtered(nodes_of_faces, f -> IsSubset(f, [cur[1][1], cur[Length(cur)][1]]));
+                        if Length(to_be_positioned_nodes) = 1 then
+                            next_node_in_order_pos := [1];
+                        else
+                            next_node_in_order_pos := Filtered([1..Length(to_be_positioned_nodes)], i -> Length(Intersection(neighbouring_faces_of_tbp_nodes[i], neighbouring_faces_of_pred)) = 1);
+                        fi;
+                        if Length(next_node_in_order_pos) = 1 then # ensures that the position is unique which should be
+                            next_node_in_order_pos := next_node_in_order_pos[1];
+                            next_node_in_order := to_be_positioned_nodes[next_node_in_order_pos];
+                        else
+                            Error();
+                        fi;
+                        Add(to_be_positioned_nodes_ordered, next_node_in_order);
+                        Unbind(remaining_nodes_pos[next_node_in_order_pos]);
+                        Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
+                        # Error();
+                        for i in [2..Length(to_be_positioned_nodes)] do
+                            # Error();
+                            correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
+                            neighbouring_faces_of_pred := Difference(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], seen_faces);
+                            next_node_in_order_pos := Filtered(remaining_nodes_pos, j -> Length(Intersection(neighbouring_faces_of_tbp_nodes[j], neighbouring_faces_of_pred)) = 1);
+                            if Length(next_node_in_order_pos) = 1 then # ensures that the position is unique which should be
+                                next_node_in_order_pos := next_node_in_order_pos[1];
+                                next_node_in_order := to_be_positioned_nodes[next_node_in_order_pos];
+                            else
+                                Error();
+                            fi;
+                            Add(to_be_positioned_nodes_ordered, next_node_in_order);
+                            Unbind(remaining_nodes_pos[next_node_in_order_pos]);
+                            Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
+                        od;
+                        # Error();
+                        embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
+                        cur := Concatenation(cur, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
+                        Remove(cur, 1);
+                        # Error();
+                        return [[cur], embedding];
                     else                                                                            # divide case
                         to_split_vertex := Intersection(Deabstract1(cur), case_deciding_neighbours)[1];
                         to_split_vertex_pos := Position(Deabstract1(cur), to_split_vertex);
@@ -729,12 +790,15 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         end;
 
         DrawConvexPlaneGraph := function(graph, start_face, spread, nodes_of_faces)
-            local embedding, currents, main_help;
+            local embedding, currents, main_help, i;
             nodes_of_faces := Difference(nodes_of_faces, [start_face]);
             embedding := RegularPolygon(start_face);
             currents := [embedding];
 
             while Length(embedding) < Length(DigraphVertices(graph)) do
+                for i in Positions(currents, []) do
+                    Remove(currents, i);
+                od;
                 main_help := MainHelp(graph, currents, embedding, spread, nodes_of_faces);
                 currents := main_help[1];
                 embedding := main_help[2];
