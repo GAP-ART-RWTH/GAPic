@@ -47,114 +47,116 @@ BindGlobal( "__GAPIC__PrintRecordInitBool",
 );
 
 BindGlobal( "__GAPIC__PrintRecordInit",
-    function(printRecord, surface)
+    function(printRecord, graph)
         local givenStarts, v, e, givenEdgeDrawOrder, i, col, f;
 
-        # Starting faces
-        if not IsBound(printRecord.startingFaces) and IsBound(printRecord.startingFace) then
-            # If someone spells startingFace instead of startingFaces, we are lenient..
-            printRecord.startingFaces := printRecord.startingFace;
-            Unbind(printRecord.startingFace);
-        fi;
-        if IsBound(printRecord!.startingFaces) then
-            if IsPosInt(printRecord!.startingFaces) then
-                givenStarts := [ printRecord!.startingFaces ];
-            elif IsList( printRecord!.startingFaces ) and ForAll( printRecord!.startingFaces, IsPosInt ) then
-                givenStarts := printRecord!.startingFaces;
-            else
-                Print("Given starting faces are neither a list of faces nor a single face.");
-                givenStarts := [];
-            fi;
-        else
-            givenStarts := [];
-        fi;
-        printRecord!.givenStartingFaces := givenStarts;
-        printRecord!.startingFaces := [];
+        # # Starting faces
+        # if not IsBound(printRecord.startingFaces) and IsBound(printRecord.startingFace) then
+        #     # If someone spells startingFace instead of startingFaces, we are lenient..
+        #     printRecord.startingFaces := printRecord.startingFace;
+        #     Unbind(printRecord.startingFace);
+        # fi;
+        # if IsBound(printRecord!.startingFaces) then
+        #     if IsPosInt(printRecord!.startingFaces) then
+        #         givenStarts := [ printRecord!.startingFaces ];
+        #     elif IsList( printRecord!.startingFaces ) and ForAll( printRecord!.startingFaces, IsPosInt ) then
+        #         givenStarts := printRecord!.startingFaces;
+        #     else
+        #         Print("Given starting faces are neither a list of faces nor a single face.");
+        #         givenStarts := [];
+        #     fi;
+        # else
+        #     givenStarts := [];
+        # fi;
+        # printRecord!.givenStartingFaces := givenStarts;
+        # printRecord!.startingFaces := [];
         
-        # Edge draw order
-        if IsBound(printRecord.edgeDrawOrder) then
-            givenEdgeDrawOrder := printRecord.edgeDrawOrder;
-            if not IsList(givenEdgeDrawOrder) then
-                givenEdgeDrawOrder := [];
-            elif ForAll( givenEdgeDrawOrder, IsPosInt ) then
-                givenEdgeDrawOrder := [ givenEdgeDrawOrder ];
-            fi;
-            #TODO more checks and warnings?
-        else
-            givenEdgeDrawOrder := [];
-        fi;
-        printRecord!.givenEdgeDrawOrder := givenEdgeDrawOrder;
-        printRecord!.edgeDrawOrder := [];
+        # # Edge draw order
+        # if IsBound(printRecord.edgeDrawOrder) then
+        #     givenEdgeDrawOrder := printRecord.edgeDrawOrder;
+        #     if not IsList(givenEdgeDrawOrder) then
+        #         givenEdgeDrawOrder := [];
+        #     elif ForAll( givenEdgeDrawOrder, IsPosInt ) then
+        #         givenEdgeDrawOrder := [ givenEdgeDrawOrder ];
+        #     fi;
+        #     #TODO more checks and warnings?
+        # else
+        #     givenEdgeDrawOrder := [];
+        # fi;
+        # printRecord!.givenEdgeDrawOrder := givenEdgeDrawOrder;
+        # printRecord!.edgeDrawOrder := [];
 
-        # Draw components and drawing indices
-        printRecord.drawComponents := [];
-        printRecord.drawIndices := [];
+        # # Draw components and drawing indices
+        # printRecord.drawComponents := [];
+        # printRecord.drawIndices := [];
 
-        # edge lengths and angles
-        if not IsBound( printRecord!.edgeLengths ) then
-            printRecord!.edgeLengths := [];
-        fi;
-        printRecord!.givenEdgeLengths := printRecord!.edgeLengths;
+        # # edge lengths and angles
+        # if not IsBound( printRecord!.edgeLengths ) then
+        #     printRecord!.edgeLengths := [];
+        # fi;
+        # printRecord!.givenEdgeLengths := printRecord!.edgeLengths;
 
-        if not IsBound( printRecord!.angles ) then
-            printRecord!.angles := [];
-        fi;
-        printRecord!.givenAngles := printRecord!.angles;
+        # if not IsBound( printRecord!.angles ) then
+        #     printRecord!.angles := [];
+        # fi;
+        # printRecord!.givenAngles := printRecord!.angles;
 
         # float accuracy
         if not IsBound( printRecord!.floatAccuracy ) then
             printRecord!.floatAccuracy := 0.001;
         fi;
 
-        # coordinates (always recomputed)
-        printRecord!.vertexCoordinates := [];
-        for v in VerticesAttributeOfComplex(surface) do
-            printRecord!.vertexCoordinates[v] := [];
-        od;
-        printRecord!.edgeEndpoints := [];
-        for e in Edges(surface) do
-            printRecord!.edgeEndpoints[e] := [];
-        od;
-        printRecord!.faceVertices := [];
-        for f in Faces(surface) do
-            printRecord.faceVertices[f] := [];
-        od;
+        # # coordinates (always recomputed)
+        # printRecord!.vertexCoordinates := [];
+        # for v in VerticesAttributeOfComplex(surface) do
+        #     printRecord!.vertexCoordinates[v] := [];
+        # od;
+        # printRecord!.edgeEndpoints := [];
+        # for e in Edges(surface) do
+        #     printRecord!.edgeEndpoints[e] := [];
+        # od;
+        # printRecord!.faceVertices := [];
+        # for f in Faces(surface) do
+        #     printRecord.faceVertices[f] := [];
+        # od;
 
-        # openEdges
-        printRecord!.openEdges := [];
+        # # openEdges
+        # printRecord!.openEdges := [];
 
 
         # drawing options
-        __GAPIC__PrintRecordInitBool( printRecord, "vertexLabelsActive", true );
-        __GAPIC__PrintRecordInitStringList( printRecord, "vertexLabels", 
-            VerticesAttributeOfComplex(surface) );
+        __GAPIC__PrintRecordInitBool(printRecord, "directedEdgesActive", true);
+
+        __GAPIC__PrintRecordInitBool( printRecord, "nodeLabelsActive", true );
+        __GAPIC__PrintRecordInitStringList( printRecord, "nodeLabels", 
+            DigraphVertices(graph) );
 
         __GAPIC__PrintRecordInitBool( printRecord, "edgeLabelsActive", true );
-        __GAPIC__PrintRecordInitStringList( printRecord, "edgeLabels", Edges(surface) );
+        __GAPIC__PrintRecordInitStringList( printRecord, "edgeLabels", [1..Length(DigraphEdges(graph))] );
 
-        __GAPIC__PrintRecordInitBool( printRecord, "faceLabelsActive", true );
-        __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", Faces(surface) );
+        # __GAPIC__PrintRecordInitBool( printRecord, "faceLabelsActive", true );
+        # __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", [1..Length(printRecord!.nodesOfFaces)] );
         
         if not IsBound( printRecord!.scale ) then
-            printRecord!.scale := 2;
+            printRecord!.scale := 3;
         fi;
-        __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
+        # __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
 
         # colours
         __GAPIC__PrintRecordInitStringList(printRecord, "vertexColours", 
-            VerticesAttributeOfComplex(surface));
-        __GAPIC__PrintRecordInitStringList(printRecord, "edgeColours", Edges(surface));
-        __GAPIC__PrintRecordInitStringList(printRecord, "faceColours", Faces(surface));
+            DigraphVertices(graph));
+        __GAPIC__PrintRecordInitStringList(printRecord, "edgeColours", [1..Length(DigraphEdges(graph))]);
+        # __GAPIC__PrintRecordInitStringList(printRecord, "faceColours", Faces(surface));
         # if the faceColours are custom given, we check for errors
-        for i in [1..Length(printRecord!.faceColours)] do
-            if IsBound( printRecord!.faceColours[i] ) then
-                col := printRecord!.faceColours[i];
-                if StartsWith( col, "\\faceColour" ) then
-                    Remove(col,10);
-                    printRecord!.faceColours[i] := col;
-                fi;
-            fi;
-        od;
+        # for i in [1..Length(printRecord!.faceColours)] do
+        #     if IsBound( printRecord!.faceColours[i] ) then
+        #         col := printRecord!.faceColours[i];
+        #         if StartsWith( col, "\\faceColour" ) then
+        #             Remove(col,10);
+        #             printRecord!.faceColours[i] := col;
+        #         fi;
+        #     fi;
+        # od;
 #        if not IsBound( printRecord!.faceSwapColoursActive ) then
 #            printRecord!.faceSwapColoursActive := false;
 #        fi;
@@ -215,17 +217,17 @@ BindGlobal( "__GAPIC__PrintRecordTikzHeader",
 
 
 BindGlobal( "__GAPIC__PrintRecordDrawVertex",
-    function( printRecord, surface, vertex, vertexTikzCoord, vertexCoord )
+    function( printRecord, vertex, vertexTikzCoord)
         local res;
 
         res := "\\vertexLabelR";
-        if IsBound( printRecord!.vertexColours[vertex] ) then
+        if IsBound( printRecord!.vertexColours[vertex] ) and (not printRecord!.vertexColours[vertex]=[]) then
             res := Concatenation(res, "[", printRecord!.vertexColours[vertex],"]");
         fi;
 
         res := Concatenation( res, "{", vertexTikzCoord, "}{left}{$");
-        if IsBound(printRecord!.vertexLabels[vertex]) then
-            Append(res, printRecord!.vertexLabels[vertex]);
+        if IsBound(printRecord!.nodeLabels[vertex]) then
+            Append(res, printRecord!.nodeLabels[vertex]);
         else
             #Append( res, "v_{" );
             Append( res, String(vertex) );
@@ -238,84 +240,66 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
 );
 
 BindGlobal( "__GAPIC__PrintRecordDrawEdge",
-    function( printRecord, graph, edge, vertexTikzCoord, vertexCoord )
+    function( printRecord, graph, edge, vertexTikzCoord) # Caution: The argument 'edge' is given as an integer from the numbering of the edges of 'graph'
         local res;
+        if printRecord!.directedEdgesActive = true then
+            if Length(Positions(List(DigraphEdges(graph), e -> Set(e)), Set(DigraphEdges(graph)[edge]))) = 2 then
+                res := "\\draw[-latex, edge";
 
-        res := "\\draw[edge";
-        # if IsBound( printRecord!.edgeColours[edge] ) then
-        #     res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
-        # fi;
+                if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+                    res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+                fi;
 
-        res := Concatenation(res, "] (", vertexTikzCoord[1], ") -- node[edgeLabel] {$");
-        # if IsBound(printRecord!.edgeLabels[edge]) then
-        #     Append(res, printRecord!.edgeLabels[edge]);
-        # else
-            #Append( res, "e_{" );
-            Append( res, String(edge) );
-            #Append( res, "}" );
-        # fi;
-        res := Concatenation(res, "$} (", vertexTikzCoord[2], ");\n" );
+                res := Concatenation(res, "] let \\p1=($(", vertexTikzCoord[2], ")-(", vertexTikzCoord[1], ")$), \\n1={atan2(\\y1,\\x1)+20},\\n2={atan2(\\y1,\\x1)+180-20} in (", vertexTikzCoord[1], " name.\\n1) -- node[auto, edgeLabel] {$");
+                
+                if IsBound(printRecord!.edgeLabels[edge]) then
+                Append(res, printRecord!.edgeLabels[edge]);
+                else
+                    Append( res, String(edge) );
+                fi;
 
-        return res;
-    end
-);
+                res := Concatenation(res, "$} (", vertexTikzCoord[2], " name.\\n2);\n" );
+            else
+                res := "\\draw[-latex, edge";
+                if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+                    res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+                fi;
 
-BindGlobal( "__GAPIC__PrintRecordDrawFace",
-    function( printRecord, surface, face, vertexTikzCoord, vertexCoord )
-        local res, i, coord;
-
-        res := "";
-        Append(res, "\\fill[");
-    #TODO this does not make sense without mirror/rotation edges -> revisit this problem then
-        # Determine if the swap colour is used
-#        if IsOrientable(surface) and printRecord!.faceVertices[face][2][1]^OrientationByVerticesAsPerm(surface)[face] = printRecord!.faceVertices[face][1][1] then
-#            Append(res, "faceSwap");
-#        else
-            Append(res, "face");
-#        fi;
-
-        if IsBound( printRecord!.faceColours[face] ) then
-            Append( res, "=" );
-            Append( res, printRecord!.faceColours[face] );
-        fi;
-        Append(res, "] ");
-
-        for coord in vertexTikzCoord do
-            Append(res, " (");
-            Append(res, coord);
-            Append(res, ") --");
-        od;
-        Append(res, " cycle;\n");
-        Append(res, "\\node[faceLabel] at (barycentric cs:");
-        for i in [1..Length(vertexTikzCoord)] do
-            if i > 1 then
-                Append(res, ",");
+                res := Concatenation(res, "] (", vertexTikzCoord[1], " name) -- node[edgeLabel] {$");
+                if IsBound(printRecord!.edgeLabels[edge]) then
+                    Append(res, printRecord!.edgeLabels[edge]);
+                else
+                    Append( res, String(edge) );
+                fi;
+                res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
             fi;
-            Append(res, vertexTikzCoord[i]);
-            Append(res, "=1");
-        od;
-        Append(res, ") {$");
-        if IsBound( printRecord!.faceLabels[face] ) then
-            Append(res, printRecord!.faceLabels[face]);
         else
-            #Append(res, "f_{");
-            Append(res, String(face));
-            #Append(res, "}");
-        fi;
-        Append(res, "$};\n" );
+            res := "\\draw[edge";
+            if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+                res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+            fi;
 
+            res := Concatenation(res, "] (", vertexTikzCoord[1], " name) -- node[edgeLabel] {$");
+            if IsBound(printRecord!.edgeLabels[edge]) then
+                Append(res, printRecord!.edgeLabels[edge]);
+            else
+                Append( res, String(edge) );
+            fi;
+            res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
+        fi;
+        
         return res;
     end
 );
+
 
 BindGlobal( "__GAPIC__PrintRecordTikzOptions",
     function(printRecord, graph)
         local res;
-
         res := "";
         # Add the vertex style
         Append( res, "vertexBall" );
-        if printRecord!.vertexLabelsActive = false then
+        if printRecord!.nodeLabelsActive = false then
             Append( res, "=nolabels" );
         fi;
         Append( res, ", " );
@@ -337,53 +321,6 @@ BindGlobal( "__GAPIC__PrintRecordTikzOptions",
         # Scale the picture
         Append( res, "scale=" );
         Append( res, String(printRecord!.scale) );
-
-        return res;
-    end
-);
-
-
-
-
-############################################################
-
-BindGlobal( "__GAPIC__PrintRecordDrawFaceFG",
-    function( printRecord, graph, face, faceTikzCoord)
-        local res;
-
-        res := "\\vertexLabelR";
-        # if IsBound( printRecord!.faceColours[face] ) then
-        #     res := Concatenation(res, "[", printRecord!.faceColours[face],"]");
-        # fi;
-
-        res := Concatenation( res, "{", faceTikzCoord, "}{left}{$");
-        # if IsBound(printRecord!.faceLabels[face]) then
-        #     Append(res, printRecord!.faceLabels[face]);
-        # else
-            Append( res, String(face) );
-        # fi;
-        Append(res,"$}\n" );
-
-        return res;
-    end
-);
-
-BindGlobal( "__GAPIC__PrintRecordDrawVertexFG",
-    function( printRecord, surface, vertex,vertexCoord )
-        local res, i, coord;
-
-        res := "";
-        Append(res, "\\node[faceLabel] at (");
-	Append(res,String(vertexCoord[1]));
-	Append(res,",");
-	Append(res,String(vertexCoord[2]));
-        Append(res, ") {$");
-        if IsBound( printRecord!.vertexLabels[vertex] ) then
-            Append(res, printRecord!.vertexLabels[vertex]);
-        else
-            Append(res, String(vertex));
-        fi;
-        Append(res, "$};\n" );
 
         return res;
     end
@@ -417,76 +354,63 @@ BindGlobal( "__GAPIC__IsCoordinates2D",
 
 
   
-    ## this functions manipulates the printRecord so that functionalities of 
-    ## DrawSurfaceToTikZ can be used 
+    ## this functions manipulates the printRecord
 
 BindGlobal( "__GAPIC__InitializePrintRecord",
     function(graph ,printRecord)
-	local g,colour,e,f,v;
-	if not IsBound(printRecord.vertexLabelsActive) then
-	    printRecord.vertexLabelsActive := true;
+	local g,colour,e,f,v, node;
+	if not IsBound(printRecord.nodeLabelsActive) then
+	    printRecord.nodeLabelsActive := true;
 	fi;
 	if not IsBound(printRecord.latexDocumentclass) then
 	    printRecord.latexDocumentclass := "article";
 	fi;
+    __GAPIC__PrintRecordInitBool(printRecord, "directedEdgesActive", true);
 	if not IsBound(printRecord.edgeLabelsActive) then
-	    printRecord.edgeLabelsActive := false; 
+	    printRecord.edgeLabelsActive := true; 
 	fi;
 	if not IsBound(printRecord.faceLabelsActive) then
 	    printRecord.faceLabelsActive := false;
 	fi;
 	if not IsBound(printRecord.scale) then
-	    printRecord.scale :=2;
+	    printRecord.scale :=3;
 	fi;
-	# if IsBound(printRecord.edgeColours) then
-	#     if IsString(printRecord.edgeColours) then
-	# 	colour:=printRecord.edgeColours; 
-	# 	printRecord.edgeColours:=[];
-	# 	for e in Edges(surface) do
-	# 	    printRecord.edgeColours[e]:=colour;
-	# 	od;
-	#     fi;
-	# else
-	# 	printRecord.edgeColours:=[];
-	# fi;	
+	if IsBound(printRecord.edgeColours) then
+	    if IsString(printRecord.edgeColours) then
+		    colour:=printRecord.edgeColours; 
+		    printRecord.edgeColours:=[];
+		    for e in [1..Length(DigraphEdges(graph))] do
+		       printRecord.edgeColours[e]:=colour;
+		    od;
+	    fi;
+	else
+		printRecord.edgeColours:=[];
+	fi;	
 	if not IsBound(printRecord.edgeLabels) then
 	    printRecord.edgeLabels := [];
 	fi;
         # if not IsBound(printRecord.faceLabels) then
         #     printRecord.faceLabels := [];
         # fi;
-    if not IsBound(printRecord.vertexLabels) then
-        printRecord.vertexLabels := [];
+    if not IsBound(printRecord.nodeLabels) then
+        printRecord.nodeLabels := [];
     fi;
-	# if not IsBound(printRecord.geodesicActive) then
-	#     printRecord.geodesicActive:= false;
-	# fi;	
-	# if not IsBound(printRecord.nodeCoordinates) then
-	#     if IsClosedSurface(surface) and IsVertexFaithful(surface) and EulerCharacteristic(surface)=2 then
-	# 	printRecord.nodeCoordinates:= __GAPIC__SetFaceCoordinates(surface);
-	#     else 
-	# 	Error("face coordinates have to be specified");
-	#    fi;
-	# else 
-    # if not __GAPIC__IsCoordinates2D(graph,printRecord.nodeCoordinates) then
-    #     Error("face coordinates have to be in the correct format");
-    # fi;
-	# fi;	
-	# if printRecord.edgeLabelsActive and printRecord.edgeLabels=[] then
-	#     for e in Edges(surface) do
-	# 	printRecord.edgeLabels[e]:=String(e);
-	#     od;
-	# fi;
+	
+	if printRecord.edgeLabelsActive and printRecord.edgeLabels=[] then
+	    for e in [1..Length(DigraphEdges(graph))] do
+		    printRecord.edgeLabels[e]:=String(e);
+	    od;
+	fi;
     #     if printRecord.faceLabelsActive and printRecord.faceLabels=[] then
     #         for f in Faces(surface) do
     #             printRecord.faceLabels[f]:=String(f);
     #         od;
     #     fi;
-    #     if printRecord.vertexLabelsActive and printRecord.vertexLabels=[] then
-    #         for v in Vertices(surface) do
-    #             printRecord.vertexLabels[v]:=String(v);
-    #         od;
-    #     fi;
+        if printRecord.nodeLabelsActive and printRecord.nodeLabels=[] then
+            for node in DigraphVertices(graph) do
+                printRecord.nodeLabels[node]:=String(node);
+            od;
+        fi;
     #     if IsBound(printRecord.faceColours) then
     #         if IsString(printRecord.faceColours) then
     #             colour:=printRecord.faceColours;
@@ -499,17 +423,17 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     #             printRecord.faceColours:=[];
     #     fi;
 
-    #     if IsBound(printRecord.vertexColours) then
-    #         if IsString(printRecord.vertexColours) then
-    #             colour:=printRecord.vertexColours;
-    #             printRecord.vertexColours:=[];
-    #             for v in Vertices(surface) do
-    #                 printRecord.vertexColours[v]:=colour;
-    #             od;
-    #         fi;
-    #     else
-    #             printRecord.vertexColours:=[];
-    #     fi;
+        if IsBound(printRecord.vertexColours) then
+            if IsString(printRecord.vertexColours) then
+                colour:=printRecord.vertexColours;
+                printRecord.vertexColours:=[];
+                for v in DigraphVertices(graph) do
+                    printRecord.vertexColours[v]:=colour;
+                od;
+            fi;
+        else
+                printRecord.vertexColours:=[];
+        fi;
         if not IsBound(printRecord.compileLaTeX) then
 	        printRecord.compileLaTeX :=false;
 	    fi;
@@ -562,12 +486,6 @@ InstallMethod(DrawDigraphToTikz,
 
         # Add Header to .tex file 
         tempRec:=ShallowCopy(printRecord);
-        # tempRec.faceLabelsActive:= printRecord.vertexLabelsActive;
-        # tempRec.vertexLabelsActive:= printRecord.faceLabelsActive;
-        # tempRec.vertexLabels:=printRecord.faceLabels;
-        # tempRec.faceLabels:=printRecord.vertexLabels;
-        # tempRec.vertexColours:=printRecord.faceColours;
-        # tempRec.faceColours:=printRecord.vertexColours;
 
     # Write this data into the file
         if not printRecord!.onlyTikzpicture then
@@ -590,30 +508,31 @@ InstallMethod(DrawDigraphToTikz,
         for node in DigraphVertices(graph) do
             faceCoordTikZ[node]:=Concatenation("V",String(node));
         od;
-        ##define face coordinates
+        ##define node coordinates
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
             printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
             #AppendTo(output,__GAPIC__PrintRecordDrawFaceFG(printRecord, surface, face, faceTikzCoord));
         od;
 
+        for v in DigraphVertices(graph) do
+            # AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
+            AppendTo(output, __GAPIC__PrintRecordDrawVertex(printRecord, v, faceCoordTikZ[v]));
+        od;
+
         ##draw edges
         for e in DigraphEdges(graph) do 
-            AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph,e,
-                    faceCoordTikZ{e},printRecord.nodeCoordinates{e}));
+            AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph, Position(DigraphEdges(graph),e),
+                    faceCoordTikZ{e}));
         od;
-        ##draw vertices as nodes
-        # for v in DigraphVertices(graph) do
-        #     AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
-        # od;
     #    for f in Faces(surface) do
     #	AppendTo(output,"\\vertexLabelR{",faceCoordTikZ[f],"}{left}{$",f,"$}\n");
     #   od;
 
-        AppendTo( output, "% Draw the faces\n" );
-        for node in DigraphVertices(graph) do
-            AppendTo( output, __GAPIC__PrintRecordDrawFaceFG( printRecord, graph, node, faceCoordTikZ[node]));
-        od;
+        # AppendTo( output, "% Draw the faces\n" );
+        # for node in DigraphVertices(graph) do
+        #     AppendTo( output, __GAPIC__PrintRecordDrawFaceFG( printRecord, graph, node, faceCoordTikZ[node]));
+        # od;
 
     #     umbrellas:=printRecord.nodesOfFaces;
     #     currUmb:=Filtered(umbrellas,umb->Length(umb)=Maximum(List(umbrellas, umb -> Length(umb))))[1];
@@ -640,63 +559,6 @@ InstallMethod(DrawDigraphToTikz,
     #     fi;
     #     fi;
 
-        # # draw geodesics 
-        # if IsBound(printRecord.geodesicActive) then 
-        # if printRecord.geodesicActive and EulerCharacteristic(surface)=2 then
-        #     coordinates:=[]; 
-        #     coordinates:=List(Vertices(surface),v->[]);
-        #     for umb in umbrellas do
-        #     v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(umb))[1];
-        #     temp:=List(umb,f->printRecord.nodeCoordinates[f]);
-        #     for f in umb do 
-        #         coordinates[v][f]:=printRecord.nodeCoordinates[f]+0.1*(sum(temp)-printRecord.nodeCoordinates[f]);
-        #     od;
-        #     od;
-        #     v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(currUmb))[1];
-        #     temp:=sum(List(currUmb,f->printRecord.nodeCoordinates[f]));
-        #     maxX:=Maximum(List(currUmb,f->printRecord.nodeCoordinates[f][1]));
-        #     maxY:=Maximum(List(currUmb,f->printRecord.nodeCoordinates[f][2]));
-        #     minX:=Minimum(List(currUmb,f->printRecord.nodeCoordinates[f][1]));
-        #     minY:=Minimum(List(currUmb,f->printRecord.nodeCoordinates[f][2]));
-        #     mX:=maxX-minX;
-        #     mY:=maxY-minY;
-        #     for f in currUmb do 
-        #     coordinates[v][f]:=printRecord.nodeCoordinates[f];
-        #     if printRecord.nodeCoordinates[f][1]=minX then 
-        #         coordinates[v][f]:=coordinates[v][f]-[0.05*mX,0.];
-        #     fi;
-        #     if printRecord.nodeCoordinates[f][2]=minY then 
-        #         coordinates[v][f]:=coordinates[v][f]-[0.,0.05*mY];
-        #     fi;
-        #     if printRecord.nodeCoordinates[f][1]=maxX then 
-        #         coordinates[v][f]:=coordinates[v][f]+[0.05*mX,0.];
-        #     fi;
-        #     if printRecord.nodeCoordinates[f][2]=maxY then 
-        #         coordinates[v][f]:=coordinates[v][f]+[0.,0.05*mY];
-        #     fi;
-        #     od;
-        #     color:=["red","blue","green","yellow","brown","gray","pink"];
-        #     geodesic:=MaximalGeodesicPaths(surface);
-        #     geodesic:=List(geodesic,g->ShallowCopy(FacesAsList(g)));
-        #     for i in [1..Length(geodesic)] do 
-        #     Add(geodesic[i],geodesic[i][1]);
-        #     Add(geodesic[i],geodesic[i][2]);
-        #     for j in [1..Length(geodesic[i])-2] do 
-        #         f1:=geodesic[i][j];
-        #         f2:=geodesic[i][j+1];
-        #         f3:=geodesic[i][j+2];
-        #         e1:=Filtered(Edges(surface),e->FacesOfEdge(surface,e)=Set([f1,f2]))[1];
-        #         e2:=Filtered(Edges(surface),e->FacesOfEdge(surface,e)=Set([f2,f3]))[1];	
-        #         v:=VerticesOfEdge(surface,e1);
-        #         v1:=Filtered(v,g-> not g in VerticesOfEdge(surface,e2))[1];
-        #         v2:=Difference(v,[v1])[1];
-        #         AppendTo(output,"\\draw[edge=",color[i],"] (",
-        #             coordinates[v1][f1][1],",",coordinates[v1][f1][2],") -- (",
-        #             coordinates[v2][f2][1],",",coordinates[v2][f2][2],");\n");
-        #     od;
-        #     od;
-        # fi;
-        # fi;
 
         AppendTo(output,"\\end{tikzpicture}\n");
         if not printRecord!.onlyTikzpicture then
@@ -729,9 +591,9 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
     "for a planar digraph, a file name and a record",
     [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
-        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition, InFilterFunc,
-                IntersectionFilterFunc, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
-                DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face;
+        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition,
+                TwoWeightedCentric, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
+                DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face, node;
 
         if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
             return fail;
@@ -774,40 +636,50 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             return [res1, res2];
         end;
 
-        InFilterFunc := function(cur1, cur2, list) # help function
-            if cur1 in list and cur2 in list then
+        # InFilterFunc := function(cur1, cur2, list) # help function
+        #     if cur1 in list and cur2 in list then
+        #         return true;
+        #     else
+        #         return false;
+        #     fi;
+        # end;
+
+        # IntersectionFilterFunc := function(cur1, embedding, list) # help function
+        #     # Error();
+        #     if not IsEmpty(Difference(Intersection(embedding, list), [cur1])) then
+        #         return true;
+        #     else 
+        #         # Error();
+        #         return false;
+        #     fi;
+        # end;
+
+        CorrectNodesOfFaceFilter := function(pred, cur, succ, face) # help function
+            if IsSubset(face, [pred, cur, succ]) then
                 return true;
             else
                 return false;
             fi;
         end;
 
-        IntersectionFilterFunc := function(embedding, list) # help function
-            if not IsEmpty(Intersection(embedding, list)) then
-                return true;
-            else 
-                return false;
-            fi;
-        end;
-
-        CorrectNodesOfFaceFilter := function(cur1, cur2, embedding, list) # help function
-            return InFilterFunc(cur1, cur2, list) and IntersectionFilterFunc(embedding, list);
-        end;
-
-        MultipleWeightedCentricParameters := function(list, main_anchor, start_anchor, end_anchor, p) # help function
+        MultipleWeightedCentricParameters := function(nodes, main_anchor, start_anchor, end_anchor, p) # help function
             local res, n, i;
             res := [];
-            n := Length(list) + 1;
-            for i in [1..Length(list)] do
-                Add(res, [list[i], p*main_anchor + (1-p)*(Float((n-i)/n)*start_anchor + Float(i/n)*end_anchor)]);
+            n := Length(nodes) + 1;
+            for i in [1..Length(nodes)] do
+                Add(res, [nodes[i], p*main_anchor + (1-p)*(Float((n-i)/n)*start_anchor + Float(i/n)*end_anchor)]);
             od;
             return res;
+        end;
+
+        TwoWeightedCentric := function(nodes, start_anchor, end_anchor)
+            return MultipleWeightedCentricParameters(nodes, [0,0], start_anchor, end_anchor, 0);
         end;
 
         MainHelp := function(graph, currents, embedding, spread, nodes_of_faces)
             local cur, res, i, main_help_i, cur_i, neighbours, nodes_of_embedding, case_deciding_neighbours, to_be_positioned_nodes,
                 to_be_positioned_nodes_ordered, node, correct_nodes_of_face, next_node_in_order, to_split_vertex, to_split_vertex_pos,
-                seen_nodes;
+                remaining_nodes_pos, seen_faces, neighbouring_faces_of_tbp_nodes, next_node_in_order_pos, neighbouring_faces_of_pred;
             if Length(currents) >= 2 then   # multiple convex areas
                 # Error();
                 res := [];
@@ -821,29 +693,85 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             else                            # only one convex area
                 # Error();
                 cur := currents[1];
-                if Length(cur) < 2 then  # trivial convex area
+                if Length(cur) < 2 then   # trivial convex area
                     # Error();
                     return [[[]], embedding];
-                else                    # non-trivial convex area
+                elif Length(cur) = 2 then # area is a line between the 2 nodes inside curv
+                    neighbours := NeighboursOfVertex(graph, cur[1][1]);
+                    nodes_of_embedding := Deabstract1(embedding);
+                    to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
+                    if to_be_positioned_nodes = [] then # All neighbours have been positioned already
+                       Remove(cur, 1);
+                       return [[cur], embedding];
+                    fi;
+                    if not Length(to_be_positioned_nodes) = 1 then # Not sure if this case can occur. In case it does, one has to modify this here somehow.
+                        Error(); 
+                    fi;
+                    next_node_in_order := to_be_positioned_nodes[1];
+                    to_be_positioned_nodes_ordered := [next_node_in_order];
+                    while true do
+                        neighbours := NeighboursOfVertex(graph, next_node_in_order);
+                        next_node_in_order := Difference(neighbours, Union(nodes_of_embedding, [next_node_in_order, cur[Length(cur)][1]]));
+                        if IsEmpty(next_node_in_order) then
+                            break;
+                        fi;
+                        if Length(next_node_in_order) = 1 then
+                            next_node_in_order := next_node_in_order[1];
+                        else # Not sure if this case can occur. In case it does, one has to modify this here somehow.
+                            Error();
+                        fi;
+                        Add(to_be_positioned_nodes_ordered, next_node_in_order);
+                    od;
+                    embedding := Concatenation(embedding, TwoWeightedCentric(to_be_positioned_nodes_ordered, cur[1][2], cur[2][2]));
+                    cur := Concatenation(cur, TwoWeightedCentric(to_be_positioned_nodes_ordered, cur[1][2], cur[2][2]));
+                    Remove(cur, 1);
+                    return [[cur], embedding];
+                else                      # non-trivial convex area
                     neighbours := NeighboursOfVertex(graph, cur[1][1]);
                     nodes_of_embedding := Deabstract1(embedding);
                     case_deciding_neighbours := Difference(neighbours, [cur[2][1], cur[Length(cur)][1]]);
                     if Length(Intersection(Deabstract1(cur), case_deciding_neighbours)) = 0 then    # conquer case
                         to_be_positioned_nodes := Difference(neighbours, nodes_of_embedding);
-                        to_be_positioned_nodes_ordered := [];
-                        seen_nodes := [];
-                        correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[1], nodes_of_embedding, x));
                         # Error();
-                        next_node_in_order := Intersection(to_be_positioned_nodes, correct_nodes_of_face[1])[1];
+                        if to_be_positioned_nodes = [] then # All neighbours have been positioned already
+                            Remove(cur, 1);
+                            return [[cur], embedding];
+                        fi;
+                        neighbouring_faces_of_tbp_nodes := List(to_be_positioned_nodes, n -> Filtered(nodes_of_faces, f -> IsSubset(f, [cur[1][1], n]))); # "tbp" stands for "to be positoned"
+                        to_be_positioned_nodes_ordered := [];
+                        seen_faces := [];
+                        remaining_nodes_pos := [1..Length(to_be_positioned_nodes)];
+                        # Error();
+                        neighbouring_faces_of_pred := Filtered(nodes_of_faces, f -> IsSubset(f, [cur[1][1], cur[Length(cur)][1]]));
+                        if Length(to_be_positioned_nodes) = 1 then
+                            next_node_in_order_pos := [1];
+                        else
+                            next_node_in_order_pos := Filtered([1..Length(to_be_positioned_nodes)], i -> Length(Intersection(neighbouring_faces_of_tbp_nodes[i], neighbouring_faces_of_pred)) = 1);
+                        fi;
+                        if Length(next_node_in_order_pos) = 1 then # ensures that the position is unique which should be
+                            next_node_in_order_pos := next_node_in_order_pos[1];
+                            next_node_in_order := to_be_positioned_nodes[next_node_in_order_pos];
+                        else
+                            Error();
+                        fi;
                         Add(to_be_positioned_nodes_ordered, next_node_in_order);
-                        Add(seen_nodes, next_node_in_order);
+                        Unbind(remaining_nodes_pos[next_node_in_order_pos]);
+                        Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
                         # Error();
                         for i in [2..Length(to_be_positioned_nodes)] do
                             # Error();
                             correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
-                            next_node_in_order := Difference(Intersection(to_be_positioned_nodes, correct_nodes_of_face[1]), seen_nodes)[1];
+                            neighbouring_faces_of_pred := Difference(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], seen_faces);
+                            next_node_in_order_pos := Filtered(remaining_nodes_pos, j -> Length(Intersection(neighbouring_faces_of_tbp_nodes[j], neighbouring_faces_of_pred)) = 1);
+                            if Length(next_node_in_order_pos) = 1 then # ensures that the position is unique which should be
+                                next_node_in_order_pos := next_node_in_order_pos[1];
+                                next_node_in_order := to_be_positioned_nodes[next_node_in_order_pos];
+                            else
+                                Error();
+                            fi;
                             Add(to_be_positioned_nodes_ordered, next_node_in_order);
-                            Add(seen_nodes, next_node_in_order);
+                            Unbind(remaining_nodes_pos[next_node_in_order_pos]);
+                            Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
                         od;
                         # Error();
                         embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
@@ -862,12 +790,15 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         end;
 
         DrawConvexPlaneGraph := function(graph, start_face, spread, nodes_of_faces)
-            local embedding, currents, main_help;
+            local embedding, currents, main_help, i;
             nodes_of_faces := Difference(nodes_of_faces, [start_face]);
             embedding := RegularPolygon(start_face);
             currents := [embedding];
 
             while Length(embedding) < Length(DigraphVertices(graph)) do
+                for i in Positions(currents, []) do
+                    Remove(currents, i);
+                od;
                 main_help := MainHelp(graph, currents, embedding, spread, nodes_of_faces);
                 currents := main_help[1];
                 embedding := main_help[2];
@@ -898,16 +829,5 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         printRecord.nodeCoordinates := List(embedding, x -> x[2]);
 
         return DrawDigraphToTikz(graph, file, printRecord);
-        # if "scale" in RecNames(record) and "nodeCoordinates" in RecNames(record) then
-        #     return DrawFacegraphToTikz(surf, name, record);
-        # elif (not "scale" in RecNames(record)) and "nodeCoordinates" in RecNames(record) then
-        #     record.scale := 4;
-        # elif "scale" in RecNames(record) and (not "nodeCoordinates" in RecNames(record)) then
-        #     record.nodeCoordinates := List(graph, x -> x[2]);
-        # else
-        #     record.nodeCoordinates := List(graph, x -> x[2]);
-        #     record.scale := 4;
-        # fi;
-        
     end
 );

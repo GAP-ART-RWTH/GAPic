@@ -134,8 +134,8 @@
 % 4) name of the vertex
 \newcommand{\vertexLabelR}[4][]{
     \ifthenelse{ \equal{#1}{} }
-        { \node[vertexNode] at (#2) {#4}; }
-        { \node[vertexNode=#1] at (#2) {#4}; }
+        { \node[vertexNode] (#2 name) at (#2) {#4}; }
+        { \node[vertexNode=#1] (#2 name) at (#2) {#4}; }
     \node[vertexLabel, #3] at (#2) {#4};
 }
 % 1) optional: colour of vertex
@@ -144,8 +144,8 @@
 % 4) name of the vertex
 \newcommand{\vertexLabelA}[4][]{
     \ifthenelse{ \equal{#1}{} }
-        { \node[vertexNode] at (#2) {#4}; }
-        { \node[vertexNode=#1] at (#2) {#4}; }
+        { \node[vertexNode] (#2 name) at (#2) {#4}; }
+        { \node[vertexNode=#1] (#2 name) at (#2) {#4}; }
     \node[vertexLabel] at (#3) {#4};
 }
 
