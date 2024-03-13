@@ -786,7 +786,7 @@ InstallMethod( IsLineWidth,
         return false;
     fi;
  
-	return printRecord.linewidth;
+	return printRecord.lineWidth;
     end
 );
 
@@ -1186,14 +1186,14 @@ InstallMethod( DrawComplexToJavaScript,
             AppendTo(output, """
     const edgeMaterial""",i,""" = new LineMaterial( {
         color: """,color,""",
-        linewidth: """,edgeThickness,""",
+        lineWidth: """,edgeThickness,""",
     } );
         """);
         else
-            AppendTo(output, """
+            AppendTo(output, """q
     const edgeMaterial""",i,""" = new THREE.LineBasicMaterial( {
         color: """,color,""",
-        linewidth: """,edgeThickness,""",
+        lineWidth: """,edgeThickness,""",
     } );
         """);
         fi;
