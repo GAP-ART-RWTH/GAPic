@@ -1190,7 +1190,7 @@ InstallMethod( DrawComplexToJavaScript,
     } );
         """);
         else
-            AppendTo(output, """q
+            AppendTo(output, """
     const edgeMaterial""",i,""" = new THREE.LineBasicMaterial( {
         color: """,color,""",
         lineWidth: """,edgeThickness,""",
