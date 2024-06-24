@@ -67,7 +67,8 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
       <Item>
          <A>Faces</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>):
          Define the faces of the planar graph. The parameter <A>nodesOfFaces</A> is obligatory
-         to be changed, otherwise the method raises an error.
+         to be set (if <K>graph</K> is not polyhedral. For more information see below in the
+         section bullet point <A>nodesOfFaces</A>), otherwise the method raises an error.
       </Item>
       <Item>
          <A>Appearance</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Appearance"/>): 
@@ -87,9 +88,7 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    <Subsection Label="Subsection_DrawStraightPlanarDigraphToTikz_Faces">
       <Heading>Faces</Heading>
       This subsection covers the parameters that define the faces of the graph which
-      should be drawn. Since the method is still work in process the user has to
-      manually define all the faces of the graph by characterising their surrounding 
-      nodes. The parameters are:
+      should be drawn. The parameters are:
       <List>
          <Item>
             <A>nodesOfFaces</A>: Define all faces of the graph as characterised by their
@@ -114,9 +113,13 @@ true
       <K>graph_embedding</K>.
       <List>
          <Item>
-            <A>nodesOfFaces</A>: The faces that have to be defined are characterised by their surrounding
-            nodes. That means that a face can be seen as a cycle of nodes. For <A>nodesOfFaces</A>
-            one has to give a list of lists where <K>nodesOfFaces[i]</K> contains the nodes of face <K>i</K>
+            <A>nodesOfFaces</A>: If <K>graph</K> is polyhedral this parameter is useless since in this case 
+            the method calculates the faces of <K>graph</K> all by itself. A planar digraph is called <A>polyhedral</A>
+            if it is 3-vertex-connected, i.e. removing any three vertices 
+            If <K>graph</K> is not polyhedral it is obligatory to set <K>nodesOfFaces</K>. In this case, the user has to 
+            define <K>nodesOfFaces</K> as a list of all faces of <K>graph</K>. The faces that have to be defined are 
+            characterised by their surrounding nodes. That means that a face can be seen as a cycle of nodes. For 
+            <A>nodesOfFaces</A> one has to give a list of lists where <K>nodesOfFaces[i]</K> contains the nodes of face <K>i</K>
             ordered in a cycle as they occur when transversing the boundary of the face clockwise or anticlockwise.
 
             <P/>
