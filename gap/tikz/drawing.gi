@@ -832,7 +832,8 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
                 HelpPoints, HelpPointsForAllPolygons, allHelpPoints, i, n, e, node, IsThreeVertexConnected,
                 cycleEdgeRecord, cycleNodeRecord, output, faceCoordTikZ, cycleEdges, cycle,
                 nodeCoordinate, tempRec, f, numberOfCycles, coverCoordinates, j, realCycleEdges,
-                realEdge;
+                realEdge, optionInRecord, graphRecord, coverCoordinatesWithOutInfiniteFace,
+                infiniteFaceHelpPoints, infiniteFaceCoordinates;
         IsCubicGraph := function(digraph)
             return ForAll(OutDegrees(digraph), d -> d=3);
         end;
@@ -980,16 +981,28 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
             if (not "nodesOfFaces" in RecNames(printRecord)) and (not IsThreeVertexConnected(graph)) then
                 Error("You have not put in the coordinates of the nodes of the graph. Hence, the function tried to draw the graph on its own. However, the input graph is not nice enough, i.e. is not polyhedral. In order to have it drawn anyways without explicitly giving the node coordinates, you have to put in the faces of the planar graph into the record, i.e. printRecord.nodesOfFaces would have to contain your faces.");
             fi;
-            printRecord.nodeCoordinates := DrawStraightPlanarDigraphToTikz(graph,file,printRecord).nodeCoordinates;
+            graphRecord := DrawStraightPlanarDigraphToTikz(digraph,file,printRecord);
+            printRecord.nodeCoordinates := graphRecord.nodeCoordinates;
+            printRecord.infiniteFace := graphRecord.infiniteFace;
         fi;
         
         coverCoordinates := List(printRecord.cycleDoubleCover, cycle -> List(cycle, node -> printRecord.nodeCoordinates[node]));
-        allHelpPoints := HelpPointsForAllPolygons(coverCoordinates, printRecord.closeness);
-
+        coverCoordinatesWithOutInfiniteFace := coverCoordinates;
+        if printRecord.infiniteFace in printRecord.cycleDoubleCover then
+            Remove(coverCoordinatesWithOutInfiniteFace, Position(printRecord.cycleDoubleCover, printRecord.infiniteFace));
+        fi;
+        allHelpPoints := HelpPointsForAllPolygons(coverCoordinatesWithOutInfiniteFace, printRecord.closeness);
+        infiniteFaceCoordinates := printRecord.nodeCoordinates{printRecord.infiniteFace};
+        infiniteFaceHelpPoints := List(infiniteFaceCoordinates, v -> v+v*(printRecord.closeness));
+        Add(allHelpPoints, infiniteFaceHelpPoints, Position(List(printRecord.cycleDoubleCover, cycle -> Set(cycle)), Set(printRecord.infiniteFace)));
+        printRecord.cycleNodeCoordinates := allHelpPoints;
+        numberOfCycles := Length(printRecord.cycleDoubleCover);
         if not "cycleDoubleCoverColours" in RecNames(printRecord) then
-            numberOfCycles := Length(printRecord.cycleDoubleCover);
             printRecord.cycleDoubleCoverColours := [];
-            for i in [1..numberOfCycles] do
+        fi;
+
+        for i in [1..numberOfCycles] do
+            if not IsBound(printRecord.cycleDoubleCoverColours[i]) then
                 if (i mod 6) = 0 then
                     printRecord.cycleDoubleCoverColours[i] := "yellow";
                 fi;
@@ -1008,7 +1021,11 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
                 if (i mod 6) = 5 then
                     printRecord.cycleDoubleCoverColours[i] := "cyan";
                 fi;
-            od;
+            fi;
+        od;
+
+        if not "cycleNodesActive" in RecNames(printRecord) then
+            printRecord.cycleNodesActive := false;
         fi;
         ###
         # Following is modified DrawDigraphToTikz
@@ -1055,6 +1072,7 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
         od;
 
         ##draw the cycle double cover
+        # Define the help points coordinates
         for i in [1..Length(printRecord.cycleDoubleCover)] do
             cycle := printRecord.cycleDoubleCover[i];
             for j in [1..Length(cycle)] do
@@ -1062,7 +1080,7 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
                     allHelpPoints[i][j][1]," , ",allHelpPoints[i][j][2],");\n");
             od;
         od;
-
+        # Define the cycle edges
         for i in [1..Length(printRecord.cycleDoubleCover)] do
             cycle := printRecord.cycleDoubleCover[i];
             cycleEdges := [[cycle[Length(cycle)], cycle[1]]];
@@ -1088,21 +1106,23 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
                     [realEdge[1], realEdge[2]]));
             od;
         od;
-
-        for i in [1..Length(printRecord.cycleDoubleCover)] do 
-            cycle := printRecord.cycleDoubleCover[i];
-            cycleNodeRecord := rec();
-            cycleNodeRecord.vertexColours := [];
-            cycleNodeRecord.nodeLabels := [];
-            for j in cycle do
-                cycleNodeRecord.vertexColours[j] := printRecord.cycleDoubleCoverColours[i];
-                cycleNodeRecord.nodeLabels[j] := [];
+        # Define the cycle nodes
+        if printRecord.cycleNodesActive = true then
+            for i in [1..Length(printRecord.cycleDoubleCover)] do 
+                cycle := printRecord.cycleDoubleCover[i];
+                cycleNodeRecord := rec();
+                cycleNodeRecord.vertexColours := [];
+                cycleNodeRecord.nodeLabels := [];
+                for j in cycle do
+                    cycleNodeRecord.vertexColours[j] := printRecord.cycleDoubleCoverColours[i];
+                    cycleNodeRecord.nodeLabels[j] := [];
+                od;
+                # Error();
+                for j in [1..Length(cycle)] do
+                    AppendTo(output, __GAPIC__PrintRecordDrawVertex(cycleNodeRecord, cycle[j], Concatenation(String(i), "_", String(cycle[j]))));
+                od;
             od;
-            # Error();
-            for j in [1..Length(cycle)] do
-                AppendTo(output, __GAPIC__PrintRecordDrawVertex(cycleNodeRecord, cycle[j], Concatenation(String(i), "_", String(cycle[j]))));
-            od;
-        od;
+        fi;
 
         #draw nodes
         for node in DigraphVertices(graph) do
@@ -1111,7 +1131,7 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
     
         ##draw edges
         for e in DigraphEdges(digraph) do 
-            AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph, Position(DigraphEdges(digraph),e),
+            AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,digraph, Position(DigraphEdges(digraph),e),
                     faceCoordTikZ{e}));
         od;
 
@@ -1136,7 +1156,12 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
                 Print( "Picture rendered (with pdflatex).\n");
             fi;
         fi;
-
+        
+        for optionInRecord in RecNames(graphRecord) do
+            if not optionInRecord in RecNames(printRecord) then
+                printRecord.(optionInRecord) := graphRecord.(optionInRecord);
+            fi; 
+        od;
         return printRecord;
     end
 );
