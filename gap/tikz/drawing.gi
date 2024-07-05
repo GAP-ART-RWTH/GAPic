@@ -983,18 +983,10 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
             fi;
             graphRecord := DrawStraightPlanarDigraphToTikz(digraph,file,printRecord);
             printRecord.nodeCoordinates := graphRecord.nodeCoordinates;
-            printRecord.infiniteFace := graphRecord.infiniteFace;
         fi;
         
         coverCoordinates := List(printRecord.cycleDoubleCover, cycle -> List(cycle, node -> printRecord.nodeCoordinates[node]));
-        coverCoordinatesWithOutInfiniteFace := coverCoordinates;
-        if printRecord.infiniteFace in printRecord.cycleDoubleCover then
-            Remove(coverCoordinatesWithOutInfiniteFace, Position(printRecord.cycleDoubleCover, printRecord.infiniteFace));
-        fi;
-        allHelpPoints := HelpPointsForAllPolygons(coverCoordinatesWithOutInfiniteFace, printRecord.closeness);
-        infiniteFaceCoordinates := printRecord.nodeCoordinates{printRecord.infiniteFace};
-        infiniteFaceHelpPoints := List(infiniteFaceCoordinates, v -> v+v*(printRecord.closeness));
-        Add(allHelpPoints, infiniteFaceHelpPoints, Position(List(printRecord.cycleDoubleCover, cycle -> Set(cycle)), Set(printRecord.infiniteFace)));
+        allHelpPoints := HelpPointsForAllPolygons(coverCoordinates, printRecord.closeness);
         printRecord.cycleNodeCoordinates := allHelpPoints;
         numberOfCycles := Length(printRecord.cycleDoubleCover);
         if not "cycleDoubleCoverColours" in RecNames(printRecord) then
