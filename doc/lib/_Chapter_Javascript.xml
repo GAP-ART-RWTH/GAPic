@@ -51,10 +51,10 @@ Some options can be changed live in the graphical user interface (GUI), displaye
 The options in the GUI influence the way a complex is displayed by the browser and includes options for the following:
 <Enum>
   <Item>Speed of rotation in the X, Y and Z directions</Item>
-  <Item>Transparency of the faces that are enabled</Item>
-  <Item>Visibility of the edges that are enabled. More in <Ref Subsect="Section_Visibility"/></Item>
-  <Item>Visibility of the vertices that are enabled</Item>
-  <Item>Visibility of the names (labels) of the vertices that are enabled</Item>
+  <Item>Transparency of the faces that are active</Item>
+  <Item>Visibility of the edges that are active. More in <Ref Subsect="Section_Visibility"/></Item>
+  <Item>Visibility of the vertices that are active</Item>
+  <Item>Visibility of the names (labels) of the vertices that are active</Item>
   <Item>Changing the size of the visible vertices (displayed as spheres)</Item>
   <Item>Changing to normalsMaterial. More in <Ref Subsect="Section_NormalsMaterial"/></Item>
   <Item>Visibility of the inner circles. More in <Ref Subsect="Section_InnerCircles"/></Item>
@@ -112,8 +112,8 @@ For an example, consider the octahedron from before:
 </Subsection>
 
 </Section>
-<Section Label="Section_Visibility">
-<Heading>Enabled vs. Visible</Heading>
+<Section Label="Section_ActiveVisible">
+<Heading>Active vs. Visible</Heading>
  Sometimes it can be helpful to make only show certain (subsets of) of vertices/edges/faces of the complex. This can be done for the following objects:
 <Enum>
   <Item>Vertices (see <Ref Subsect="ActivateVertices"/>), </Item>
@@ -441,7 +441,7 @@ As an example, consider the octahedron generated as before:
 
 Or it is possible to make all other objects invisible via the GUI and only show the innercircles as done here:
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle_transparent.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics[width=0.8\textwidth]{../images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle_transparent.png]</Alt>
 
 <ManSection Label="ActivateInnerCircles">
@@ -502,7 +502,8 @@ It is also possible to set colours for (subsets of) innercircles. This can be do
 <P/>
 A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the incenter of a triangular face and extends orthogonally w.r.t. the face in both directions.
 <P/>
-By default the normals of inner circles are enabled but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
+By default the normals of inner circles are active but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them. <Br/>
+Further, the length of the normals is restricted by default. It can be changed via the GUI, so it fits the animated complex.
 
 Consider the example from before:
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img>&lt;/br></Alt>
@@ -516,7 +517,7 @@ Consider the example from before:
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>ActivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all normals of all inner circles of <A>complex</A>. If a normal is active, then the normal is written to the file.
+ The method <K>ActivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) activates the normal of the inner circle of face <A>i</A>. The method <K>ActivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) activates all normals of all inner circles of <A>complex</A>. If a normal is active, then the normal is written to the file and can be made visible via the GUI. By default, all normals of inner circles are activated.
 <P/>
  </Description>
 </ManSection>
@@ -528,7 +529,7 @@ Consider the example from before:
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>. The method <K>DeactivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>complex</A>. If a normal is deactivated, then the normal is not shown in the animation.
+ The method <K>DeactivateNormalOfInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the normal of the inner circle of face <A>i</A>. The method <K>DeactivateNormalOfInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all normals of the inner circles of <A>complex</A>. If a normal is deactivated, then the normal cannot be shown in the animation and is not written into the file. By default, all normals of inner circles are activated.
 <P/>
  </Description>
 </ManSection>
@@ -557,17 +558,17 @@ gap> DrawComplexToJavaScript(tet, "tet-param-lines.html", printRecord);
 
 There are two steps to set up such an animation:
 <Enum>
-  <Item>Set the coordinates via the <A>SetVertexCoordinatesParameterized</A> command</Item>
+  <Item>Set the coordinates via the <A>SetVertexCoordinatesParameterized</A> command, providing the functions that give the parameterised coordinates in JavaScript notation as a string.</Item>
   <Item>Set the range(s) of the parameters that should be available in the GUI via <A>SetVertexParameters</A></Item>
 </Enum>
-Note: as the computations are performed on a JavaScript level the appropriate syntax has to be used.
+Note, the computations are performed by JavaScript and thus, corresponding syntax needs to be used.
 
 <ManSection Label="SetVertexCoordinatesParameterized">
   <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinatesParameterized" Label="for IsTriangularComplex, IsList, IsRecord"/>
  <Returns>the updated print record
 </Returns>
  <Description>
- Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats or strings in case of parameters. This does not check for correctness.
+ Save the given list of 3D-coordinates <A>coordinates</A> in the given or an empty print record if none is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats or strings in case of parameters. This method does not check for correctness.
 <P/>
  </Description>
 </ManSection>
@@ -577,17 +578,17 @@ Note: as the computations are performed on a JavaScript level the appropriate sy
  <Returns>the updated print record
 </Returns>
  <Description>
- Save the given list of ranges of the parameters. They have to be provided in the format <A>[["nameofParameterA", initialValueOfA, [minA, maxA]], ["nameofParameterB", initialValueOfB, [minB, maxB]]]</A>
+ Save the given list of ranges of the parameters. They have to be provided in the format <A>[["nameofParameterA", initialValueOfA, [minA, maxA]], </A><Br/><A>["nameofParameterB", initialValueOfB, [minB, maxB]]]</A>
 <P/>
  </Description>
 </ManSection>
 
 </Section>
 
-<Section Label="Section_LineThickness">
+<Section Label="Section_LineWidth">
 <Heading>Variable Line Width</Heading>
-Sometimes the width of the edges should be different from the default one. For this there are three simple commands that enable this functionality in the GUI. <Br/>
-Note: this can be computationally hard, so if the performance drops it might be good to disable it.
+Particularly if certain edges need to be highlighted or the complex is particularly big, it might be helpful to change the width that the edges are drawn with. For this there are three simple commands that activate this functionality in the GUI. <Br/>
+Note: it can be computationally hard, so if the performance is to bad it might be good to deactivate it.
 
 <ManSection Label="LineWidth">
   <Oper Arg="complex, printRecord" Name="ActivateLineWidth" Label="for IsTriangularComplex, IsRecord"/>
@@ -631,9 +632,9 @@ When running big animations and especially when features like the variable line 
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/PerformanceOverlay-FPS.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/PerformanceOverlay-FPS.png]</Alt>
 
-As this option is mainly used for debugging it is disabled by default and can be enabled with the following commands:
+As this option is mainly used for debugging it is deactivated by default and can be activated with the following commands:
 
-<ManSection Label="LineWidth">
+<ManSection Label="PerformanceOverlay">
   <Oper Arg="complex, printRecord" Name="ActivatePerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="complex, printRecord" Name="DeactivatePerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
   <Oper Arg="complex, printRecord" Name="IsPerformanceOverlay" Label="for IsTriangularComplex, IsRecord"/>
