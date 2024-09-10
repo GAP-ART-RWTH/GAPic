@@ -234,7 +234,7 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
             #Append( res, "}" );
         fi;
         Append(res,"$}\n" );
-
+        # if vertex = 7 then Error(); fi;
         return res;
     end
 );
@@ -287,6 +287,21 @@ BindGlobal( "__GAPIC__PrintRecordDrawEdge",
             fi;
             res := Concatenation(res, "$} (", vertexTikzCoord[2], " name);\n" );
         fi;
+        
+        return res;
+    end
+);
+
+BindGlobal( "__GAPIC__CycleEdgeRecordDrawEdge",
+    function( printRecord, graph, edge, vertexTikzCoord) # Caution: The argument 'edge' is given as an integer from the numbering of the edges of 'graph'
+        local res;
+
+        res := "\\draw[edge";
+        if IsBound( printRecord!.edgeColours[edge] ) and (not printRecord!.edgeColours[edge]=[]) then
+            res := Concatenation(res, "=", printRecord!.edgeColours[edge]);
+        fi;
+        res := Concatenation(res, "] (", vertexTikzCoord[1], ") -- ");
+        res := Concatenation(res, " (", vertexTikzCoord[2], ");\n" );
         
         return res;
     end
@@ -458,18 +473,8 @@ InstallMethod(DrawDigraphToTikz,
     [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
         local e,e1,e2,f,f1,f2,f3,v,v1,v2,faceCoordTikZ,foe,output,umb,maxX,maxY,
-        sum,newCoor,minX,minY,mX,mY,geodesic,i,j,currUmb,coordinates,temp,
-        umbrellas,color,tempRec, node;
-
-        sum:=function(L)
-        local g,s,n;
-        s:=[0.,0.];
-        n:=Length(L);
-        for g in L do
-            s:=1./n*g+s;
-        od;
-        return s;
-        end;
+        newCoor,minX,minY,mX,mY,geodesic,i,j,currUmb,coordinates,temp,
+        color,tempRec, node;
 
         # Make the file end with .tex
         if not EndsWith( file, ".tex" ) then
@@ -487,7 +492,7 @@ InstallMethod(DrawDigraphToTikz,
         # Add Header to .tex file 
         tempRec:=ShallowCopy(printRecord);
 
-    # Write this data into the file
+        # Write this data into the file
         if not printRecord!.onlyTikzpicture then
             AppendTo( output, __GAPIC__PrintRecordGeneralHeader(tempRec));
             AppendTo( output, __GAPIC__PrintRecordTikzHeader(tempRec));
@@ -498,9 +503,6 @@ InstallMethod(DrawDigraphToTikz,
                 fi;
             fi;
 
-    #    AppendTo( output,__GAPIC__PrintRecordGeneralHeader(tempRec));
-    #    AppendTo( output,__GAPIC__PrintRecordTikzHeader(tempRec));
-    #    AppendTo( output, "\n\n\\begin{document}\n");
         AppendTo( output, "\n\n\\begin{tikzpicture}[",
         __GAPIC__PrintRecordTikzOptions(tempRec, graph), "]\n\n" );
 
@@ -512,11 +514,9 @@ InstallMethod(DrawDigraphToTikz,
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
             printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
-            #AppendTo(output,__GAPIC__PrintRecordDrawFaceFG(printRecord, surface, face, faceTikzCoord));
         od;
 
         for v in DigraphVertices(graph) do
-            # AppendTo(output, "\\vertexLabelR{",faceCoordTikZ[v],"}{left}{$",v,"$}\n");
             AppendTo(output, __GAPIC__PrintRecordDrawVertex(printRecord, v, faceCoordTikZ[v]));
         od;
 
@@ -525,40 +525,6 @@ InstallMethod(DrawDigraphToTikz,
             AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,graph, Position(DigraphEdges(graph),e),
                     faceCoordTikZ{e}));
         od;
-    #    for f in Faces(surface) do
-    #	AppendTo(output,"\\vertexLabelR{",faceCoordTikZ[f],"}{left}{$",f,"$}\n");
-    #   od;
-
-        # AppendTo( output, "% Draw the faces\n" );
-        # for node in DigraphVertices(graph) do
-        #     AppendTo( output, __GAPIC__PrintRecordDrawFaceFG( printRecord, graph, node, faceCoordTikZ[node]));
-        # od;
-
-    #     umbrellas:=printRecord.nodesOfFaces;
-    #     currUmb:=Filtered(umbrellas,umb->Length(umb)=Maximum(List(umbrellas, umb -> Length(umb))))[1];
-
-    #     ## draw vertex labels
-    #     if IsBound(printRecord.vertexLabelsActive) then 
-    #     if printRecord.vertexLabelsActive then
-    #     # at first draw vertex label of the outer umbrella
-    #         v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(currUmb))[1];
-    #         umbrellas:=Difference(umbrellas,[currUmb]);
-    #         coordinates:=List(currUmb,f->printRecord.nodeCoordinates[f]);
-    #         maxX:=Maximum(List(coordinates,g->g[1]));
-    #         maxY:=Maximum(List(coordinates,g->g[2]));
-    #         minY:=Minimum(List(coordinates,g->g[2]));
-    # #	    AppendTo(output,"\\node[faceLabel,scale=1.5] at (",maxX+1.,",",minY+1/2*(maxY-minY),") {$",v,"$};\n");
-    #         AppendTo(output,__GAPIC__PrintRecordDrawVertexFG(printRecord, surface, v,[maxX+1.,minY+1/2*(maxY-minY)]) ); 
-    #         ## now the other labels 
-    #         for umb in umbrellas do
-    #         v:=Filtered(Vertices(surface),v->Set(FacesOfVertex(surface,v))=Set(umb))[1];
-    #         coordinates:=List(umb,f->printRecord.nodeCoordinates[f]);
-    #         temp:=sum(coordinates);
-    #         AppendTo(output,__GAPIC__PrintRecordDrawVertexFG(printRecord,surface,v,temp));
-    #         od; 
-    #     fi;
-    #     fi;
-
 
         AppendTo(output,"\\end{tikzpicture}\n");
         if not printRecord!.onlyTikzpicture then
@@ -593,11 +559,13 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
     function(graph, file, printRecord)
         local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition,
                 TwoWeightedCentric, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
-                DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face, node;
+                DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face, node, nodes_of_faces,
+                IsThreeVertexConnected, undir_version_graph, NodesFromEdgesInFace, mat;
 
         if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
             return fail;
         fi;
+
         RegularPolygon := function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
             local n, res, i;
             res := [];
@@ -636,23 +604,40 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             return [res1, res2];
         end;
 
-        # InFilterFunc := function(cur1, cur2, list) # help function
-        #     if cur1 in list and cur2 in list then
-        #         return true;
-        #     else
-        #         return false;
-        #     fi;
-        # end;
-
-        # IntersectionFilterFunc := function(cur1, embedding, list) # help function
-        #     # Error();
-        #     if not IsEmpty(Difference(Intersection(embedding, list), [cur1])) then
-        #         return true;
-        #     else 
-        #         # Error();
-        #         return false;
-        #     fi;
-        # end;
+        IsThreeVertexConnected := function(graph)
+        local node;
+            for node in DigraphVertices(graph) do
+                if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
+                    return false;
+                fi;
+            od;
+            return true;
+        end;
+        
+        NodesFromEdgesInFace := function(face_from_edges)
+            local edge, face, remaining_edges, cur_edge_pos, cur_node;
+            if face_from_edges = [] then
+                return [];
+            fi;
+            remaining_edges := face_from_edges;
+            face := [];
+            cur_edge_pos := 1;
+            cur_node := face_from_edges[1][2];
+            while true do
+                Add(face, cur_node);
+                Unbind(remaining_edges[cur_edge_pos]);
+                if remaining_edges = [] then
+                    break;
+                fi;
+                if Length(Filtered(remaining_edges, e -> cur_node in e)) = 1 then # this edge should be unique
+                    cur_edge_pos := Position(remaining_edges, Filtered(remaining_edges, e -> cur_node in e)[1]);
+                else 
+                    Error("this edge should be unique");
+                fi;
+                cur_node := Difference(remaining_edges[cur_edge_pos], [cur_node])[1];
+            od;
+            return face;
+        end;
 
         CorrectNodesOfFaceFilter := function(pred, cur, succ, face) # help function
             if IsSubset(face, [pred, cur, succ]) then
@@ -812,10 +797,15 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             Error("The spread parameter has to be chosen in the interval (0, 1) !");
         fi;
 
-        if not "nodesOfFaces" in RecNames(printRecord) then
-            Error("Select all faces characterised by their surrounding nodes!"); # To be changed?
-        # else
-        #     printRecord.nodesOfFaces := nodes_of_faces;
+        undir_version_graph := DigraphSymmetricClosure(graph);
+        if (not "nodesOfFaces" in RecNames(printRecord)) and (not IsThreeVertexConnected(graph)) then
+            Error("The graph is not polyhedral. You have to define all faces characterised by their surrounding nodes! For more information read the documentation."); # To be changed?
+        elif IsThreeVertexConnected(graph) then
+            nodes_of_faces := List(__SIMPLICIAL_AllChordlessCyclesOfGraph(undir_version_graph), c -> __SIMPLICIAL_AdjacencyMatrixFromList(c,DigraphNrVertices(undir_version_graph)));
+            nodes_of_faces := Filtered(nodes_of_faces, c -> __SIMPLICIAL_IsNonSeparating(undir_version_graph, c));
+            nodes_of_faces := List(nodes_of_faces, mat -> __SIMPLICIAL_EdgesFromAdjacencyMat(mat));
+            nodes_of_faces := List(nodes_of_faces, face_from_edges -> NodesFromEdgesInFace(face_from_edges));
+            printRecord.nodesOfFaces := nodes_of_faces;
         fi;
 
         if not "infiniteFace" in RecNames(printRecord) then
@@ -829,5 +819,341 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         printRecord.nodeCoordinates := List(embedding, x -> x[2]);
 
         return DrawDigraphToTikz(graph, file, printRecord);
+    end
+);
+
+
+InstallMethod( DrawCycleDoubleCoverToTikz,
+    "for a planar cubic digraph, a file name and a record",
+    [IsDigraph, IsString, IsRecord],
+    function(digraph, file, printRecord)
+        local IsCubicGraph, graph, MyDistance, VectorDifference, NormalizeVector, AngleBisector,
+                LineIntersection, IsPointInPolygon, IsPointOnSegment, VectorsToIntersections,
+                HelpPoints, HelpPointsForAllPolygons, allHelpPoints, i, n, e, node, IsThreeVertexConnected,
+                cycleEdgeRecord, cycleNodeRecord, output, faceCoordTikZ, cycleEdges, cycle,
+                nodeCoordinate, tempRec, f, numberOfCycles, coverCoordinates, j, realCycleEdges,
+                realEdge, optionInRecord, graphRecord, coverCoordinatesWithOutInfiniteFace,
+                infiniteFaceHelpPoints, infiniteFaceCoordinates;
+        IsCubicGraph := function(digraph)
+            return ForAll(OutDegrees(digraph), d -> d=3);
+        end;
+
+        graph := DigraphSymmetricClosure(digraph);
+        if (not IsPlanarDigraph(graph)) or (not IsCubicGraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
+            Error("Input is not correct. See the manual for details.");
+        fi;
+        if not "cycleDoubleCover" in RecNames(printRecord) then
+            Error("For this function you have to input the cycle double cover yourself. For that put the cover in printRecord.cycleDoubleCover. See the manual for details.");
+        fi;
+
+        IsThreeVertexConnected := function(graph)
+        local node;
+            for node in DigraphVertices(graph) do
+                if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
+                    return false;
+                fi;
+            od;
+            return true;
+        end;
+
+        MyDistance := function(p1, p2)
+            return Sqrt((p2[1] - p1[1])^2 + (p2[2] - p1[2])^2);
+        end;
+
+        VectorDifference := function(p1, p2)
+            return [p2[1] - p1[1], p2[2] - p1[2]];
+        end;
+
+        NormalizeVector := function(v)
+            local length;
+            length := Float(Sqrt(v[1]^2 + v[2]^2));
+            if length < 1.e-6 then
+                return [0., 0.];
+            fi;
+            return [v[1] / length, v[2] / length];
+        end;
+
+        AngleBisector := function(v1, v2)
+            local n1, n2, bisector;
+            n1 := NormalizeVector(v1);
+            n2 := NormalizeVector(v2);
+            bisector := [n1[1] + n2[1], n1[2] + n2[2]];
+            return NormalizeVector(bisector);
+        end;
+
+        LineIntersection := function(p1, d1, p2, d2)
+            local a1, b1, c1, a2, b2, c2, det, x, y;
+            a1 := d1[2];
+            b1 := -d1[1];
+            c1 := a1 * p1[1] + b1 * p1[2];
+            a2 := d2[2];
+            b2 := -d2[1];
+            c2 := a2 * p2[1] + b2 * p2[2];
+            det := a1 * b2 - a2 * b1;
+            if AbsoluteValue(det) < 1.e-10 then
+                return fail; # Lines are parallel or nearly parallel
+            fi;
+            x := (b2 * c1 - b1 * c2) / det;
+            y := (a1 * c2 - a2 * c1) / det;
+            return [x, y];
+        end;
+
+        IsPointInPolygon := function(point, polygon)
+            local n, i, j, wn;
+            n := Length(polygon);
+            wn := 0.;
+            for i in [1..n] do
+                j := (i mod n) + 1;
+                if polygon[i][2] <= point[2] then
+                    if polygon[j][2] > point[2] and ((polygon[j][1] - polygon[i][1]) * (point[2] - polygon[i][2]) - (polygon[j][2] - polygon[i][2]) * (point[1] - polygon[i][1])) > 0. then
+                        wn := wn + 1.;
+                    fi;
+                else
+                    if polygon[j][2] <= point[2] and ((polygon[j][1] - polygon[i][1]) * (point[2] - polygon[i][2]) - (polygon[j][2] - polygon[i][2]) * (point[1] - polygon[i][1])) < 0. then
+                        wn := wn - 1.;
+                    fi;
+                fi;
+            od;
+            return wn <> 0.;
+        end;
+
+        IsPointOnSegment := function(point, p1, p2)
+            return (point[1] >= Minimum(p1[1], p2[1]) and point[1] <= Maximum(p1[1], p2[1])
+                and point[2] >= Minimum(p1[2], p2[2]) and point[2] <= Maximum(p1[2], p2[2])
+                and AbsoluteValue(MyDistance(p1, point) + MyDistance(point, p2) - MyDistance(p1, p2)) < 1.e-10);
+        end;
+
+        VectorsToIntersections := function(vertices)
+            local n, i, j, k, bisector, intersection, minVector, distance, minDistance, vectors, vPrev, vNext;
+            n := Length(vertices);
+            vectors := [];
+            for i in [1..n] do
+                vPrev := VectorDifference(vertices[(i-2) mod n + 1], vertices[i]);
+                vNext := VectorDifference(vertices[(i mod n) + 1], vertices[i]);
+                bisector := AngleBisector(vPrev, vNext);
+                minDistance := 1.e18; # A large number representing infinity
+                minVector := fail;
+                for j in [1..n] do
+                    k := (j mod n) + 1;
+                    if i <> j and i <> k then
+                        intersection := LineIntersection(vertices[i], bisector, vertices[j], VectorDifference(vertices[j], vertices[k]));
+                        if intersection <> fail and IsPointOnSegment(intersection, vertices[j], vertices[k]) then
+                            distance := MyDistance(vertices[i], intersection);
+                            if distance < minDistance and distance > 0. then
+                                minDistance := distance;
+                                minVector := VectorDifference(vertices[i], intersection);
+                            fi;
+                        fi;
+                    fi;
+                od;
+                Add(vectors, minVector);
+            od;
+            return vectors;
+        end;
+
+        # Calculates for one polygon the points for the cycle double cover to go through
+        HelpPoints := function(vertices, closeness)
+            local i,n, helpPoints, intersectionVectors;
+            n := Length(vertices);
+            intersectionVectors := VectorsToIntersections(vertices);
+            helpPoints := [];
+            for i in [1..n] do
+                helpPoints[i] := vertices[i] + (closeness * intersectionVectors[i]);
+            od;
+            return helpPoints;
+        end;
+
+        HelpPointsForAllPolygons := function(cover, closeness)
+            local i, n, res;
+            n := Length(cover);
+            res := [];
+            for i in [1..n] do
+                res[i] := HelpPoints(cover[i], closeness);
+            od;
+            return res;
+        end;
+
+        if not "closeness" in RecNames(printRecord) then
+            printRecord.closeness := 0.2;
+        fi;
+
+        if not "nodeCoordinates" in RecNames(printRecord) then
+            if (not "nodesOfFaces" in RecNames(printRecord)) and (not IsThreeVertexConnected(graph)) then
+                Error("You have not put in the coordinates of the nodes of the graph. Hence, the function tried to draw the graph on its own. However, the input graph is not nice enough, i.e. is not polyhedral. In order to have it drawn anyways without explicitly giving the node coordinates, you have to put in the faces of the planar graph into the record, i.e. printRecord.nodesOfFaces would have to contain your faces.");
+            fi;
+            graphRecord := DrawStraightPlanarDigraphToTikz(digraph,file,printRecord);
+            printRecord.nodeCoordinates := graphRecord.nodeCoordinates;
+        fi;
+        
+        coverCoordinates := List(printRecord.cycleDoubleCover, cycle -> List(cycle, node -> printRecord.nodeCoordinates[node]));
+        allHelpPoints := HelpPointsForAllPolygons(coverCoordinates, printRecord.closeness);
+        printRecord.cycleNodeCoordinates := allHelpPoints;
+        numberOfCycles := Length(printRecord.cycleDoubleCover);
+        if not "cycleDoubleCoverColours" in RecNames(printRecord) then
+            printRecord.cycleDoubleCoverColours := [];
+        fi;
+
+        for i in [1..numberOfCycles] do
+            if not IsBound(printRecord.cycleDoubleCoverColours[i]) then
+                if (i mod 6) = 0 then
+                    printRecord.cycleDoubleCoverColours[i] := "yellow";
+                fi;
+                if (i mod 6) = 1 then
+                    printRecord.cycleDoubleCoverColours[i] := "red";
+                fi;
+                if (i mod 6) = 2 then
+                    printRecord.cycleDoubleCoverColours[i] := "blue";
+                fi;
+                if (i mod 6) = 3 then
+                    printRecord.cycleDoubleCoverColours[i] := "green";
+                fi;
+                if (i mod 6) = 4 then
+                    printRecord.cycleDoubleCoverColours[i] := "orange";
+                fi;
+                if (i mod 6) = 5 then
+                    printRecord.cycleDoubleCoverColours[i] := "cyan";
+                fi;
+            fi;
+        od;
+
+        if not "cycleNodesActive" in RecNames(printRecord) then
+            printRecord.cycleNodesActive := false;
+        fi;
+        ###
+        # Following is modified DrawDigraphToTikz
+        ###
+
+        # Make the file end with .tex
+        if not EndsWith( file, ".tex" ) then
+            file := Concatenation( file, ".tex" );
+        fi;
+
+        f := Filename( DirectoryCurrent(), file );
+        output := OutputTextFile( f, false );
+        if output = fail then
+            Error(Concatenation("File ", String(file), " can't be opened.") );
+        fi;
+        printRecord:=__GAPIC__InitializePrintRecord(graph ,printRecord);
+        SetPrintFormattingStatus( output, false );
+
+        # Add Header to .tex file 
+        tempRec:=ShallowCopy(printRecord);
+
+        # Write this data into the file
+        if not printRecord!.onlyTikzpicture then
+            AppendTo( output, __GAPIC__PrintRecordGeneralHeader(tempRec));
+            AppendTo( output, __GAPIC__PrintRecordTikzHeader(tempRec));
+            AppendTo( output, "\n\n\\begin{document}\n\n" );
+            if IsBound(printRecord!.caption) then
+                AppendTo( output,
+                    "\\subsection*{", printRecord!.caption, "}\n \\bigskip\n");
+                fi;
+            fi;
+
+        AppendTo( output, "\n\n\\begin{tikzpicture}[",
+        __GAPIC__PrintRecordTikzOptions(tempRec, graph), "]\n\n" );
+
+        faceCoordTikZ:=[];
+        for node in DigraphVertices(graph) do
+            faceCoordTikZ[node]:=Concatenation("V",String(node));
+        od;
+        ##define node coordinates
+        for node in DigraphVertices(graph) do
+            AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
+                printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
+        od;
+
+        ##draw the cycle double cover
+        # Define the help points coordinates
+        for i in [1..Length(printRecord.cycleDoubleCover)] do
+            cycle := printRecord.cycleDoubleCover[i];
+            for j in [1..Length(cycle)] do
+                AppendTo(output	,"\\coordinate (", i, "_", cycle[j],") at (",
+                    allHelpPoints[i][j][1]," , ",allHelpPoints[i][j][2],");\n");
+            od;
+        od;
+        # Define the cycle edges
+        for i in [1..Length(printRecord.cycleDoubleCover)] do
+            cycle := printRecord.cycleDoubleCover[i];
+            cycleEdges := [[cycle[Length(cycle)], cycle[1]]];
+            for j in [1..(Length(cycle)-1)] do
+                Add(cycleEdges, [cycle[j], cycle[j+1]]);
+            od;
+            realCycleEdges := [[Concatenation(String(i), "_", String(cycle[Length(cycle)])), Concatenation(String(i), "_", String(cycle[1]))]];
+            for j in [1..(Length(cycle)-1)] do
+                Add(realCycleEdges, [Concatenation(String(i), "_", String(cycle[j])), Concatenation(String(i), "_", String(cycle[j+1]))]);
+            od;
+            cycleEdgeRecord := rec();
+            cycleEdgeRecord.directedEdgesActive := false;
+            cycleEdgeRecord.edgeColours := [];
+            cycleEdgeRecord.edgeLabels := [];
+            for e in cycleEdges do
+                cycleEdgeRecord.edgeColours[Position(DigraphEdges(graph),e)] := printRecord.cycleDoubleCoverColours[i];
+                cycleEdgeRecord.edgeLabels[Position(DigraphEdges(graph),e)] := [];
+            od;
+            for e in cycleEdges do
+                # Error();
+                realEdge := realCycleEdges[Position(cycleEdges, e)];
+                AppendTo(output,__GAPIC__CycleEdgeRecordDrawEdge(cycleEdgeRecord, graph, Position(DigraphEdges(graph),e),
+                    [realEdge[1], realEdge[2]]));
+            od;
+        od;
+        # Define the cycle nodes
+        if printRecord.cycleNodesActive = true then
+            for i in [1..Length(printRecord.cycleDoubleCover)] do 
+                cycle := printRecord.cycleDoubleCover[i];
+                cycleNodeRecord := rec();
+                cycleNodeRecord.vertexColours := [];
+                cycleNodeRecord.nodeLabels := [];
+                for j in cycle do
+                    cycleNodeRecord.vertexColours[j] := printRecord.cycleDoubleCoverColours[i];
+                    cycleNodeRecord.nodeLabels[j] := [];
+                od;
+                # Error();
+                for j in [1..Length(cycle)] do
+                    AppendTo(output, __GAPIC__PrintRecordDrawVertex(cycleNodeRecord, cycle[j], Concatenation(String(i), "_", String(cycle[j]))));
+                od;
+            od;
+        fi;
+
+        #draw nodes
+        for node in DigraphVertices(graph) do
+            AppendTo(output, __GAPIC__PrintRecordDrawVertex(printRecord, node, faceCoordTikZ[node]));
+        od;      
+    
+        ##draw edges
+        for e in DigraphEdges(digraph) do 
+            AppendTo(output,__GAPIC__PrintRecordDrawEdge(printRecord,digraph, Position(DigraphEdges(digraph),e),
+                    faceCoordTikZ{e}));
+        od;
+
+        AppendTo(output,"\\end{tikzpicture}\n");
+        if not printRecord!.onlyTikzpicture then
+            AppendTo( output, "\n\\end{document}\n");
+        fi;
+
+        CloseStream(output);
+        if not printRecord!.noOutput then
+            Print( "Picture written in TikZ." );
+        fi;
+
+        if printRecord.compileLaTeX then
+            if not printRecord!.noOutput then
+                Print( "Start LaTeX-compilation (type 'x' and press ENTER to abort).\n" );
+            fi;
+
+            # Run pdfLaTeX on the file (without visible output)
+            Exec( "pdflatex ", file, " > /dev/null" );
+            if not printRecord!.noOutput then
+                Print( "Picture rendered (with pdflatex).\n");
+            fi;
+        fi;
+        
+        for optionInRecord in RecNames(graphRecord) do
+            if not optionInRecord in RecNames(printRecord) then
+                printRecord.(optionInRecord) := graphRecord.(optionInRecord);
+            fi; 
+        od;
+        return printRecord;
     end
 );
