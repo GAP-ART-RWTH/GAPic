@@ -4,7 +4,7 @@
 <Heading>Animating surfaces with Java Script</Heading>
 
 <P/>
-This chapter describes animating simplicial surfaces via Javascript using a 3D library called three.js, see <URL>https://threejs.org/</URL>. Currently this uses r148. This functionality requires the GAP Package <A>SimplicialSurfaces</A>, see <URL>https://github.com/gap-packages/SimplicialSurfaces</URL>. Currently it is possible to animate triagonal complexes, so any triangulated polygon.
+This chapter describes animating simplicial surfaces via Javascript using a 3D library called three.js, see <URL>https://threejs.org/</URL>. Currently we use r148. This functionality requires the GAP Package <A>SimplicialSurfaces</A>, see <URL>https://github.com/gap-packages/SimplicialSurfaces</URL>. Currently it is possible to animate triagonal complexes, so any triangulated polyhedron.
 <Section Label="Section_QuickStart">
 <Heading>Quick Start</Heading>
 
@@ -22,26 +22,26 @@ gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
 gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-Now, your working directory should contain a file "octahedron.html". The following picture will be produced when the file is opened with a browser of your choice:<Br/>
+Now, the working directory should contain a file "octahedron.html". The following picture will be produced when the file is opened with a browser of your choice:<Br/>
 
 <Alt Only="HTML">&lt;br>&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check &lt;package location>/doc/images/Octahedron_animated.png]</Alt>
 
-The method <K>DrawComplexToJavaScript</K> (Section <Ref Sect="Section_basicCommands"/>) generates this .html file. The function requires the argument <A>printRecord</A> where <A>printRecord</A> is a GAP record which containes the 3D-coordinates (as lists with three float entries) of the vertices at a minimum. Based on these 3D-coordinates of the vertices, the complex is placed in the animation. Therefore, a typical workflow to animate a complex would look like this:
+The method <K>DrawComplexToJavaScript</K> (Section <Ref Sect="Section_basicCommands"/>) is generating this <A>.html</A> file. The function requires the argument <A>printRecord</A> where <A>printRecord</A> is a GAP record which containes the 3D-coordinates (as lists with three float entries) of the vertices at a minimum. Based on these 3D-coordinates of the vertices, the complex is placed in the animation. Therefore, a typical workflow to animate a complex would look like this:
 <Enum>
-  <Item>Construct the complex as triangular complex object from the <A>SimplicialSurfaces</A> package.</Item>
-  <Item>Set the location of the vertices</Item>
-  <Item>(Optional) Configure more parameters of <A>printRecord</A> as described in <Ref Subsect="Section_Colouring"/> and following</Item>
+  <Item>Construct the complex as triangular complex object with the <A>SimplicialSurfaces</A> package,</Item>
+  <Item>Define the locations of the vertices,</Item>
+  <Item>(Optional) Configure more parameters of <A>printRecord</A> as described in <Ref Subsect="Section_Colouring"/> and following,</Item>
   <Item>Generate the animation as an <A>.html</A> file using the function <A>DrawComplexToJavaScript</A>.</Item>
 </Enum>
 
-This file can be opened with most modern browsers and the complex will be shown as a 3D render with some options. More on them in <Ref Subsect="Section_GUI"/>. Note that the image is interactive, for example it can be rotated by clicking and dragging it with the mouse or touchscreen.<Br/>
-Also note, that an active internet connection is required because we load the <A>three.js</A> dependencies (and <A>three.js</A> itself) from a content delivery network (CDN) (Some browsers will cache these files so it might work offline but this is not guaranteed). Due to newer security requirements when using JavaScript libraries it is currently not possible to distribute these files with the package.
+The generated file can be opened with most modern browsers and the complex will be shown as a 3D render with some options, whic are described in <Ref Subsect="Section_GUI"/>. Note, that the image is interactive, for example it can be rotated by clicking and dragging it with the mouse or touchscreen.<Br/>
+Also note, that an active internet connection is required, as <A>three.js</A> dependencies (and <A>three.js</A> itself) are loaded from a content delivery network (CDN) (Some browsers will cache these files so it might work offline but this is not guaranteed). Due to newer security requirements when using JavaScript libraries it is currently not easily possible to distribute these files with the package.
 </Section>
 
 <Section Label="Section_GUI">
-<Heading>Output files and the GUI</Heading>
+<Heading>The GUI</Heading>
 
 Some options can be changed live in the graphical user interface (GUI), displayed by the browser which will look similar to the following
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/GUI.png">&lt;/img>&lt;/br></Alt>
@@ -67,11 +67,11 @@ The options in the GUI influence the way a complex is displayed by the browser a
 This GUI is implemented using the dat.GUI package from three.js.  
 <Subsection Label="Subsection_IntersectionPlanes">
 <Heading>Intersection Planes</Heading>
-The GUI contains an option for enabling intersection planes. These planes aligned with the three axes, intersect the complete animation and only show the part of the animation that lies on one side of the plane. <Br/>
+The GUI contains an option for enabling intersection planes. These are planes, aligned with the three axes, that intersect the complete animation and only show the part of the animation that lies on one side of the plane. <Br/>
 Enabling the intersecting plane option allows to look inside the animation and can be very helpful for example if there are self-intersections or a complex is fairly large.<Br/>
 To activate a plane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. This slider has a minimum and maximum setting, which are called the range of this slider.<Br/>
-If the vertex coordinates are not parameterised (<Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted to intersect the whole complex in X, Y and Z direction. In case you want more precision, either make the GUI larger by dragging on the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
-If there are coordinates which are parameterized or you want to change the range of the planes manually, it is possible with the following:
+If the vertex coordinates are not parameterised (see <Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted to intersect the whole complex in X, Y and Z direction. In case you want more precision, either make the GUI larger by dragging on the left of the GUI or change the slider by typing a number in the field next to it.<Br/>
+If the coordinates are parameterized or you want to change the range of the planes manually, it is possible with the following:
 </Subsection>
 <ManSection Label="SetPlaneRange">
   <Oper Arg="complex, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
@@ -94,16 +94,34 @@ If there are coordinates which are parameterized or you want to change the range
 </ManSection>
 
 <Subsection Label="Section_Visibility">
-<Heading>Appearence</Heading>
+<Heading>Visibility</Heading>
+Sometimes the vertices/edges/faces of the complex should be not be visible in the animation. In the GUI it is possible to show/hide all vertices/edges/faces with the respective button in the GUI.
+By default, all faces and vertices are visible. The edges can also be made visible by checking the respective box.
+</Subsection>
 
-Sometimes parts of the complex should be not shown in the animation. In the GUI it is possible to turn all vertices/edges/faces off but sometimes it can help if only certain (subsets of) of vertices/edges/faces of the complex are visible. This can be done for the following objects:
+
+<Subsection Label="Section_NormalsMaterial">
+<Heading>NormalsMaterial</Heading>
+Sometimes it is not important that the faces have any specific colour, and more to show how they are located relative to each other. For this case, the normalsMaterial option is a good choice, as it automatically computes a colour for the faces in real time with regards to its normal vector towards the camera. For this, it uses a smooth colour transition and thus colours closer together on the colour spectrum correspond to faces with similar angles of the normal vector. This can especially help when studying complexes with intersecting faces.
+To turn this material on, the corresponding box in the GUI needs to be clicked.
+For an example, consider the octahedron from before:
+
+<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_normalsMaterial.png}\end{center}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt>
+</Subsection>
+
+</Section>
+<Section Label="Section_Visibility">
+<Heading>Enabled vs. Visible</Heading>
+ off but sometimes it can help if only certain (subsets of) of vertices/edges/faces of the complex are visible. This can be done for the following objects:
 <Enum>
   <Item>Vertices (see <Ref Subsect="ActivateVertices"/>) </Item>
   <Item>Edges (see <Ref Subsect="ActivateEdges"/>)</Item>
   <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
 </Enum>
-By default, all faces are visible. In the GUI the vertices and edges can also be made visible by checking the respective box.
-In general there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
+
+There is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
 If however any (subset) of them are deactivated they will be skipped during the generation of the file. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
 
 We illustrade this functionality by animating an octahedron as before but with only vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated
@@ -221,21 +239,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <P/>
  </Description>
 </ManSection>
-
-<Subsection Label="Section_NormalsMaterial">
-<Heading>NormalsMaterial</Heading>
-There is the possibility to render the faces of the surface with not in the usual way but by a so called normalsMaterial. If switched on this material computes the colour of any face in real time with regards to its normal vector towards the camera. This means it computes the angle between the normal of the considered face and the camera and maps it to a smooth colour transition. As a result usually differently coloured faces have different normals. This can especially help when studying complexes with intersecting faces.
-To turn this material on, just toggle the corresponding box in the GUI.
-Consider the following example from before:
-
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_normalsMaterial.png}\end{center}</Alt>
-<Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt>
-
-</Subsection>
-
 </Section>
-
 
 <Section Label="Section_basicCommands">
 <Heading>Basic Commands</Heading>
