@@ -4,7 +4,8 @@
 # This file runs package tests. It is also referenced in the package
 # metadata in PackageInfo.g.
 #
-LoadPackage( "GAPic" );
+LoadPackage("SimplicialSurfaces");;
+LoadPackage( "GAPic" );;
 
 TestDirectory(DirectoriesPackageLibrary( "GAPic", "tst" ),
   rec(exitGAP := true));
