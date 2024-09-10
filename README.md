@@ -16,12 +16,7 @@ The package is currently under development and will as a first step gain the fun
 - [ ] Finish review of the manual, currently is in a beta state
 
 ## Contact
-
 Feel free to contact us via the given contacts in the ```PackageInfo.g``` or write an Issue in that tab
 
 ## License
-
-TODO: Provide information on the license of your package. A license is
-important as it determines who has a right to distribute your package. The
-"default" license to consider is GNU General Public License v2 or later, as
-that is the license of GAP itself.
+GAPic is released under GNU General Public License v3.0. 
