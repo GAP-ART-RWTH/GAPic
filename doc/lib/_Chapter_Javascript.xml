@@ -114,17 +114,17 @@ For an example, consider the octahedron from before:
 </Section>
 <Section Label="Section_Visibility">
 <Heading>Enabled vs. Visible</Heading>
- off but sometimes it can help if only certain (subsets of) of vertices/edges/faces of the complex are visible. This can be done for the following objects:
+ Sometimes it can be helpful to make only show certain (subsets of) of vertices/edges/faces of the complex. This can be done for the following objects:
 <Enum>
-  <Item>Vertices (see <Ref Subsect="ActivateVertices"/>) </Item>
-  <Item>Edges (see <Ref Subsect="ActivateEdges"/>)</Item>
-  <Item>Faces (see <Ref Subsect="ActivateFaces"/>) </Item>
+  <Item>Vertices (see <Ref Subsect="ActivateVertices"/>), </Item>
+  <Item>Edges (see <Ref Subsect="ActivateEdges"/>),</Item>
+  <Item>Faces (see <Ref Subsect="ActivateFaces"/>). </Item>
 </Enum>
 
-There is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
-If however any (subset) of them are deactivated they will be skipped during the generation of the file. With this it is possible to make parts of the complex visible and others not. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
+To achieve this, there is a difference between a visible vertex, edge and face and an active one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
+If however any (subset) of them are deactivated they will be skipped during the generation of the file. However it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
 
-We illustrade this functionality by animating an octahedron as before but with only vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated
+This functionality is demonstrated by animating an octahedron as before but with only vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated.
 <Log><![CDATA[
 gap> oct := Octahedron();;
 gap> verticesPositions := [
@@ -147,9 +147,6 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt>
-
-</Subsection>
-
 
 <ManSection Label="ActivateVertices">
   <Oper Arg="complex, printRecord" Name="ActivateVertices" Label="for IsTriangularComplex, IsRecord"/>
@@ -243,7 +240,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 <Section Label="Section_basicCommands">
 <Heading>Basic Commands</Heading>
-In this section the options that can be defined by the <A>printRecord</A> will be described. The most important one is how to set coordinates.
+In this section the options that can be defined by the <A>printRecord</A> will be described. The most important one is setting coordinates.
 
 <ManSection Label="SetVertexCoordinates3D">
   <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
@@ -251,7 +248,7 @@ In this section the options that can be defined by the <A>printRecord</A> will b
  <Returns>the updated print record
 </Returns>
  <Description>
- Let <A>complex</A> be a triagonal complex and <A>coordinates</A> a list of lists, where <A>coordinates[i] = [x,y,z]</A> for floats <A>x, y, z</A>. The optional argument <A>printRecord</A> has to be a record. This function saves the given list of 3D-coordinates <A>coordinates</A> in the given print record or a new one if non is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats. If the format of the <A>coordinates</A> is not correct, an error is shown. The NC-version does not check the coordinate format.
+ Let <A>complex</A> be a triangular complex and <A>coordinates</A> a list of lists, where <A>coordinates[i] = [x,y,z]</A> for floats <A>x, y, z</A>. The optional argument <A>printRecord</A> has to be a record. This function saves the given list of 3D-coordinates <A>coordinates</A> in the given print record or a new one if none is provided. The list <A>coordinates</A> has to have entries that are a list <A>[x,y,z]</A> of three floats. If the format of the <A>coordinates</A> is not correct, an error is shown. The NC-version does not check the coordinate format.
 <P/>
  </Description>
 </ManSection>
@@ -263,7 +260,7 @@ Note: for using parameterised vertex coordinates see <Ref Subsect="Section_Param
  <Returns>a list of lists with three floats
 </Returns>
  <Description>
-This function returns the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>complex</A>. The 3D-coordinates of vertex <A>vertex</A> has to have the format <A>[x,y,z]</A>. If the format of the <A>coordinates</A> is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record. For using parameterised coordinates (see <Ref Subsect="Section_ParameterizedCoordinates"/>) it is necessary to use the NC version, as the parameterized coordinates are store in GAP as strings.
+This function returns the 3D-coordinates from the print record of the vertex <A>vertex</A> from <A>complex</A>. The 3D-coordinates of vertex <A>vertex</A> have to have the format <A>[x,y,z]</A>. If the format of the coordinates is not correct, then an error is shown. This can happen, if the NC version is used to store the 3D-coordinates. The NC-version does not check the coordinate format saved in the print record. For using parameterised coordinates (see <Ref Subsect="Section_ParameterizedCoordinates"/>) it is necessary to use the NC version, as the parameterized coordinates are store in GAP as strings.
 <P/>
  </Description>
 </ManSection>
@@ -344,7 +341,7 @@ gap> printRecord := SetVertexCoordinates3D(oct, verticesPositions, rec());;
 gap> printRecord := SetVertexColours(oct,
 > ListWithIdenticalEntries(NumberOfVertices(oct), "0x00FF00"), printRecord);;
 gap> printRecord := SetVertexColour(oct, 3, "0xFF0000", printRecord);;
-gap> List([1..NumberOfVertices(oct)], i -> GetVertexColour(oct, i, printRecord));
+gap> GetVertexColours(oct, printRecord));
 [ "0x00FF00", "0x00FF00", "0xFF0000", "0x00FF00", "0x00FF00", "0x00FF00" ]
 gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord);;
 ]]></Log>
@@ -410,7 +407,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
 </Returns>
  <Description>
  The method <K>SetFaceColour</K>(<A>complex</A>, <A>i</A>, <A>colour</A>, <A>printRecord</A>) sets the colour of face <A>i</A> to <A>colour</A>. The method <K>SetFaceColours</K>(<A>complex</A>,<A>newColoursList</A>, <A>printRecord</A>) sets the colours for all faces of <A>complex</A>. That means the method sets the colour of face <A>j</A> to <A>newColoursList[j]</A>. The default colour for all faces is 0x049EF4, a light blue hue.<Br/>
- It is also possible to set the colour to a so called <A>normalsMaterial</A>, Section <Ref Subsect="Section_NormalsMaterial"/> for an explanation.
+ Not, that if the colour of the faces it not relevant, the <A>normalsMaterial</A> (Section <Ref Subsect="Section_NormalsMaterial"/>) might be a good choice.
 <P/>
  </Description>
 </ManSection>
@@ -432,7 +429,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
 
 <Section Label="Section_InnerCircles">
 <Heading>Inner Circles</Heading>
-Inner circles are defined for triangular faces. In the animation, they are circles within the face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be toggled on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
+Inner circles are defined for triangular faces as circles within every face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be turned on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
 <P/>
 Note that it is possible to activate and deactivate the innercircles of individual faces. Additionally it is possible to colour any (sub-)set of the circles other than the default, which is black. In the GUI there is an option to change the width of the drawn circles.
 <P/>
@@ -503,9 +500,9 @@ It is also possible to set colours for (subsets of) innercircles. This can be do
 <Heading>Normals of Inner Circles</Heading>
 
 <P/>
-A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the the incenter of a triangular face orthogonally and extends orthogonally w.r.t. the face in both directions.
+A normal of an inner circle (compare Section <Ref Sect="Section_InnerCircles"/>) is a line intersecting the incenter of a triangular face and extends orthogonally w.r.t. the face in both directions.
 <P/>
-By default the normals of inner circles are active but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
+By default the normals of inner circles are enabled but invisible and can be toggled on in the GUI. To make the output files smaller it can help to disable them.
 
 Consider the example from before:
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img>&lt;/br></Alt>
