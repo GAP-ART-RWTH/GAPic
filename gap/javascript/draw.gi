@@ -627,7 +627,12 @@ InstallMethod( GetCircleColour,
         if not IsBound(printRecord.circleColours[face]) then
             return default; 
         fi;
-        return printRecord.circleColours[face];
+        # If the colour starts with 0x we assume it to be a hex code. Otherwise the names need quations around them to work in JS
+        if StartsWith(printRecord.circleColours[face], "0x") then
+            return printRecord.circleColours[face];
+        else
+            return Concatenation("\"" , printRecord.circleColours[face] , "\"");
+        fi;
     end
 );
 
