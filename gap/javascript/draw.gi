@@ -451,19 +451,20 @@ InstallMethod( GetFaceColour,
     "for a simplicial surface, a face and a record",
     [IsTriangularComplex, IsPosInt, IsRecord],
     function(surface, face, printRecord)
-				local default;
-				default := "0x049EF4";
-				if not IsBound(printRecord.faceColours) or (face <= 0) then
-					return default;
-				fi;
-				if not IsBound(printRecord.faceColours[face]) and not IsString(printRecord.faceColours) then
-					return default;
-				fi;
-				if IsString(printRecord.faceColours) then
-                    return printRecord.faceColours;
-                else
-    				return printRecord.faceColours[face];
-                fi;
+        local default;
+        default := "0x049EF4";
+        if not IsBound(printRecord.faceColours) or (face <= 0) then
+            return default;
+        fi;
+        if not IsBound(printRecord.faceColours[face]) then
+            return default;
+        fi;
+        # If the colour starts with 0x we assume it to be a hex code. Otherwise the names need quations around them to work in JS
+        if StartsWith(printRecord.faceColours[face], "0x") then
+            return printRecord.faceColours[face];
+        else
+            return Concatenation("\"" , printRecord.faceColours[face] , "\"");
+        fi;
     end
 );
 
