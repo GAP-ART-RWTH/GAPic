@@ -327,6 +327,8 @@ rec( edgeThickness := 0.03,
    <Item>Faces (The default colour is 0x049EF4, a light blue hue. See <Ref Subsect="SetFaceColours"/>)</Item>
    <Item>Innercircles. See <Ref Subsect="Section_InnerCircles"/></Item>
  </Enum>
+
+ Further, it is possible to specify a colour by name using one of the X11 colours: <URL>https://www.w3schools.com/colors/colors_x11.asp</URL>.<Br/>
  Here is a brief colouring example:
 <Log><![CDATA[
 gap> oct := Octahedron();;
