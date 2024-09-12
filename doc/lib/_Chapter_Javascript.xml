@@ -429,9 +429,9 @@ gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord)
 
 <Section Label="Section_InnerCircles">
 <Heading>Inner Circles</Heading>
-Inner circles are defined for triangular faces as circles within every face that touch each of the three edges in exactly one point, centered at the incenter. By default the innercircles are active but not visible and can be turned on in the GUI. If the output file should be smaller it can help to disable these as they will not be written into the file if disabled.
+Inner circles are defined for complexes with triangular faces as circles within each face that touch each of the three edges in exactly one point, centred at the incentre. By default the inner circles are active but not visible and can be turned on in the GUI. If the size of the output file should be smaller, it can help to disable these as they will not be written into the file if disabled.
 <P/>
-Note that it is possible to activate and deactivate the innercircles of individual faces. Additionally it is possible to colour any (sub-)set of the circles other than the default, which is black. In the GUI there is an option to change the width of the drawn circles.
+Note that it is possible to activate and deactivate the inner circles of individual faces. Additionally, it is possible to colour any (sub-)set of the circles in a colour other than the default colour, which is black. In the GUI there is an option to change the width of the drawn circles.
 <P/>
 As an example, consider the octahedron generated as before:
 
@@ -439,7 +439,7 @@ As an example, consider the octahedron generated as before:
 <Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt>
 
-Or it is possible to make all other objects invisible via the GUI and only show the innercircles as done here:
+Or it is possible to make all other objects invisible via the GUI (Section <Ref Subsect="Section_GUI"/>) and only show the inner circles as done here:
 <Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle_transparent.png">&lt;/img>&lt;/br></Alt>
 <Alt Only="LaTeX">\begin{center}\includegraphics[width=0.8\textwidth]{../images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle_transparent.png]</Alt>
@@ -463,12 +463,12 @@ Or it is possible to make all other objects invisible via the GUI and only show 
  <Returns>a print record
 </Returns>
  <Description>
- The method <K>DeactivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>. The method <K>DeactivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all inner circles of <A>complex</A>. If an inner circle is deactivated, then it is not shown in the animation and will not be written into the file. By default, the inner circles are activated.
+ The method <K>DeactivateInnerCircles</K>(<A>complex</A>, <A>i</A>, <A>printRecord</A>) deactivates the inner circle of face <A>i</A>. The method <K>DeactivateInnerCircle</K>(<A>complex</A>, <A>printRecord</A>) deactivates all inner circles of <A>complex</A>. If an inner circle is deactivated, then it is not shown in the animation and will not be written into the file that will be generated. By default, the inner circles are activated.
 <P/>
  </Description>
 </ManSection>
 
-It is also possible to set colours for (subsets of) innercircles. This can be done with the following:
+It is also possible to set colours for (subsets of) inner circles. This can be done with the following:
 <ManSection Label="SetCircleColours">
   <Oper Arg="complex, newColoursList, printRecord" Name="SetCircleColours" Label="for IsTriangularComplex, IsList, IsRecord"/>
   <Oper Arg="complex, i, colour, printRecord" Name="SetCircleColour" Label="for IsTriangularComplex, IsPosInt, IsString, IsRecord"/>
