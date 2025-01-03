@@ -1,13 +1,503 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Chapter Label="Chapter_Drawing_A_Planar_Graph">
-<Heading>Drawing a planar graph</Heading>
+<Chapter Label="Chapter_Graph_Visualization">
+<Heading>Visualizations of a Graph</Heading>
 
+<P/>
 Recall that a directed graph, or digraph for short, is a tuple <M>(V,E)</M>, where <M>V</M>
 is a set and <M>E</M> is a subset of the cartesian product of <M>V</M> 
 with itself. The elements of <M>V</M> are henceforth called <A>nodes</A> and the elements 
-of <M>E</M> <A>Edges</A>. We will only consider simple digraphs, i.e. there are no loops 
-contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
+of <M>E</M> <A>edges</A>, denoted by <M>[v,w]</M> for nodes <M>v,w</M> in <M>V</M>. We will
+only consider simple digraphs, i.e. there are no loops 
+contained in <M>E</M>, meaning <M>E</M> is an antireflexive relation.
+<Section Label="Visualization-Functions for General Graphs">
+<Heading>Visualization-Functions for General Graphs</Heading>
+   <ManSection Label="DrawDigraphToTikzDispatcher"> 
+      <Prop Name="DrawDigraphToTikzDispatcher" Arg="graph, file, printRecord"
+         Label="for IsDigraph, IsString, IsRecord"/>
+      <Returns>a record</Returns>
+      <Description>
+         This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
+         <K>graph</K> is a digraph,
+         then <K>file</K> encodes a drawing of an embedding of <K>graph</K> with 
+         straight edges. This function contains four big case distinctions based on the
+         properties of <K>graph</K> which are listed and
+         explained below. This is a dispatcher-function, i.e. it unifies already existing
+         functions, also listed below. It is recommended to use this dispatcher-function if it is unknown
+         whether the digraph <K>graph</K> fulfills the needed properties for the concrete
+         functions this function refers to. This function's purpose is to serve as an
+         allrounder and quick solution. If you are interested in the particularities and
+         especially in options to modify the outcome, then
+         refer to the functions listed in the cases below.
+         <Enum>
+            <Item>
+               If <K>nodeCoordinates</K> is given in <K>printRecord</K>, then the nodes are
+               placed according to these coordinates. In this case the function 
+               <K>DrawDigraphToTikz</K> will be called and used. For more details see 
+               (<Ref Subsect="DrawDigraphToTikz"/>).
+            </Item>
+            <Item>
+               If <K>nodeCoordinates</K> is not given in <K>printRecord</K> and the graph
+               <K>graph</K> is polyhedral, i.e. planar and three-vertex-connected (it remains
+               connected whenever fewer than 3 vertices together with their incident edges
+               are removed), then the function <K>DrawDigraphToTikz</K> calculates
+               the coordinates itself. In this case the edges are drawn as straight lines
+               and the embedding is plane, i.e. edges only intersect at the nodes. In this
+               case the function <K>DrawStraightPlanarDigraphToTikz</K> will be called and
+               used. For more details see (<Ref Subsect="DrawStraightPlanarDigraphToTikz"/>).
+            </Item>
+            <Item>
+               If <K>nodeCoordinates</K> is not given in <K>printRecord</K> and the graph
+               is not polyhedral (see the second case above) but the digraph <K>graph</K>
+               is planar and the faces are given in <K>nodesOfFaces</K> in the <K>printRecord</K>, 
+               then the function calculates the coordinates itself. In this case the edges
+               are drawn as straight lines and the embedding is plane, i.e. edges only intersect
+               at the nodes. In this case the function <K>DrawStraightPlanarDigraphToTikz</K>
+               will be called and used. For more details see 
+               (<Ref Subsect="DrawStraightPlanarDigraphToTikz"/>).
+            </Item>
+            <Item>
+               If <K>nodeCoordinates</K> is not given in <K>printRecord</K>, <K>graph</K> is
+               not polyhedral and the graph
+               is not planar or the faces have not been given in <K>nodesOfFaces</K> (see the 
+               third case above), then the nodes are placed in the form of a regular polygon.
+               In this case no existing function is called. Nonetheless, for options to modify
+               the outcome, see the functions listed in the cases above.
+            </Item>
+         </Enum>
+      </Description>
+   </ManSection>
+   Also, the following aspects should be noted:
+   <List>
+   <Item>
+      If the given <K>file</K> does not end in <A>.tex</A> the ending <A>.tex</A>
+      will be added to it.
+   </Item>
+   <Item>
+      The given file will be overwritten without asking if it already exists. If
+      you do not have permission to write to that file, this method will raise an
+      error.
+   </Item>
+   <Item>
+      The particulars of the drawing are determined by the argument <K>printRecord</K>, 
+      which is a record.
+      <!-- If this is not given, the default settings are used. -->
+   </Item>
+   <Item>
+      The record <K>printRecord</K> will be modified and returned by this method. It contains the
+      data to recreate the drawing of the graph.
+   </Item>
+   </List>
+
+
+
+
+
+
+   <ManSection Label="DrawDigraphToTikz"> 
+      <Prop Name="DrawDigraphToTikz" Arg="graph, file[, printRecord]"
+         Label="for IsDigraph, IsString, IsRecord"/>
+      <Returns>a record</Returns>
+      <Description>
+         This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
+         <K>graph</K> is a digraph, then <K>file</K> encodes a drawing of an embedding of <K>graph</K> with 
+         straight edges.
+      </Description>
+   </ManSection>
+   <List>
+   <Item>
+      If the given <K>file</K> does not end in <A>.tex</A> the ending <A>.tex</A>
+      will be added to it.
+   </Item>
+   <Item>
+      The given file will be overwritten without asking if it already exists. If
+      you do not have permission to write to that file, this method will raise an
+      error.
+   </Item>
+   <Item>
+      The particulars of the drawing are determined by the argument <K>printRecord</K>, 
+      which is a record.
+      If the record is not given, the default settings are used.
+   </Item>
+   <Item>
+      The record <K>printRecord</K> will be modified and returned by this method. It contains the
+      data to recreate the drawing of the graph.
+   </Item>
+   </List>
+
+   <P/>
+   There are parameters to change the output of this method. There are the
+   following classes of parameters:
+   <List>
+      <Item>
+         <A>Coordinates</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Coordinates"/>):
+         These parameters control the coordinates of the nodes.
+      </Item>
+      <Item>
+         <A>Appearance</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Appearance"/>): 
+         These parameters control the appearance of the drawing.
+      </Item>
+      <Item>
+         <A>Labels</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Labels"/>):
+         These parameters control whether and how nodes and edges are labelled. 
+      </Item>
+      <Item>
+         <A>Colours</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Colours"/>):
+         These parameters control the colours of nodes and edges.
+      </Item>
+      <Item>
+         <A>Output control</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Output"/>):
+         Modify the behaviour of the LaTeX-output and how much information is printed to the console.
+      </Item>
+   </List>         
+   
+   <P/>
+   <Subsection Label="Subsection_DrawDigraphToTikz_Coordinates">
+      <Heading>Coordinates</Heading>
+      This subsection covers the parameters that control the coordinates of the nodes of the embedding of
+      the graph. The parameters are:
+      <List>
+         <Item>
+            <A>nodeCoordinates</A>: Define where each node is drawn by giving a list of coordinates.
+         </Item>
+      </List>
+      We will exemplify them with the following graph in order to clarify how the parameters work:
+      <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph.pdf}</Alt>
+      <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph.png]</Alt>
+
+      <List>
+         <Item>
+            <A>nodeCoordinates</A>: This parameter is a list of coordinates of each vertex. A coordinate is a
+            list with exactly two entries containing numbers. If <K>i</K> is an index, <K>[x,y]</K> is a coordinate
+            and <K>printRecord.nodeCoordinates[i] = [x,y]</K>, then the <K>i</K>-th node has the coordinate
+            <K>[x,y]</K> in the drawing. The <K>i</K>-th node is given by the numbering from the method
+            <K>DigraphVertices</K> applied on <K>graph</K>.
+            Consider the following example:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeCoordinates",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
+            <P/>
+            If we choose the following coordinates
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [ [ 1., 0. ], [ -0.5, -0.866025 ],
+> [ -0.5, 0.866025 ], [ -0.3125, 0.216506 ], [ 0.25, 8.97448e-10 ] ]);;
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph", 
+> printRecord);;
+]]></Log>
+            then we obtain the picture from above: <P/>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph.png]</Alt>
+
+            
+         </Item>
+      </List>
+   </Subsection>
+
+   <Subsection Label="Subsection_DrawDigraphToTikz_Appearance">
+      <Heading>Appearance</Heading>
+      This subsection covers the parameters that control the appearance of the drawing. The parameters are:
+      <List>
+         <Item>
+            <A>scale</A>: Globally scales the picture. The default is 3.
+         </Item>
+         <Item>
+            <A>directedEdgesActive</A>: Toggle between a directed or undirected representation of the graph.
+            The default is <K>true</K>.
+         </Item>
+      </List>
+      We will exemplify them with the following graph in order to clarify how the parameters
+      work:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeCoordinates",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
+      <List>
+         <Item>
+            <A>scale</A>: Scales the produced TikZ-picture by <K>scale</K>. By default <K>scale</K> is set to 2. 
+            Now one can change it, to 4 for example, by:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> printRecord.scale := 4;;
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_scale",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_scale.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_scale.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_scale.png]</Alt>
+         </Item>
+         <Item>
+            <A>directedEdgesActive</A>: By default <K>directedEdgesActive</K> is <K>true</K>. That means that edges will be
+            represented as directed arrows as seen in the pictures. In the case that two nodes <K>i</K> and <K>j</K> are
+            doubly connected with directed edges, i.e. <K>[i,j]</K> and <K>[j,i]</K> are edges of <K>graph</K>, the embedding
+            shows two separated arrows from <K>i</K> to <K>j</K> and the other way around. <P/>
+            If <K>directedEdgesActive</K> is set to <K>false</K> edges are represented as plane lines without any direction.
+            In this case it is recommended to choose the graph <K>graph</K> in such a way that no pair of nodes is doubly 
+            connected with directed edges (see above). The reason is that in this case the double edges will be represented 
+            as one single plane line. This means that the drawing settings of one of the directed edges will be ignored.
+            Let us look at the following examples:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> DrawDigraphToTikz(graph, 
+> "DrawDigraphToTikz_graph_directedEdgesActive_true", printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_directedEdgesActive_true.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_directedEdgesActive_true.png]</Alt>
+            <P/> 
+            Now, we toggle <K>directedEdgesActive</K> off and we get
+<Log><![CDATA[ 
+gap> printRecord.directedEdgesActive := false;;
+gap> DrawDigraphToTikz(graph, 
+> "DrawDigraphToTikz_graph_directedEdgesActive_false", printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_directedEdgesActive_false.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_directedEdgesActive_false.png]</Alt>
+            <P/>
+            Here, we can see that the edges numbered 3 and 6 vanished. That is because we are looking at the undirected
+            representation while having pairs of doubly connected nodes, namely <K>(1,5)</K> and <K>(2,5)</K>.
+         </Item>
+      </List>
+   </Subsection>
+
+   <Subsection Label="Subsection_DrawDigraphToTikz_Labels">
+      <Heading>Labels</Heading>
+      This subsection contains parameters to control whether and how nodes and edges are labelled in the TikZ-picture. In
+      order to modify the settings one has to change the following parameters inside the argument <K>printRecord</K> which 
+      is a record. It contains the following options:
+      <List>
+         <Item>
+            <A>nodeLabelsActive</A>: Toggle whether the labels of nodes are shown or not. (By default they are shown.)
+         </Item>
+         <Item>
+            <A>nodeLabels</A>: Modify the labels of the nodes. (By default they are labelled by their number.)
+         </Item>
+         <Item>
+            <A>edgeLabelsActive</A>: Toggle whether the labels of edges are shown or not. (By default they are shown.)
+         </Item>
+         <Item>
+            <A>edgeLabels</A>: Modify the labels of the edges. (By default they are labelled by their number.)
+         </Item>
+      </List>
+      We will exemplify these with the following graph in order to clarify how the parameters work:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> DrawDigraphToTikz(graph, 
+> "DrawDigraphToTikz_graph_nodeCoordinates", printRecord);;
+]]></Log>
+      <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}</Alt>
+      <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
+   
+      <List>
+         <Item>
+            <A>nodeLabelsActive</A>: The default is <K>true</K>. In this case the labels of the nodes are shown.
+            When set to <K>false</K> nodes will not contain any label. In the example we set <K>nodeLabelsActive</K>
+            to <K>false</K>:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> printRecord.nodeLabelsActive := false;;
+gap> DrawDigraphToTikz(graph,
+> "DrawDigraphToTikz_graph_nodeLabelsActive_false", printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeLabelsActive_false.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeLabelsActive_false.png]</Alt>
+         </Item>
+         <Item>
+            <A>nodeLabels</A>: The default node labels are the numbering of <K>graph</K>. One can change the label of
+            the node numbered by <K>i</K> by setting <K>nodeLabels</K> to a list which contains in position <K>i</K>
+            the wanted label as a string. If the <K>i</K>-th entry of <K>nodeLabels</K> is not bound then the labelling 
+            of the <K>i</K>-th node will be <K>i</K>. In the following example we change the labels of nodes
+            1, 2 and 4 to their Roman numerals:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> printRecord.nodeLabels := ["I", "II", , "IV"];;
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeLabels",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeLabels.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeLabels.png]</Alt>
+         </Item>
+         <Item>
+            <A>edgeLabelsActive</A>: The default is <K>true</K>. In this case the labels of the edges are shown.
+            When set to <K>false</K> edges will not have any label. In the example we set <K>edgeLabelsActive</K>
+            to <K>false</K>:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> printRecord.edgeLabelsActive := false;;
+gap> DrawDigraphToTikz(graph, 
+> "DrawDigraphToTikz_graph_edgeLabelsActive_false", printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_edgeLabelsActive_false.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeLabelsActive_false.png]</Alt>
+         </Item>
+         <Item>
+            <A>edgeLabels</A>: The default edge labels are the numbering of <K>graph</K>. One can change the label of
+            the edge numbered by <K>i</K> by setting <K>edgeLabels</K> to a list which contains in position <K>i</K>
+            the wanted label as a string. If the <K>i</K>-th entry of <K>edgeLabels</K> is not bound then the labelling 
+            of the <K>i</K>-th edge will be <K>i</K>. In the following example we change the labels of edges
+            1,2 and 4 to their Roman numerals:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]]);
+gap> printRecord.edgeLabels := ["I", "II", , "IV"];;
+gap> DrawDigraphToTikz(graph, 
+> "DrawDigraphToTikz_graph_edgeLabels", printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_edgeLabels.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeLabels.png]</Alt>
+         </Item>
+      </List>
+   </Subsection>
+
+   <Subsection Label="Subsection_DrawDigraphToTikz_Colours">
+      <Heading>Colours</Heading>
+      This subsection covers the parameters that control the colours of nodes and edges. The parameters are:
+      <List>
+         <Item>
+            <A>nodeColours</A>: Modify the colours of the nodes (the default colour is gray).
+         </Item>
+         <Item>
+            <A>edgeColours</A>: Modify the colours of the edges (the default color is gray).
+         </Item>
+      </List>
+      We will exemplify these with the following graph in order to clarify how the parameters work:
+         <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+         <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}</Alt>
+         <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
+
+      <List>
+         <Item>
+            <A>nodeColours</A>: Modifies the colours of the nodes. The colours are given in a list 
+            <K>colours</K> such that <K>colours[i]</K> is the colour of the <K>i</K>-th node. The <K>i</K>-th 
+            node is given by the numbering from the method <K>DigraphVertices</K> applied on <K>graph</K>.
+            If node <K>i</K> is not a node of <K>graph</K>, then the colour will be skipped. The colours are strings
+            that are recognizable by LaTeX.
+            <P/>
+            It is possible to leave node colours unbound - those will be coloured with the default colour which
+            is gray. Consider the following example:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]], nodeColours := ["red", "green", , "white!40!blue"]);
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeColours",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeColours.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeColours.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeColours.png]</Alt>
+            <P/>
+            Instead of giving an entire list it is also possible to give just one string defining a new colour for
+            all nodes. It will internally be converted into a list. Using the same <K>printRecord</K> from above
+<Log><![CDATA[ 
+gap> printRecord.nodeColours := "red";
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeColours_all",
+> printRecord);;
+]]></Log>
+            we obtain the picture: <P/>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeColours_all.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_nodeColours_all.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeColours_all.png]</Alt>
+         </Item>
+         <Item>
+            <A>edgeColours</A>: Modifies the colours of the edges. The colours are given in a list 
+            <K>colours</K> such that <K>colours[i]</K> is the colour of the <K>i</K>-th edge. The <K>i</K>-th 
+            edge is given by the numbering from the method <K>DigraphEdges</K> applied on <K>graph</K>.
+            If edge <K>i</K> is not an edge of <K>graph</K>, then the colour will be skipped. The colours are strings
+            that are recognizable by LaTeX.
+            <P/>
+            It is possible to leave edge colours unbound - those will be coloured with the default colour which
+            is gray. Consider the following example:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4,5],[3,4,5],[4,5],[5],[]]);;
+gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
+> [0, 2]], edgeColours := ["red", "green", , "white!40!blue"]);
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_edgeColours",
+> printRecord);;
+]]></Log>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeColours.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_edgeColours.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeColours.png]</Alt>
+            <P/>
+            Instead of giving an entire list it is also possible to give just one string defining a new colour for
+            all edges. It will internally be converted into a list. Using the same <K>printRecord</K> from above
+<Log><![CDATA[ 
+gap> printRecord.edgeColours := "red";
+gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_edgeColours_all",
+> printRecord);;
+]]></Log>
+            we obtain the picture: <P/>
+            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeColours_all.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\includegraphics{../images/DrawDigraphToTikz_graph_edgeColours_all.pdf}</Alt>
+            <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeColours_all.png]</Alt>
+         </Item>
+      </List>
+   </Subsection>
+
+   <Subsection Label="Subsection_DrawDigraphToTikz_Output">
+         <Heading>Output control</Heading>
+         This subsection contains miscellaneous parameters to control the output of <K>DrawDigraphToTikz</K>
+         <Ref Sect="DrawDigraphToTikz"/>. In order to modify the settings one has to change the following 
+         parameters inside the argument <K>printRecord</K> which is a record. It contains the following options:
+         <List>
+            <Item>
+               <A>compileLatex</A>: If this parameter is <K>true</K> (the default is <K>false</K>) the generated tex-file will be
+               automatically compiled with <K>pdflatex</K>. In rare cases the compilation might run into a problem
+               and stop. To abort such a computation, type 'x' and hit ENTER (this command is passed to
+               <K>pdflatex</K>). If this happens, please notify the developers so it can be fixed in a later version.
+            </Item>
+            <Item>
+               <A>latexDocumentclass</A>: Defines which documentclass is used for the output. The default is
+               <K>article</K>. If the picture should not be cropped (and not be printed), <K>standalone</K> is recom-
+               mended.
+            </Item>
+            <Item>
+               <A>noOutput</A>: If this parameter is <K>true</K> (the default is <K>false</K>) the method 
+               <K>DrawDigraphToTikz</K> will produce no output on the console.
+            </Item>
+            <Item>
+               <A>onlyTikzpicture</A>: If this parameter is <K>true</K> (the default is <K>false</K>) the generated
+               tex-file will only consist of a <K>tikzpicture</K> without header (it is not possible to compile it 
+               with LaTeX on its own).
+            </Item>
+         </List>
+   </Subsection>
+</Section>
+
+
 
 <Section Label="Section_Plane_Embedding">
 <Heading>Plane embedding of a planar graph</Heading>
@@ -24,19 +514,22 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    straight edges. To obtain such a drawing, one can use the following method:
 <P/>
    <ManSection Label="DrawStraightPlanarDigraphToTikz"> 
-      <Prop Name="DrawStraightPlanarDigraphToTikz" Arg="graph, file, printRecord"
+      <Prop Name="DrawStraightPlanarDigraphToTikz" Arg="graph, file[, printRecord]"
          Label="for IsPlanarDigraph, IsString, IsRecord"/>
       <Returns>a record</Returns>
       <Description>
          This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
-         <K>graph</K> is a planar, connected digraph (and one defines the faces of the graph 
-         <Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>), 
+         <K>graph</K> is a planar, connected digraph and (<K>graph</K> is a polyhedral
+         graph OR one defines the faces of the graph 
+         (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>)), 
          then <K>file</K> encodes a drawing of a plane embedding of <K>graph</K> with 
-         straight edges which only intersect in Nodes.
+         straight edges which only intersect in nodes.
          The drawing algorithm constructs the embedding by successively manipulating
          a convex drawing plane by updating vertex coordinates. Trying 
          to use the function for a digraph that is not planar and connected results in
-         returning <K>fail</K>.
+         returning <K>fail</K>. In that case the coordinates of <K>graph</K> can be set
+         manually or set automatically. For more details see (<Ref Subsect="DrawDigraphToTikzDispatcher"/>)
+         and (<Ref Subsect="DrawDigraphToTikz"/>).
       </Description>
    </ManSection>
    <List>
@@ -52,7 +545,7 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
    <Item>
       The particulars of the drawing are determined by the argument <K>printRecord</K>, 
       which is a record.
-      <!-- If this is not given, the default settings are used. -->
+      If this is not given, the default settings are used.
    </Item>
    <Item>
       The record <K>printRecord</K> will be modified and returned by this method. It contains the
@@ -79,6 +572,12 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
          These parameters control whether and how nodes and edges are labelled. 
       </Item>
       <Item>
+         <A>Colours</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Colours"/>):
+         These parameters control the colours of nodes and edges. Note that this parameter has been
+         explained in the documentation of the method <K>DrawDigraphToTikz</K> 
+         (<Ref Subsect="Subsection_DrawDigraphToTikz_Colours"/>) and hence please refer to this section.
+      </Item>
+      <Item>
          <A>Output control</A> (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Output"/>):
          Modify the behaviour of the LaTeX-output and how much information is printed to the console.
       </Item>
@@ -101,6 +600,10 @@ contained in <M>E</M> (in particular <M>E</M> is an antireflexive relation).
       </List>
       We will exemplify them with the following graph in order to clarify how the parameters
       work:
+      <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}</Alt>
+      <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
+      which can be obtained as a digraph as follows.
 <Log><![CDATA[ 
 gap> graph := Digraph([[3,4,7], [3,4,8], [], [6], [3,7,8], [7,8], [], []]);;
 gap> IsPlanarDigraph(graph);
@@ -109,29 +612,58 @@ gap> IsConnectedDigraph(graph);
 true
 ]]></Log>
       This graph is a planar, connected graph and thus can be drawn with the method <K>DrawStraightPlanarDigraphToTikz</K>.
-      Therefore, one must define the the graph's faces inside of a record. The file name will simply be
-      <K>graph_embedding</K>.
       <List>
          <Item>
             <A>nodesOfFaces</A>: If <K>graph</K> is polyhedral this parameter is useless since in this case 
             the method calculates the faces of <K>graph</K> all by itself. A planar digraph is called <A>polyhedral</A>
-            if it is 3-vertex-connected, i.e. removing any three vertices 
+            if it is 3-vertex-connected, i.e. removing any three vertices together with their incident edges
+            still results in a connected graph.
             If <K>graph</K> is not polyhedral it is obligatory to set <K>nodesOfFaces</K>. In this case, the user has to 
             define <K>nodesOfFaces</K> as a list of all faces of <K>graph</K>. The faces that have to be defined are 
             characterised by their surrounding nodes. That means that a face can be seen as a cycle of nodes. For 
             <A>nodesOfFaces</A> one has to give a list of lists where <K>nodesOfFaces[i]</K> contains the nodes of face <K>i</K>
             ordered in a cycle as they occur when transversing the boundary of the face clockwise or anticlockwise.
-
+            Consider the following example:
             <P/>
 <Log><![CDATA[ 
-gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3], 
-> [2,3,5,8], [5,8,6,7], [2,4,6,8], [1,3,5,7]]);;
-gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
-> printRecord);;
+gap> DrawStraightPlanarDigraphToTikz(graph, 
+> "DrawStraightPlanarDigraphToTikz_graph");;
 ]]></Log>
                <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
                <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
+               <P/>
+               In this case the graph is polyhedral and it was not needed to set <K>nodesOfFaces</K> in <K>printRecord</K>.
+               In fact, we did not even give a <K>printRecord</K> as an argument. 
+               <!-- We now want to consider a planar graph which
+               is not polyhedral.
+<Log><![CDATA[ 
+gap> non_polyhedral_graph := Digraph([[2,3,4], [3,5], [4,5], [5], []]);
+]]></Log>
+               The just defined graph is planar but not three-vertex-connected which can be seen by removing the nodes 2, 3 and 4.
+               It thus is not polyhedral. If we, nonetheless, try to use the function
+               <K>DrawStraightPlanarDigraphToTikz</K> without specifying the faces, we obtain the following drawing:
+<Log><![CDATA[ 
+gap> DrawStraightPlanarDigraphToTikz(non_polyhedral_graph, 
+> "DrawStraightPlanarDigraphToTikz_non_polyhedral_graph");;
+]]></Log>
+               <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.png]</Alt>
+
+               Although the graph is drawn 'correctly', the drawn embedding is not plane, i.e. there are intersections of edges
+               not only in nodes. This problem can be solved by specifying the faces in the record as follows.
+<Log><![CDATA[ 
+gap> printRecord := rec( nodesOfFaces := [ [ 1, 3, 2 ], [ 1, 4, 3 ], 
+> [ 2, 5, 3 ], [ 3, 5, 4 ], [ 1, 4, 5, 2 ] ] );;
+gap> DrawStraightPlanarDigraphToTikz(non_polyhedral_graph, 
+> "DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly", 
+> printRecord);;
+]]></Log>
+               This then leads to the desired picture with a plane embedding:
+               <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.png]</Alt> -->
          </Item>
          <Item>
             <A>infiniteFace</A>: The infinite face of a plane embedding is the face whose area in the plane <M>&RR;^2</M> is infinite. 
@@ -180,7 +712,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
       <List>
          <Item>
-            <A>scale</A>: Scales the produced TikZ-picture by <K>scale</K>. By default <K>scale</K> is set to 3. 
+            <A>scale</A>: Scales the produced TikZ-picture by <K>scale</K>. By default <K>scale</K> is set to 2. 
             Now one can change, to 4 for example, by:
 <Log><![CDATA[ 
 gap> printRecord.scale := 4;;
@@ -388,4 +920,253 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
          </List>
    </Subsection>
 </Section>
+
+
+
+
+
+<Section Label="Section_Cycle_Double_Cover">
+   <Heading>Cycle Double Cover</Heading>
+   
+   <P/>
+   A <A>cycle</A> in a graph <M>G</M> is a closed path where no vertex 
+   is repeated and the first and last vertices are connected by an edge.
+   Formally, it is a sequence of vertices <M>[v_1,...,v_k]</M> 
+   such that <M>[v_1, v_2], [v_2, v_3],...,[v_{k-1}, v_k], [v_k, v_1]</M> are 
+   edges of the graph <M>G</M>. A <A>cycle double cover</A> of a graph <M>G</M> is a collection <M>C</M> of 
+   cycles such that every edge of <M>G</M> belongs to exactly two cycles in <M>C</M>. This concept plays
+   a crucial role in understanding the connectivity and structural properties of graphs, 
+   particularly in planar graphs. This section explores a method for generating visual
+   representations of cycle double covers.
+   <P/>
+      <ManSection Label="DrawCycleDoubleCoverToTikz"> 
+         <Prop Name="DrawCycleDoubleCoverToTikz" Arg="graph, file, printRecord"
+            Label="for IsPlanarDigraph, IsString, IsRecord"/>
+         <Returns>a record</Returns>
+         <Description>
+            Even though we are working with directed graphs, this function will interpret
+            directed edges as undirected. This does not alter the graph given as an argument.
+            It is solely the consequence to ease up the computation when working with
+            cycles. By default the directed edges of the graph will be shown in the drawing. If
+            desired, the direction of the edges can be turned off. For more on that, see the option
+            <A>Appearance</A>.
+            <P/>
+            This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
+            <K>graph</K> is a planar, connected and cubic (i.e. every vertex has degree 3)
+            digraph and the cycle double cover, which
+            is desired to be drawn, as well as
+            the faces (if needed which will be explained below) of <K>graph</K> are
+            given in the record <K>printRecord</K>, 
+            then <K>file</K> encodes a drawing of a plane embedding of <K>graph</K> with 
+            straight edges which only intersect in nodes together with the cycle double
+            cover. Trying to use the function for a digraph that is not planar, 
+            connected and cubic results in returning <K>fail</K>.
+         </Description>
+      </ManSection>
+      <List>
+      <Item>
+         If the given <K>file</K> does not end in <A>.tex</A> the ending <A>.tex</A>
+         will be added to it.
+      </Item>
+      <Item>
+         The given file will be overwritten without asking if it already exists. If
+         you do not have permission to write to that file, this method will raise an
+         error.
+      </Item>
+      <Item>
+         The particulars of the drawing are determined by the argument <K>printRecord</K>, 
+         which is a record.
+         <!-- If this is not given, the default settings are used. -->
+      </Item>
+      <Item>
+         The record <K>printRecord</K> will be modified and returned by this method. It contains the
+         data to recreate the drawing of the graph.
+      </Item>
+      </List>
+   
+      <P/>
+      There are parameters to change the output of this method. Most of them apply to the particulars
+      of the graph-drawing. These are already explained at the documentation of the function 
+      <K>DrawStraightPlanarDigraphToTikz</K> (<Ref Subsect="DrawStraightPlanarDigraphToTikz"/>).
+      There are the following classes of parameters:
+      <List>
+         <Item>
+            <A>Cycle Double Cover</A> (<Ref Subsect="Subsection_DrawCycleDoubleCoverToTikz_Cycle_Double_Cover"/>):
+            Modify the particulars of drawing the cycle double cover. This includes the colors of the cycles,
+            the distance of the help nodes to their nodes (called closeness) and whether the help nodes
+            should be drawn as visual nodes.
+         </Item>
+         <Item>
+            <A>Faces</A>:
+            Define the faces of the planar graph. The parameter <A>nodesOfFaces</A> is obligatory
+            to be set (if <K>graph</K> is not polyhedral), otherwise the method raises an error.
+            For details, please refer to (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Faces"/>).
+         </Item>
+         <Item>
+            <A>Appearance</A>: 
+            These parameters control the appearance of the drawing. For details, please refer to
+            (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Appearance"/>).
+         </Item>
+         <Item>
+            <A>Labels</A>:
+            These parameters control whether and how nodes and edges are labelled. For details, please refer to
+            (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Labels"/>).
+         </Item>
+         <Item>
+            <A>Output control</A>:
+            Modify the behaviour of the LaTeX-output and how much information is printed to the console.
+            For details, please refer to (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Output"/>).
+         </Item>
+      </List>         
+      
+      <P/>
+      <Subsection Label="Subsection_DrawCycleDoubleCoverToTikz_Cycle_Double_Cover">
+         <Heading>Cycle Double Cover</Heading>
+         This subsection covers the parameters that modify the particulars of the cycle double cover.
+         <List>
+            <Item>
+               <A>cycleDoubleCover</A>: Define all cycles that the cycle double cover, which is
+               desired to be drawn, is made up of.
+            </Item>
+            <Item>
+               <A>cycleDoubleCoverColours</A>: Define the colour of each cycle of the cover. By
+               default the cycles are drawn in six different colours.
+            </Item>
+            <Item>
+               <A>cycleNodesActive</A>: Toggle whether the drawn cycles have visual nodes. By default
+               the nodes are not shown.
+            </Item>
+            <Item>
+               <A>closeness</A>: Define how close the cycle edges are drawn with respect to the corresponding
+               edges of the graph. By default, the closeness is 0.8.
+            </Item>
+         </List>
+         We will exemplify them with the following graph in order to clarify how the parameters
+         work:
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(scale := 4);;
+gap> DrawStraightPlanarDigraphToTikz(graph, "DrawCycleDoubleCoverToTikz_graph");;
+]]></Log>
+<Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph.png">&lt;/img></Alt>
+<Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph.pdf}</Alt>
+<Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph.png]</Alt>
+         <P/>
+         This graph is a planar and connected graph and thus can be drawn with the method <K>DrawStraightPlanarDigraphToTikz</K>.
+         Moreover, this graph is cubic. If we give a cycle double cover to the method <K>DrawCycleDoubleCoverToTikz</K>, we obtain
+         a drawing of the graph together with its cover which will be explained in the following option <A>cycleDoubleCover</A>.
+
+         <List>
+            <Item>
+               <A>cycleDoubleCover</A>: This parameter is a list consisting of the cycles the cycle double cover, which is desired
+               to be drawn, is made up of. That is, if the desired cycle double cover of <K>graph</K> consists of the cycles
+               <K>c_1, ..., c_n</K>, then we should set <K>cycleDoubleCover := [c_1, ..., c_n]</K>. Consider the following example.
+               We have the complete graph on 4 vertices <K>graph</K> and want to draw the cycle double cover consisting of the 
+               cycles <K>[1,2,3,4], [1,2,4,3], [1,4,2,3]</K> and <K>[1,2,3]</K>:
+   
+               <P/>
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
+> [1,2,3]], scale := 4);;
+gap> DrawCycleDoubleCoverToTikz(graph, 
+> "DrawCycleDoubleCoverToTikz_graph_cover", printRecord);;
+]]></Log>
+                  <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_cover.png">&lt;/img></Alt>
+                  <Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_cover.pdf}</Alt>
+                  <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_cover.png]</Alt>
+            </Item>
+            <Item>
+               <A>cycleDoubleCoverColours</A>: This parameter can be used to define the colour of each cycle of the cover. By default
+               the cycles are drawn in six different colours as follows. If <K>cycleDoubleCover = [c_1, ..., c_n]</K>, then <K>c_i</K>
+               is drawn
+               <List>
+                  <Item>
+                     yellow if <K>i mod 6 = 0</K>,
+                  </Item>
+                  <Item>
+                     red if <K>i mod 6 = 1</K>,
+                  </Item>
+                  <Item>
+                     blue if <K>i mod 6 = 2</K>,
+                  </Item>
+                  <Item>
+                     green if <K>i mod 6 = 3</K>,
+                  </Item>
+                  <Item>
+                     orange if <K>i mod 6 = 4</K>,
+                  </Item>
+                  <Item>
+                     cyan if <K>i mod 6 = 5</K>.
+                  </Item>
+               </List>
+               The colours of the cycle edges can be modified by setting the parameter <K>cycleDoubleCoverColours</K> to be a list
+               <K>colours</K> such that <K>colours[i]</K> is the colour of the <K>i</K>-th cycle. The colours are strings that are
+               recognisable by LaTeX.
+               <P/>
+               It is possible to leave cycle colours unbound - all remaining cycles are coloured in the default colour given by
+               the case distinction above.
+               <P/>
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
+> [1,2,3]], cycleDoubleCoverColours := ["yellow", , "black!30!yellow"], 
+> scale := 4);;
+gap> DrawCycleDoubleCoverToTikz(graph, 
+> "DrawCycleDoubleCoverToTikz_graph_colour", printRecord);;
+]]></Log>
+               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_colour.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_colour.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_colour.png]</Alt>
+            </Item>
+            <Item>
+               <A>cycleNodesActive</A>: With this parameter you can toggle whether the drawn cycles of the cover have visual nodes.
+               The default is <K>false</K>, i.e. the nodes are not shown. We can toggle them on as follows.
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
+> [1,2,3]], cycleNodesActive := true, scale := 4);;
+gap> DrawCycleDoubleCoverToTikz(graph, 
+> "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
+]]></Log>
+               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_nodes_active.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_nodes_active.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_nodes_active.png]</Alt>
+
+            </Item>
+            <Item>
+               <A>closeness</A>: This parameter defines how close the cycle edges and cycle nodes are drawn with respect to the
+               corresponding edges and vertices, respectively. By default, the closeness is 0.8. This parameter can be chosen as a
+               float and it is highly recommended to choose it in the real interval [0.5, 1] (or even greater than 0.5) 
+               since values outside of this interval
+               can lead to meaningless pictures. Choosing a closeness value close to 1 modifies the cycle nodes such that they
+               tend to be placed closer to the nodes of the graph and as such the cycle edges will also be drawn close the
+               edges of the graph. As the closeness value decreases the closeness of the cycle nodes and edges to the nodes and edges
+               of the graph decreases as well. We now show two examples with a closeness value of 0.7 and 0.9.
+
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
+> [1,2,3]], closeness := 0.7, scale := 4);;
+gap> DrawCycleDoubleCoverToTikz(graph, 
+> "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
+]]></Log>
+               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_closeness_low.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_closeness_low.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_closeness_low.png]</Alt>
+
+<Log><![CDATA[ 
+gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
+> [1,2,3]], closeness := 0.9, scale := 4);;
+gap> DrawCycleDoubleCoverToTikz(graph, 
+> "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
+]]></Log>
+               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_closeness_high.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_closeness_high.pdf}</Alt>
+               <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_closeness_high.png]</Alt>
+            </Item>
+         </List>
+      </Subsection>
+   </Section>
 </Chapter>

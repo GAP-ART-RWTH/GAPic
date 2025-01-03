@@ -138,12 +138,12 @@ BindGlobal( "__GAPIC__PrintRecordInit",
         # __GAPIC__PrintRecordInitStringList( printRecord, "faceLabels", [1..Length(printRecord!.nodesOfFaces)] );
         
         if not IsBound( printRecord!.scale ) then
-            printRecord!.scale := 3;
+            printRecord!.scale := 2;
         fi;
         # __GAPIC__PrintRecordInitBool(printRecord, "avoidIntersections", true);
 
         # colours
-        __GAPIC__PrintRecordInitStringList(printRecord, "vertexColours", 
+        __GAPIC__PrintRecordInitStringList(printRecord, "nodeColours", 
             DigraphVertices(graph));
         __GAPIC__PrintRecordInitStringList(printRecord, "edgeColours", [1..Length(DigraphEdges(graph))]);
         # __GAPIC__PrintRecordInitStringList(printRecord, "faceColours", Faces(surface));
@@ -221,8 +221,8 @@ BindGlobal( "__GAPIC__PrintRecordDrawVertex",
         local res;
 
         res := "\\vertexLabelR";
-        if IsBound( printRecord!.vertexColours[vertex] ) and (not printRecord!.vertexColours[vertex]=[]) then
-            res := Concatenation(res, "[", printRecord!.vertexColours[vertex],"]");
+        if IsBound( printRecord!.nodeColours[vertex] ) and (not printRecord!.nodeColours[vertex]=[]) then
+            res := Concatenation(res, "[", printRecord!.nodeColours[vertex],"]");
         fi;
 
         res := Concatenation( res, "{", vertexTikzCoord, "}{left}{$");
@@ -364,6 +364,29 @@ BindGlobal( "__GAPIC__IsCoordinates2D",
     end
 );
 
+BindGlobal( "__GAPIC__RegularPolygon",
+    function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
+        local n, res, i;
+        res := [];
+        n := Length(list);
+        for i in [1..n] do
+            Add(res, [list[i], [Cos(2*3.14159265*((i-1)/n)), Sin(2*3.14159265*((i-1)/n))]]);
+        od;
+        return res;
+    end
+);
+
+BindGlobal( "__GAPIC__IsThreeVertexConnected",
+    function(graph)
+        local node;
+        for node in DigraphVertices(graph) do
+            if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
+                return false;
+            fi;
+        od;
+        return true;
+    end
+);
 
 #######################################
 
@@ -388,7 +411,7 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
 	    printRecord.faceLabelsActive := false;
 	fi;
 	if not IsBound(printRecord.scale) then
-	    printRecord.scale :=3;
+	    printRecord.scale :=2;
 	fi;
 	if IsBound(printRecord.edgeColours) then
 	    if IsString(printRecord.edgeColours) then
@@ -438,16 +461,16 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     #             printRecord.faceColours:=[];
     #     fi;
 
-        if IsBound(printRecord.vertexColours) then
-            if IsString(printRecord.vertexColours) then
-                colour:=printRecord.vertexColours;
-                printRecord.vertexColours:=[];
+        if IsBound(printRecord.nodeColours) then
+            if IsString(printRecord.nodeColours) then
+                colour:=printRecord.nodeColours;
+                printRecord.nodeColours:=[];
                 for v in DigraphVertices(graph) do
-                    printRecord.vertexColours[v]:=colour;
+                    printRecord.nodeColours[v]:=colour;
                 od;
             fi;
         else
-                printRecord.vertexColours:=[];
+                printRecord.nodeColours:=[];
         fi;
         if not IsBound(printRecord.compileLaTeX) then
 	        printRecord.compileLaTeX :=false;
@@ -511,6 +534,15 @@ InstallMethod(DrawDigraphToTikz,
             faceCoordTikZ[node]:=Concatenation("V",String(node));
         od;
         ##define node coordinates
+        if not "nodeCoordinates" in RecNames(printRecord) then
+            Print("You are using this function without having specified the coordinates of the nodes, i.e. they will be placed in a regular polygon. If you want to manually set the coordinates, please change 'nodeCoordinates' in the the argument 'printRecord' and refer to the manual for more details.\n");
+            printRecord.nodeCoordinates := List(__GAPIC__RegularPolygon(DigraphVertices(graph)), x -> x[2]);
+            # if IsPlanarDigraph(graph) and ( __GAPIC__IsThreeVertexConnected(graph) or "nodesOfFaces" in RecNames(printRecord) ) then
+            #     printRecord.nodeCoordinates := (DrawStraightPlanarDigraphToTikz(graph, file, printRecord)).nodeCoordinates;
+            # else
+            #     printRecord.nodeCoordinates := List(__GAPIC__RegularPolygon(DigraphVertices(graph)), x -> x[2]);
+            # fi;
+        fi;
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",
             printRecord.nodeCoordinates[node][1]," , ",printRecord.nodeCoordinates[node][2],");\n");
@@ -553,28 +585,28 @@ InstallMethod(DrawDigraphToTikz,
     end
 );
 
+
+InstallOtherMethod( DrawDigraphToTikz, 
+    "for a digraph, a file name and a record",
+    [IsDigraph, IsString],
+    function(graph, file)
+        return DrawDigraphToTikz(graph, file, rec());
+    end
+);
+
+
 InstallMethod( DrawStraightPlanarDigraphToTikz,
     "for a planar digraph, a file name and a record",
     [IsDigraph, IsString, IsRecord],
     function(graph, file, printRecord)
-        local RegularPolygon, Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition,
+        local Deabstract, Deabstract1, NeighboursOfVertex, SplitListPosition,
                 TwoWeightedCentric, CorrectNodesOfFaceFilter, MultipleWeightedCentricParameters, MainHelp,
                 DrawConvexPlaneGraph, embedding, max_nodes_face_pos, max_nodes_face, node, nodes_of_faces,
-                IsThreeVertexConnected, undir_version_graph, NodesFromEdgesInFace, mat;
+                undir_version_graph, NodesFromEdgesInFace, mat;
 
         if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
             return fail;
         fi;
-
-        RegularPolygon := function(list) #returns vertices of a regular polygon as a list of [vert, [x,y]]
-            local n, res, i;
-            res := [];
-            n := Length(list);
-            for i in [1..n] do
-                Add(res, [list[i], [Cos(2*3.14159265*((i-1)/n)), Sin(2*3.14159265*((i-1)/n))]]);
-            od;
-            return res;
-        end;
 
         Deabstract := function(list, n)
             return List(list, x -> x[n]);
@@ -602,16 +634,6 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
             Add(res2, list[1]);
             Add(res2, list[v]);
             return [res1, res2];
-        end;
-
-        IsThreeVertexConnected := function(graph)
-        local node;
-            for node in DigraphVertices(graph) do
-                if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
-                    return false;
-                fi;
-            od;
-            return true;
         end;
         
         NodesFromEdgesInFace := function(face_from_edges)
@@ -742,9 +764,7 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
                         Add(to_be_positioned_nodes_ordered, next_node_in_order);
                         Unbind(remaining_nodes_pos[next_node_in_order_pos]);
                         Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
-                        # Error();
                         for i in [2..Length(to_be_positioned_nodes)] do
-                            # Error();
                             correct_nodes_of_face := Filtered(nodes_of_faces, x -> CorrectNodesOfFaceFilter(cur[1][1], to_be_positioned_nodes[i], nodes_of_embedding, x));
                             neighbouring_faces_of_pred := Difference(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], seen_faces);
                             next_node_in_order_pos := Filtered(remaining_nodes_pos, j -> Length(Intersection(neighbouring_faces_of_tbp_nodes[j], neighbouring_faces_of_pred)) = 1);
@@ -758,16 +778,13 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
                             Unbind(remaining_nodes_pos[next_node_in_order_pos]);
                             Add(seen_faces, Intersection(neighbouring_faces_of_tbp_nodes[next_node_in_order_pos], neighbouring_faces_of_pred)[1]);
                         od;
-                        # Error();
                         embedding := Concatenation(embedding, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
                         cur := Concatenation(cur, MultipleWeightedCentricParameters(to_be_positioned_nodes_ordered, cur[1][2], cur[Length(cur)][2], cur[2][2], spread));
                         Remove(cur, 1);
-                        # Error();
                         return [[cur], embedding];
                     else                                                                            # divide case
                         to_split_vertex := Intersection(Deabstract1(cur), case_deciding_neighbours)[1];
                         to_split_vertex_pos := Position(Deabstract1(cur), to_split_vertex);
-                        # Error();
                         return [SplitListPosition(cur, to_split_vertex_pos), embedding];
                     fi;
                 fi;
@@ -777,7 +794,7 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         DrawConvexPlaneGraph := function(graph, start_face, spread, nodes_of_faces)
             local embedding, currents, main_help, i;
             nodes_of_faces := Difference(nodes_of_faces, [start_face]);
-            embedding := RegularPolygon(start_face);
+            embedding := __GAPIC__RegularPolygon(start_face);
             currents := [embedding];
 
             while Length(embedding) < Length(DigraphVertices(graph)) do
@@ -798,13 +815,10 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
         fi;
 
         undir_version_graph := DigraphSymmetricClosure(graph);
-        if (not "nodesOfFaces" in RecNames(printRecord)) and (not IsThreeVertexConnected(graph)) then
+        if (not "nodesOfFaces" in RecNames(printRecord)) and (not __GAPIC__IsThreeVertexConnected(graph)) then
             Error("The graph is not polyhedral. You have to define all faces characterised by their surrounding nodes! For more information read the documentation."); # To be changed?
-        elif IsThreeVertexConnected(graph) then
-            nodes_of_faces := List(__SIMPLICIAL_AllChordlessCyclesOfGraph(undir_version_graph), c -> __SIMPLICIAL_AdjacencyMatrixFromList(c,DigraphNrVertices(undir_version_graph)));
-            nodes_of_faces := Filtered(nodes_of_faces, c -> __SIMPLICIAL_IsNonSeparating(undir_version_graph, c));
-            nodes_of_faces := List(nodes_of_faces, mat -> __SIMPLICIAL_EdgesFromAdjacencyMat(mat));
-            nodes_of_faces := List(nodes_of_faces, face_from_edges -> NodesFromEdgesInFace(face_from_edges));
+        elif __GAPIC__IsThreeVertexConnected(graph) then
+            nodes_of_faces := Filtered(DigraphAllChordlessCycles(undir_version_graph), c -> __SIMPLICIAL_IsNonSeparating(undir_version_graph, c));
             printRecord.nodesOfFaces := nodes_of_faces;
         fi;
 
@@ -822,6 +836,13 @@ InstallMethod( DrawStraightPlanarDigraphToTikz,
     end
 );
 
+InstallOtherMethod( DrawStraightPlanarDigraphToTikz, 
+    "for a planar digraph, a file name and a record",
+    [IsDigraph, IsString],
+    function(graph, file)
+        return DrawDigraphToTikz(graph, file, rec());
+    end
+);
 
 InstallMethod( DrawCycleDoubleCoverToTikz,
     "for a planar cubic digraph, a file name and a record",
@@ -829,7 +850,7 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
     function(digraph, file, printRecord)
         local IsCubicGraph, graph, MyDistance, VectorDifference, NormalizeVector, AngleBisector,
                 LineIntersection, IsPointInPolygon, IsPointOnSegment, VectorsToIntersections,
-                HelpPoints, HelpPointsForAllPolygons, allHelpPoints, i, n, e, node, IsThreeVertexConnected,
+                HelpPoints, HelpPointsForAllPolygons, allHelpPoints, i, n, e, node,
                 cycleEdgeRecord, cycleNodeRecord, output, faceCoordTikZ, cycleEdges, cycle,
                 nodeCoordinate, tempRec, f, numberOfCycles, coverCoordinates, j, realCycleEdges,
                 realEdge, optionInRecord, graphRecord, coverCoordinatesWithOutInfiniteFace,
@@ -839,22 +860,12 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
         end;
 
         graph := DigraphSymmetricClosure(digraph);
-        if (not IsPlanarDigraph(graph)) or (not IsCubicGraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
+        if (not IsConnectedDigraph(graph)) or (not IsPlanarDigraph(graph)) or (not IsCubicGraph(graph)) or (not IsString(file)) or (not IsRecord(printRecord)) then
             Error("Input is not correct. See the manual for details.");
         fi;
         if not "cycleDoubleCover" in RecNames(printRecord) then
             Error("For this function you have to input the cycle double cover yourself. For that put the cover in printRecord.cycleDoubleCover. See the manual for details.");
         fi;
-
-        IsThreeVertexConnected := function(graph)
-        local node;
-            for node in DigraphVertices(graph) do
-                if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
-                    return false;
-                fi;
-            od;
-            return true;
-        end;
 
         MyDistance := function(p1, p2)
             return Sqrt((p2[1] - p1[1])^2 + (p2[2] - p1[2])^2);
@@ -951,7 +962,7 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
             return vectors;
         end;
 
-        # Calculates for one polygon the points for the cycle double cover to go through
+        # Calculates for a polygon the points for the cycle double cover to go through
         HelpPoints := function(vertices, closeness)
             local i,n, helpPoints, intersectionVectors;
             n := Length(vertices);
@@ -974,19 +985,19 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
         end;
 
         if not "closeness" in RecNames(printRecord) then
-            printRecord.closeness := 0.2;
+            printRecord.closeness := 0.8;
         fi;
 
-        if not "nodeCoordinates" in RecNames(printRecord) then
-            if (not "nodesOfFaces" in RecNames(printRecord)) and (not IsThreeVertexConnected(graph)) then
+        # if not "nodeCoordinates" in RecNames(printRecord) then
+            if (not "nodesOfFaces" in RecNames(printRecord)) and (not __GAPIC__IsThreeVertexConnected(graph)) then
                 Error("You have not put in the coordinates of the nodes of the graph. Hence, the function tried to draw the graph on its own. However, the input graph is not nice enough, i.e. is not polyhedral. In order to have it drawn anyways without explicitly giving the node coordinates, you have to put in the faces of the planar graph into the record, i.e. printRecord.nodesOfFaces would have to contain your faces.");
             fi;
             graphRecord := DrawStraightPlanarDigraphToTikz(digraph,file,printRecord);
             printRecord.nodeCoordinates := graphRecord.nodeCoordinates;
-        fi;
+        # fi;
         
         coverCoordinates := List(printRecord.cycleDoubleCover, cycle -> List(cycle, node -> printRecord.nodeCoordinates[node]));
-        allHelpPoints := HelpPointsForAllPolygons(coverCoordinates, printRecord.closeness);
+        allHelpPoints := HelpPointsForAllPolygons(coverCoordinates, 1-printRecord.closeness); # For the sake of good naming, the closeness has to be inverted 
         printRecord.cycleNodeCoordinates := allHelpPoints;
         numberOfCycles := Length(printRecord.cycleDoubleCover);
         if not "cycleDoubleCoverColours" in RecNames(printRecord) then
@@ -1103,10 +1114,10 @@ InstallMethod( DrawCycleDoubleCoverToTikz,
             for i in [1..Length(printRecord.cycleDoubleCover)] do 
                 cycle := printRecord.cycleDoubleCover[i];
                 cycleNodeRecord := rec();
-                cycleNodeRecord.vertexColours := [];
+                cycleNodeRecord.nodeColours := [];
                 cycleNodeRecord.nodeLabels := [];
                 for j in cycle do
-                    cycleNodeRecord.vertexColours[j] := printRecord.cycleDoubleCoverColours[i];
+                    cycleNodeRecord.nodeColours[j] := printRecord.cycleDoubleCoverColours[i];
                     cycleNodeRecord.nodeLabels[j] := [];
                 od;
                 # Error();
