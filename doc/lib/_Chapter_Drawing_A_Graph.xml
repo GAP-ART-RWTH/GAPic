@@ -948,9 +948,7 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             Even though we are working with directed graphs, this function will interpret
             directed edges as undirected. This does not alter the graph given as an argument.
             It is solely the consequence to ease up the computation when working with
-            cycles. By default the directed edges of the graph will be shown in the drawing. If
-            desired, the direction of the edges can be turned off. For more on that, see the option
-            <A>Appearance</A>.
+            cycles.
             <P/>
             This function prints TikZ-code for LaTeX into the file called <K>file</K>. If 
             <K>graph</K> is a planar, connected and cubic (i.e. every vertex has degree 3)
@@ -962,6 +960,11 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             straight edges which only intersect in nodes together with the cycle double
             cover. Trying to use the function for a digraph that is not planar, 
             connected and cubic results in returning <K>fail</K>.
+            <P/>
+            Note that this function does not check whether the given cycle double cover
+            is correct. Indeed, this could also be intentionally abused in order to
+            draw arbitrary cycles into the graph by just giving those which are desired
+            to be drawn.
          </Description>
       </ManSection>
       <List>
@@ -1007,6 +1010,12 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
             <A>Appearance</A>: 
             These parameters control the appearance of the drawing. For details, please refer to
             (<Ref Subsect="Subsection_DrawStraightPlanarDigraphToTikz_Appearance"/>).
+         </Item>
+         <Item>
+            <A>Colours</A> (<Ref Subsect="Subsection_DrawDigraphToTikz_Colours"/>):
+            These parameters control the colours of nodes and edges. Note that this parameter has been
+            explained in the documentation of the method <K>DrawDigraphToTikz</K> 
+            (<Ref Subsect="Subsection_DrawDigraphToTikz_Colours"/>) and hence please refer to this section.
          </Item>
          <Item>
             <A>Labels</A>:
@@ -1063,13 +1072,13 @@ gap> DrawStraightPlanarDigraphToTikz(graph, "DrawCycleDoubleCoverToTikz_graph");
                to be drawn, is made up of. That is, if the desired cycle double cover of <K>graph</K> consists of the cycles
                <K>c_1, ..., c_n</K>, then we should set <K>cycleDoubleCover := [c_1, ..., c_n]</K>. Consider the following example.
                We have the complete graph on 4 vertices <K>graph</K> and want to draw the cycle double cover consisting of the 
-               cycles <K>[1,2,3,4], [1,2,4,3], [1,4,2,3]</K> and <K>[1,2,3]</K>:
+               cycles <K>[1,2,3,4], [1,2,4,3], [1,4,2,3]</K>:
    
                <P/>
 <Log><![CDATA[ 
 gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
-gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
-> [1,2,3]], scale := 4);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
+> scale := 4);;
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_cover", printRecord);;
 ]]></Log>
@@ -1110,8 +1119,8 @@ gap> DrawCycleDoubleCoverToTikz(graph,
                <P/>
 <Log><![CDATA[ 
 gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
-gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
-> [1,2,3]], cycleDoubleCoverColours := ["yellow", , "black!30!yellow"], 
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
+> cycleDoubleCoverColours := ["yellow", , "black!30!yellow"], 
 > scale := 4);;
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_colour", printRecord);;
@@ -1125,8 +1134,8 @@ gap> DrawCycleDoubleCoverToTikz(graph,
                The default is <K>false</K>, i.e. the nodes are not shown. We can toggle them on as follows.
 <Log><![CDATA[ 
 gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
-gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
-> [1,2,3]], cycleNodesActive := true, scale := 4);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
+> cycleNodesActive := true, scale := 4);;
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
@@ -1147,8 +1156,8 @@ gap> DrawCycleDoubleCoverToTikz(graph,
 
 <Log><![CDATA[ 
 gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
-gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
-> [1,2,3]], closeness := 0.7, scale := 4);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
+> closeness := 0.7, scale := 4);;
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
@@ -1158,8 +1167,8 @@ gap> DrawCycleDoubleCoverToTikz(graph,
 
 <Log><![CDATA[ 
 gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
-gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3],
-> [1,2,3]], closeness := 0.9, scale := 4);;
+gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
+> closeness := 0.9, scale := 4);;
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
