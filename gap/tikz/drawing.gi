@@ -379,6 +379,9 @@ BindGlobal( "__GAPIC__RegularPolygon",
 BindGlobal( "__GAPIC__IsThreeVertexConnected",
     function(graph)
         local node;
+        if DigraphNrVertices(graph) < 3 or (IsConnectedDigraph(graph) = false) then
+            return false;
+        fi;
         for node in DigraphVertices(graph) do
             if not IsBiconnectedDigraph(DigraphRemoveVertex(graph, node)) then
                 return false;
@@ -486,9 +489,35 @@ BindGlobal( "__GAPIC__InitializePrintRecord",
     end
 );
 
+InstallMethod(DrawDigraphToTikzDispatcher,
+    "for a digraph, a file name and a record",
+    [IsDigraph, IsString, IsRecord],
+    function(graph, file, printRecord)
+
+        if "nodeCoordinates" in RecNames(printRecord) then
+            DrawDigraphToTikz(graph, file, printRecord);
+        elif IsPlanarDigraph(graph) and __GAPIC__IsThreeVertexConnected(graph) then
+            DrawStraightPlanarDigraphToTikz(graph, file, printRecord);
+        elif IsPlanarDigraph(graph) and "nodesOfFaces" in RecNames(printRecord) then
+            DrawStraightPlanarDigraphToTikz(graph, file, printRecord);
+        else 
+            DrawDigraphToTikz(graph, file, printRecord);
+        fi;        
+
+        return printRecord;
+    end
+);
+
+InstallOtherMethod( DrawDigraphToTikzDispatcher, 
+    "for a digraph, a file name and a record",
+    [IsDigraph, IsString],
+    function(graph, file)
+        return DrawDigraphToTikzDispatcher(graph, file, rec());
+    end
+);
 
 ###
-# From DrawFacegraphToTikz from SimplicialSurfaces package
+# Copied and modified from DrawFacegraphToTikz from SimplicialSurfaces package
 ###
 
 InstallMethod(DrawDigraphToTikz,
@@ -537,11 +566,6 @@ InstallMethod(DrawDigraphToTikz,
         if not "nodeCoordinates" in RecNames(printRecord) then
             Print("You are using this function without having specified the coordinates of the nodes, i.e. they will be placed in a regular polygon. If you want to manually set the coordinates, please change 'nodeCoordinates' in the the argument 'printRecord' and refer to the manual for more details.\n");
             printRecord.nodeCoordinates := List(__GAPIC__RegularPolygon(DigraphVertices(graph)), x -> x[2]);
-            # if IsPlanarDigraph(graph) and ( __GAPIC__IsThreeVertexConnected(graph) or "nodesOfFaces" in RecNames(printRecord) ) then
-            #     printRecord.nodeCoordinates := (DrawStraightPlanarDigraphToTikz(graph, file, printRecord)).nodeCoordinates;
-            # else
-            #     printRecord.nodeCoordinates := List(__GAPIC__RegularPolygon(DigraphVertices(graph)), x -> x[2]);
-            # fi;
         fi;
         for node in DigraphVertices(graph) do
         AppendTo(output	,"\\coordinate (",faceCoordTikZ[node],") at (",

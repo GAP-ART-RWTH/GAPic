@@ -13,7 +13,7 @@ contained in <M>E</M>, meaning <M>E</M> is an antireflexive relation.
 <Section Label="Visualization-Functions for General Graphs">
 <Heading>Visualization-Functions for General Graphs</Heading>
    <ManSection Label="DrawDigraphToTikzDispatcher"> 
-      <Prop Name="DrawDigraphToTikzDispatcher" Arg="graph, file, printRecord"
+      <Prop Name="DrawDigraphToTikzDispatcher" Arg="graph, file[, printRecord]"
          Label="for IsDigraph, IsString, IsRecord"/>
       <Returns>a record</Returns>
       <Description>
@@ -26,9 +26,10 @@ contained in <M>E</M>, meaning <M>E</M> is an antireflexive relation.
          functions, also listed below. It is recommended to use this dispatcher-function if it is unknown
          whether the digraph <K>graph</K> fulfills the needed properties for the concrete
          functions this function refers to. This function's purpose is to serve as an
-         allrounder and quick solution. If you are interested in the particularities and
+         allrounder and quick solution to draw a graph. If you are interested in the particularities and
          especially in options to modify the outcome, then
-         refer to the functions listed in the cases below.
+         refer to the functions listed in the cases below. In the following we list the four case
+         distinction in the order the function checks the properties of the graph <K>graph</K>.
          <Enum>
             <Item>
                If <K>nodeCoordinates</K> is given in <K>printRecord</K>, then the nodes are
@@ -40,7 +41,7 @@ contained in <M>E</M>, meaning <M>E</M> is an antireflexive relation.
                If <K>nodeCoordinates</K> is not given in <K>printRecord</K> and the graph
                <K>graph</K> is polyhedral, i.e. planar and three-vertex-connected (it remains
                connected whenever fewer than 3 vertices together with their incident edges
-               are removed), then the function <K>DrawDigraphToTikz</K> calculates
+               are removed), then the function <K>DrawDigraphToTikzDispatcher</K> calculates
                the coordinates itself. In this case the edges are drawn as straight lines
                and the embedding is plane, i.e. edges only intersect at the nodes. In this
                case the function <K>DrawStraightPlanarDigraphToTikz</K> will be called and
@@ -81,7 +82,7 @@ contained in <M>E</M>, meaning <M>E</M> is an antireflexive relation.
    <Item>
       The particulars of the drawing are determined by the argument <K>printRecord</K>, 
       which is a record.
-      <!-- If this is not given, the default settings are used. -->
+      If this is not given, the default settings are used.
    </Item>
    <Item>
       The record <K>printRecord</K> will be modified and returned by this method. It contains the
@@ -208,7 +209,7 @@ gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph",
       This subsection covers the parameters that control the appearance of the drawing. The parameters are:
       <List>
          <Item>
-            <A>scale</A>: Globally scales the picture. The default is 3.
+            <A>scale</A>: Globally scales the picture. The default is 2.
          </Item>
          <Item>
             <A>directedEdgesActive</A>: Toggle between a directed or undirected representation of the graph.
