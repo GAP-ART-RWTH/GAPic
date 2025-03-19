@@ -37,3 +37,4 @@ Exec("mv doc/lib/GAPic.tex doc/build");
 Exec("mv doc/lib/GAPic.toc doc/build");
 Exec("mv doc/lib/manual.* doc/build");
 
+quit;
