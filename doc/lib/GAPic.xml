@@ -14,6 +14,7 @@
 <TableOfContents/>
 <Body>
 <#Include SYSTEM "_Chapter_Javascript.xml">
+<#Include SYSTEM "_Chapter_ExamplePolyhedra.xml">
 <#Include SYSTEM "_Chapter_Drawing_A_Graph.xml">
 </Body>
 <TheIndex/>

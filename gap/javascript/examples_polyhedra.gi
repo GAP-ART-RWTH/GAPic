@@ -74,7 +74,7 @@ InstallMethod(TruncatedTetrahedronEmbedding,
 );
 
 
-InstallMethod(CubOctahedronEmbedding,
+InstallMethod(CuboctahedronEmbedding,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -125,7 +125,7 @@ InstallMethod(TruncatedOctahedronEmbedding,
 );
 
 #Rhombicuboctahedron
-InstallMethod(RhombicCuboctahedronEmbedding,
+InstallMethod(RhombicuboctahedronEmbedding,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
