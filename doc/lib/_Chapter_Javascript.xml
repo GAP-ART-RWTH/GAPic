@@ -36,7 +36,7 @@ The method <K>DrawComplexToJavaScript</K> (Section <Ref Sect="Section_basicComma
   <Item>Generate the animation as an <A>.html</A> file using the function <A>DrawComplexToJavaScript</A>.</Item>
 </Enum>
 
-The generated <A>.html</A> file can be opened with most modern browsers and the complex will be shown as a 3D render with some options, whic are described in <Ref Subsect="Section_GUI"/>. Note, that the image is interactive, for example it can be rotated by clicking and dragging it with the mouse or touchscreen.<Br/>
+The generated <A>.html</A> file can be opened with most modern browsers and the complex will be shown as a 3D render with some options, which are described in <Ref Subsect="Section_GUI"/>. Note, that the image is interactive, for example it can be rotated by clicking and dragging it with the mouse or touchscreen.<Br/>
 Also note, that an active internet connection is required, as <A>three.js</A> dependencies (and <A>three.js</A> itself) are loaded from a content delivery network (CDN) (Some browsers will cache these files so it might work offline but this is not guaranteed). Due to newer security requirements when using JavaScript libraries it is currently not easily possible to distribute these files with the package.
 </Section>
 
@@ -68,9 +68,9 @@ This GUI is implemented using the dat.GUI package from three.js.
 <Heading>Intersection Planes</Heading>
 The GUI contains an option for enabling intersection planes. These are planes, aligned with the three axes, that intersect the complete animation and only show the part of the animation that lies on one side of the intersectionplane. <Br/>
 Enabling the intersecting plane option allows to look inside the animation and can be very helpful, for example, if there are self-intersections or a complex is fairly large.<Br/>
-To activate an intersectionplane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. This slider has a minimum and maximum setting, which are called the range of this slider.<Br/>
-If the vertex coordinates are not parameterised (That is the vertex coordinatesare not given via parameterised functions, see <Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted to fit the whole complex in X, Y and Z directions. In case more precision is required, the GUI can be made larger by dragging on the left of the GUI or a number can be entered into the field next to it directly.<Br/>
-If the coordinates are parameterized or you want to change the range of the planes manually, it is possible with the following:
+To activate an intersectionplane, toggle the respective checkbox in the GUI. Directly underneath, there is a slider to adjust where the plane should intersect the animation. This slider has a minimum and maximum setting, which are called the range.<Br/>
+If the vertex coordinates are not parameterised (That is the vertex coordinates are not given via parameterised functions, see <Ref Subsect="Section_ParameterizedCoordinates"/>) the sliders are automatically adjusted to fit the whole complex in X, Y and Z directions. In case more precision is required, the GUI can be made larger by dragging on the left of the GUI or a number can be entered into the field next to it directly.<Br/>
+If the coordinates are parameterized or you want to change the range of the planes manually, the following can be used:
 </Subsection>
 <ManSection Label="SetPlaneRange">
   <Oper Arg="complex, ranges, printRecord" Name="SetPlaneRange" Label="for IsTriangularComplex, IsList, IsRecord"/>
@@ -95,7 +95,7 @@ If the coordinates are parameterized or you want to change the range of the plan
 <Subsection Label="Section_Visibility">
 <Heading>Visibility</Heading>
 Sometimes the vertices/edges/faces of the complex should be not be visible in the animation. In the GUI it is possible to show/hide all vertices/edges/faces with the respective button in the GUI.
-By default, all faces and vertices are visible. The edges can also be made visible by checking the respective box.  Furhter, for visibility of individual vertices/edges/faces see <Ref Subsect="Section_ActiveVisible"/>.
+By default, all faces and vertices are visible. The edges can also be made visible by checking the respective box.  For for visibility of individual vertices/edges/faces see <Ref Subsect="Section_ActiveVisible"/>.
 </Subsection>
 
 
@@ -121,7 +121,7 @@ For an example, consider the octahedron from before, where each face was rendere
 </Enum>
 
 To achieve this, there is a difference between a <E>visible</E> vertex, edge and face and an <E>active</E> one. If they are active (all of them are by default) then the whole set can be made (in)visible in the GUI without changing the file.<Br/>
-If however any (subset) of them are deactivated they will be skipped during the generation of the file. However, it is currently not possible to activate or deactivate anything in the GUI, once it is set, this property can only be changed by regenerating the file.
+If however any (subset) of them are deactivated they will be skipped during the generation of the file. However, it is currently not possible to activate or deactivate anything in the GUI. (De-)activation can only be changed by regenerating the file.
 
 This functionality is demonstrated by animating an octahedron as before but with only vertices 2 and 3 visible. For this, first all vertices will be deactivated and then only 2 and 3 activated.
 <Log><![CDATA[
@@ -240,7 +240,7 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 <Section Label="Section_basicCommands">
 <Heading>Basic Commands</Heading>
 The options that influence an animation before it is generated are recorded in a GAP record called <A>printRecord</A>.
-In this section these options will be described. The most important one is setting coordinates.
+The most important one is setting coordinates.
 
 <ManSection Label="SetVertexCoordinates3D">
   <Oper Arg="complex, coordinates[, printRecord]" Name="SetVertexCoordinates3D" Label="for IsTriangularComplex, IsList, IsRecord"/>
