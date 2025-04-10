@@ -62,13 +62,16 @@ citeas: |
 
 bibtex: |
     @misc{ GAPic,
-      author =           {Niemeyer, A. and Akpanya, R. and G{\"o}rtzen, T. and Wei{\ss}, M. and Schnelle, L.},
-      title =            {{GAPic},  {GAP  image  creator,  GAPic  for  short,  is  a  package  to visualize mathematical
-                          structures which can be generated using GAP.}, {V}ersion 0.1},
+      author =           {Niemeyer,  A.  and Akpanya, R. and G{\"o}rtzen, T. and
+                          Wei{\ss}, M. and Schnelle, L.},
+      title =            {{GAPic},  {GAP  image  creator,  GAPic for short, is a
+                          package to visualize mathematical structures which can
+                          be generated using GAP.}, {V}ersion 0.1},
       month =            {Oct},
       year =             {2023},
       note =             {GAP package},
-      howpublished =     {\href    {https://github.com/GAP-ART-RWTH/GAPic}   {\texttt{https://github.com/}\discretionary
+      howpublished =     {\href          {https://github.com/GAP-ART-RWTH/GAPic}
+                          {\texttt{https://github.com/}\discretionary
                           {}{}{}\texttt{GAP\texttt{\symbol{45}}ART\texttt{\symbol{45}}RWTH/}\discretionary
                           {}{}{}\texttt{GAPic}}},
       printedkey =       {NAGWS23}
