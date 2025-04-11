@@ -1,7 +1,7 @@
 name: GAPic
 version: "0.1"
 license: "GPL-2.0-or-later"
-date: 2023-10-20
+date: 2025-04-11
 description: |
     GAP image creator, GAPic for short, is a package to visualize mathematical structures which can be generated using GAP.
 
@@ -51,10 +51,10 @@ doc-html: doc/html-version/chap0.html
 doc-pdf: doc/manual.pdf
 citeas: |
     <p class='BibEntry'>
-    [<span class='BibKey'>NAGWS23</span>]   <b class='BibAuthor'>Niemeyer, A., Akpanya, R., Görtzen, T., Weiß, M. and Schnelle, L.</b>,
+    [<span class='BibKey'>NAGWS25</span>]   <b class='BibAuthor'>Niemeyer, A., Akpanya, R., Görtzen, T., Weiß, M. and Schnelle, L.</b>,
      <i class='BibTitle'>GAPic, GAP image creator, GAPic for short, is a package to visualize mathematical structures which can be generated using GAP.,
              Version 0.1</i>
-     (<span class='BibYear'>2023</span>)<br />
+     (<span class='BibYear'>2025</span>)<br />
     (<span class='BibNote'>GAP package</span>),
     <span class='BibHowpublished'><a href="https://github.com/GAP-ART-RWTH/GAPic">https://github.com/GAP-ART-RWTH/GAPic</a></span>.
     </p>
@@ -67,13 +67,13 @@ bibtex: |
       title =            {{GAPic},  {GAP  image  creator,  GAPic for short, is a
                           package to visualize mathematical structures which can
                           be generated using GAP.}, {V}ersion 0.1},
-      month =            {Oct},
-      year =             {2023},
+      month =            {Apr},
+      year =             {2025},
       note =             {GAP package},
       howpublished =     {\href          {https://github.com/GAP-ART-RWTH/GAPic}
                           {\texttt{https://github.com/}\discretionary
                           {}{}{}\texttt{GAP\texttt{\symbol{45}}ART\texttt{\symbol{45}}RWTH/}\discretionary
                           {}{}{}\texttt{GAPic}}},
-      printedkey =       {NAGWS23}
+      printedkey =       {NAGWS25}
     }
 
