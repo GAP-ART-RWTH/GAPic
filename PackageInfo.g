@@ -11,7 +11,7 @@ SetPackageInfo( rec(
 PackageName := "GAPic",
 Subtitle := "GAP image creator, GAPic for short, is a package to visualize mathematical structures which can be generated using GAP.",
 Version := "0.1",
-Date := "20/10/2023", # dd/mm/yyyy format
+Date := "11/04/2025", # dd/mm/yyyy format
 License := "GPL-2.0-or-later",
 
 Persons := [
