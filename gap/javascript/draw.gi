@@ -1262,7 +1262,7 @@ InstallMethod( DrawComplexToJavaScript,
             AppendTo(output, "\n\t// update function to be called every frame \n");
             if IsParameterizedVertices(surface, printRecord) then
                 AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
-                for i in [1..Length(uniqueFaceColors)] do
+                for i in [1..Length(uniqueEdgeColors)] do
                     AppendTo(output, "\t\tedgeGeometry",i,".setPositions(getEdges",i,"(",vertexParameterString,") );\n");
                 od;
                 AppendTo(output, "\t}\n\n");
@@ -1279,7 +1279,7 @@ InstallMethod( DrawComplexToJavaScript,
             AppendTo(output, "\n\t// update function to be called every frame \n");
             if IsParameterizedVertices(surface, printRecord) then
                 AppendTo(output, "\n\tfunction updateEdgeCoordinates(){\n");
-                for i in [1..Length(uniqueFaceColors)] do
+                for i in [1..Length(uniqueEdgeColors)] do
                     AppendTo(output, "\t\tedgeGeometry",i,".setAttribute( 'position', new THREE.BufferAttribute( getEdges",i,"(",vertexParameterString,"), 3 ) );\n");
                 od;
                 AppendTo(output, "\t}\n\n");
