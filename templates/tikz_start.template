@@ -1,0 +1,51 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+% --- MISSING MACRO DEFINITION ---
+\newcommand{\drawEdges}[4]{
+    \def\u{#1}
+    \def\v{#2}
+    \def\uv{#3}
+    \def\vu{#4}
+    
+    \ifnum\u=\v
+        % Render Self Loops
+        \ifnum\uv>0
+            \foreach \i in {1,...,\uv} {
+                \path[->] (v\u) edge[selfloop=\i] (v\u);
+            }
+        \fi
+    \else
+        % Render Multiedges A -> B
+        \ifnum\uv>0
+            \foreach \i in {1,...,\uv} {
+                \path[->] (v\u) edge[multiedge=\i] (v\v);
+            }
+        \fi
+        
+        % Render Multiedges B -> A 
+        % (We offset the index by \uv so the back-edges stack neatly without overlapping the front-edges)
+        \ifnum\vu>0
+            \foreach \i in {1,...,\vu} {
+                \pgfmathtruncatemacro{\idx}{-(\uv + \i)}
+                \path[->] (v\v) edge[multiedge=\idx] (v\u);
+            }
+        \fi
+    \fi
+}
+% --------------------------------
+
+\begin{document}
+
+\begin{tikzpicture}[
+    >=latex,
+    vertex/.style={circle, draw, minimum size=6mm, inner sep=1pt},
+    declare function={
+        multibend(\n) = sign(\n) * pow(-1, abs(\n)) * 15 * int(abs(\n)/2);
+        loopout(\n)   = ((\n-1)*45) + 115;
+        loopin(\n)    = ((\n-1)*45) + 65;
+        looploose(\n) = 5 + int((\n-1)/8)*3;
+    },
+    multiedge/.style={bend left={multibend(#1)}},
+    selfloop/.style={loop, out={loopout(#1)}, in={loopin(#1)}, looseness={looploose(#1)}}
+]
