@@ -10,4 +10,5 @@ ReadPackage( "GAPic", "gap/io.gi");
     ReadPackage( "GAPic", "gap/javascript/examples_polyhedra.gi");
     ReadPackage( "GAPic", "gap/javascript/draw.gi");
     ReadPackage( "GAPic", "gap/tikz/digraph-to-tikz.gi");
+    ReadPackage( "GAPic", "gap/dot/digraph-to-dot.gi");
 #fi;

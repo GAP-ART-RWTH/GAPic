@@ -1,6 +1,9 @@
 \documentclass{standalone}
 \usepackage{tikz}
 
+\usetikzlibrary{graphs, graphdrawing}
+\usegdlibrary{layered, force} % This loads the automatic layout engines
+
 % Safely define the edge drawing macro
 \newcommand{\drawEdges}[4]{
     \ifnum#1=#2\relax 

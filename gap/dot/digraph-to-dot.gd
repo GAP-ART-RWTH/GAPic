@@ -1,0 +1,1 @@
+DeclareOperation( "DrawDigraphToDot", [IsDigraph, IsString, IsRecord]);
