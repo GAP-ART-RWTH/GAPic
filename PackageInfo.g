@@ -109,9 +109,9 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.11",
-  NeededOtherPackages := [  ["SimplicialSurfaces", "0.6"]],
-  SuggestedOtherPackages := [ ],
+  GAP := ">= 4.13",
+  NeededOtherPackages := [ ["Digraphs", ">=1.1.1"]],
+  SuggestedOtherPackages := [ ["SimplicialSurfaces", "0.6"]],
   ExternalConditions := [ ],
 ),
 
@@ -121,15 +121,15 @@ TestFile := "tst/testall.g",
 
 #Keywords := [ "TODO" ],
 
-#Extensions := [
-#  rec(
-#    needed := [ ["SimplicialSurfaces", "0.6"] ],
-#    filename := "./gap/javascript/draw.gd",
-#  ),
-#  rec(
-#    needed := [ ["SimplicialSurfaces", "0.6"] ],
-#    filename := "./gap/javascript/draw.gi",
-#  ),
+Extensions := [
+ rec(
+   needed := [ ["SimplicialSurfaces", "0.6"] ],
+   filename := "./gap/javascript/draw.gd",
+ ),
+ rec(
+   needed := [ ["SimplicialSurfaces", "0.6"] ],
+   filename := "./gap/javascript/draw.gi",
+ ),
 #  rec(
 #    needed := [ ["SimplicialSurfaces", "0.6"] ],
 #    filename := "./gap/tikz/drawing.gd",
@@ -138,6 +138,6 @@ TestFile := "tst/testall.g",
 #    needed := [ ["SimplicialSurfaces", "0.6"] ],
 #    filename := "./gap/tikz/drawing.gi",
 #  )
-#],
+],
 
 ));
