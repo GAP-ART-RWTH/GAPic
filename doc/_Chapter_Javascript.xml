@@ -24,8 +24,8 @@ gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 
 Now, the working directory should contain a file "octahedron.html". The following picture is produced when the file is opened with a browser of your choice:<Br/>
 
-<Alt Only="HTML">&lt;br>&lt;img src="../images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animated.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;br>&lt;img src="images/Octahedron_animated.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check &lt;package location>/doc/images/Octahedron_animated.png]</Alt>
 
 The method <K>DrawComplexToJavaScript</K> (Section <Ref Sect="Section_basicCommands"/>) generates this <A>.html</A> file. The function requires the argument <A>printRecord</A>, where <A>printRecord</A> is a GAP record which contains the 3D-coordinates (as lists with three float entries) of the vertices at a minimum. Based on these 3D-coordinates of the vertices, the complex is placed in the animation. Therefore, a typical workflow to animate a complex would look like this:
@@ -43,8 +43,8 @@ Also note, that an active internet connection is required, as <A>three.js</A> de
 <Section Label="Section_GUI">
 <Heading>The GUI</Heading>
 In general, there are multiple options of the animations, that influence <A>DrawComplexToJavaScript</A>. Further, the following options of the animation can be changed live in the graphical user interface (GUI), displayed by the browser which will look similar to the following
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/GUI.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/GUI.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/GUI.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/GUI.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check &lt;package location>/doc/images/GUI.png]</Alt>
 
 The options in the GUI influence the way a complex is displayed by the browser and includes options for the following:
@@ -105,8 +105,8 @@ Sometimes it is not important that faces are rendered in a specific colour, but 
 To turn this option on, the corresponding box in the GUI needs to be clicked.
 For an example, consider the octahedron from before, where each face was rendered in the default blue colour, which looks as follows once the normalsMaterial is turned on:
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_normalsMaterial.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_normalsMaterial.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_normalsMaterial.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_normalsMaterial.png]</Alt>
 </Subsection>
 
@@ -143,8 +143,8 @@ gap> List([1..NumberOfVertices(oct)], i -> IsVertexActive(oct, i, printRecord));
 gap> DrawComplexToJavaScript(oct, "octahedron.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_animatedWithoutSomeVertices.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_animatedWithoutSomeVertices.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_animatedWithoutSomeVertices.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_animatedWithoutSomeVertices.png]</Alt>
 
 <ManSection Label="ActivateVertices">
@@ -310,8 +310,8 @@ rec( edgeThickness := 0.03,
 ]]></Example>
 
 <P/>
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/OneFace_animated.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/OneFace_animated.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/OneFace_animated.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/OneFace_animated.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/OneFace_animated.png]</Alt>
 
 </Section>
@@ -348,8 +348,8 @@ gap> GetVertexColours(oct, printRecord));
 gap> DrawComplexToJavaScript(oct, "octahedron-vertex-colours.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_VertexColors.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_VertexColors.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_VertexColors.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_VertexColors.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_VertexColors.png]</Alt>
 
 
@@ -437,13 +437,13 @@ Note that it is possible to activate and deactivate the inner circles of individ
 <P/>
 As an example, consider the octahedron generated as before:
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_InnerCircle.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_InnerCircle.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_InnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle.png]</Alt>
 
 Or it is possible to make all other objects invisible via the GUI (Section <Ref Subsect="Section_GUI"/>) and only show the inner circles as done here:
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_InnerCircle_transparent.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics[width=0.8\textwidth]{../images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_InnerCircle_transparent.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics[width=0.8\textwidth]{images/Octahedron_InnerCircle_transparent.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_InnerCircle_transparent.png]</Alt>
 
 <ManSection Label="ActivateInnerCircles">
@@ -508,8 +508,8 @@ By default the normals of inner circles are active but invisible and can be togg
 Further, the length of the normals is restricted by default. It can be changed via the GUI, so it fits the animated complex.
 
 Consider the example from before:
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_NormalsOfInnerCircle.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_NormalsOfInnerCircle.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_NormalsOfInnerCircle.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_NormalsOfInnerCircle.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_NormalsOfInnerCircle.png]</Alt>
 
 <ManSection Label="ActivateNormalOfInnerCircles">
@@ -620,8 +620,8 @@ gap> printRecord := ActivateLineWidth(oct, printRecord);;
 gap> DrawComplexToJavaScript(oct, "octahedron_lineWidth.html", printRecord);;
 ]]></Log>
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/Octahedron_LineWidth.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/Octahedron_LineWidth.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/Octahedron_LineWidth.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/Octahedron_LineWidth.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/Octahedron_LineWidth.png]</Alt>
 
 </Section>
@@ -630,8 +630,8 @@ gap> DrawComplexToJavaScript(oct, "octahedron_lineWidth.html", printRecord);;
 <Heading>Performance Overlay</Heading>
 When running big animations and especially when features like the variable line width are enabled, the performance of the animation can become a problem. To get more precise information about the current performance and memory usage there is the option to show it in the corner. If clicked it switches trough the following modes: FPS (Frames per second), milliseconds it took to render the last frame and megabytes of memory used to show the current simulation. It looks as following:
 
-<Alt Only="HTML">&lt;/br>&lt;img src="../images/PerformanceOverlay-FPS.png">&lt;/img>&lt;/br></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/PerformanceOverlay-FPS.png}\end{center}</Alt>
+<Alt Only="HTML">&lt;/br>&lt;img src="images/PerformanceOverlay-FPS.png">&lt;/img>&lt;/br></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/PerformanceOverlay-FPS.png}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/PerformanceOverlay-FPS.png]</Alt>
 
 As this option is mainly used for debugging it is deactivated by default and can be activated with the following commands:
