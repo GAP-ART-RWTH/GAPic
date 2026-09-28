@@ -102,9 +102,9 @@ AbstractHTML   :=  "",
 PackageDoc := rec(
   BookName  := "GAPic",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/html-version/chap0.html",
+  HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
-  SixFile   := "doc/build/manual.six",
+  SixFile   := "doc/manual.six",
   LongTitle := "GAP image creator, for visualizing structures",
 ),
 

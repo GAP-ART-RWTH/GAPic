@@ -163,8 +163,8 @@ contained in <M>E</M>.
          </Item>
       </List>
       We will exemplify them with the following graph in order to clarify how the parameters work:
-      <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
-      <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph.pdf}\end{center}</Alt>
+      <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph.pdf}\end{center}</Alt>
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph.png]</Alt>
 
       <List>
@@ -182,8 +182,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeCoordinates",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
             <P/>
             If we choose the following coordinates, then we obtain the picture from above: <P/>
@@ -194,8 +194,8 @@ gap> printRecord := rec(nodeCoordinates := [ [ 1., 0. ], [ -0.5, -0.866025 ],
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph", 
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph.png]</Alt>
 
             
@@ -224,8 +224,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeCoordinates",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
       <List>
          <Item>
@@ -239,8 +239,8 @@ gap> printRecord.scale := 4;;
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_scale",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_scale.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_scale.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_scale.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_scale.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_scale.png]</Alt>
          </Item>
          <Item>
@@ -260,8 +260,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, 
 > "DrawDigraphToTikz_graph_directedEdgesActive_true", printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_directedEdgesActive_true.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_directedEdgesActive_true.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_directedEdgesActive_true.png]</Alt>
             <P/> 
             Now, we toggle <K>directedEdgesActive</K> off and we get
@@ -270,8 +270,8 @@ gap> printRecord.directedEdgesActive := false;;
 gap> DrawDigraphToTikz(graph, 
 > "DrawDigraphToTikz_graph_directedEdgesActive_false", printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_directedEdgesActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_directedEdgesActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_directedEdgesActive_false.png]</Alt>
             <P/>
             Here, we can see that the edges numbered 3 and 6 vanished. That is because we are looking at the undirected
@@ -307,8 +307,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, 
 > "DrawDigraphToTikz_graph_nodeCoordinates", printRecord);;
 ]]></Log>
-      <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
-      <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
+      <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeCoordinates.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeCoordinates.pdf}\end{center}</Alt>
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeCoordinates.png]</Alt>
    
       <List>
@@ -324,8 +324,8 @@ gap> printRecord.nodeLabelsActive := false;;
 gap> DrawDigraphToTikz(graph,
 > "DrawDigraphToTikz_graph_nodeLabelsActive_false", printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeLabelsActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeLabelsActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeLabelsActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeLabelsActive_false.png]</Alt>
          </Item>
          <Item>
@@ -342,8 +342,8 @@ gap> printRecord.nodeLabels := ["I", "II", , "IV"];;
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeLabels",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeLabels.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeLabels.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeLabels.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeLabels.png]</Alt>
          </Item>
          <Item>
@@ -358,8 +358,8 @@ gap> printRecord.edgeLabelsActive := false;;
 gap> DrawDigraphToTikz(graph, 
 > "DrawDigraphToTikz_graph_edgeLabelsActive_false", printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeLabelsActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_edgeLabelsActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_edgeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_edgeLabelsActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeLabelsActive_false.png]</Alt>
          </Item>
          <Item>
@@ -376,8 +376,8 @@ gap> printRecord.edgeLabels := ["I", "II", , "IV"];;
 gap> DrawDigraphToTikz(graph, 
 > "DrawDigraphToTikz_graph_edgeLabels", printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeLabels.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_edgeLabels.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_edgeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_edgeLabels.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeLabels.png]</Alt>
          </Item>
       </List>
@@ -395,8 +395,8 @@ gap> DrawDigraphToTikz(graph,
          </Item>
       </List>
       We will exemplify these with the following graph in order to clarify how the parameters work:
-         <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
-         <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
+         <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+         <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
          <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
 
       <List>
@@ -416,8 +416,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeColours",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeColours.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeColours.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeColours.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeColours.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeColours.png]</Alt>
             <P/>
             Instead of giving an entire list it is also possible to give just one string defining a new colour for
@@ -428,8 +428,8 @@ gap> printRecord.nodeColours := "red";
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_nodeColours_all",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_nodeColours_all.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_nodeColours_all.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_nodeColours_all.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_nodeColours_all.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_nodeColours_all.png]</Alt>
          </Item>
          <Item>
@@ -448,8 +448,8 @@ gap> printRecord := rec(nodeCoordinates := [[0, 0], [3, 0], [2, 2], [1,3],
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_edgeColours",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeColours.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_edgeColours.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_edgeColours.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_edgeColours.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeColours.png]</Alt>
             <P/>
             Instead of giving an entire list it is also possible to give just one string defining a new colour for
@@ -459,8 +459,8 @@ gap> printRecord.edgeColours := "red";
 gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_edgeColours_all",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawDigraphToTikz_graph_edgeColours_all.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawDigraphToTikz_graph_edgeColours_all.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawDigraphToTikz_graph_edgeColours_all.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawDigraphToTikz_graph_edgeColours_all.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawDigraphToTikz_graph_edgeColours_all.png]</Alt>
          </Item>
       </List>
@@ -599,8 +599,8 @@ gap> DrawDigraphToTikz(graph, "DrawDigraphToTikz_graph_edgeColours_all",
       </List>
       We will exemplify them with the following graph in order to clarify how the parameters
       work:
-      <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
-      <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
+      <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
       which can be obtained as a digraph as follows.
 <Log><![CDATA[ 
@@ -628,8 +628,8 @@ true
 gap> DrawStraightPlanarDigraphToTikz(graph, 
 > "DrawStraightPlanarDigraphToTikz_graph");;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
                <P/>
                In this case the graph is polyhedral and it was not needed to set <K>nodesOfFaces</K> in <K>printRecord</K>.
@@ -646,8 +646,8 @@ gap> non_polyhedral_graph := Digraph([[2,3,4], [3,5], [4,5], [5], []]);
 gap> DrawStraightPlanarDigraphToTikz(non_polyhedral_graph, 
 > "DrawStraightPlanarDigraphToTikz_non_polyhedral_graph");;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph.png]</Alt>
 
                Although the graph is drawn 'correctly', the drawn embedding is not plane, i.e. there are intersections of edges
@@ -660,8 +660,8 @@ gap> DrawStraightPlanarDigraphToTikz(non_polyhedral_graph,
 > printRecord);;
 ]]></Log>
                This then leads to the desired picture with a plane embedding:
-               <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_non_polyhedral_graph_correctly.png]</Alt> -->
          </Item>
          <Item>
@@ -676,8 +676,8 @@ gap> printRecord.infiniteFace := [1,4,2,3];;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_infiniteFace.png]</Alt>
          </Item>
       </List>
@@ -706,8 +706,8 @@ gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3],
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-      <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
-      <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
+      <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
       <List>
          <Item>
@@ -718,8 +718,8 @@ gap> printRecord.scale := 4;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_scale.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_scale.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_scale.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_scale.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_scale.png]</Alt>
          </Item>
 
@@ -735,8 +735,8 @@ gap> printRecord.spread := 0.3;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_spread_low.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_spread_low.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_low.png]</Alt>
 
 <Log><![CDATA[ 
@@ -744,8 +744,8 @@ gap> printRecord.spread := 0.7;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_spread_high.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_spread_high.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_spread_high.png]</Alt>
          </Item>
 
@@ -767,8 +767,8 @@ gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3],
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_true.png]</Alt>
             <P/> 
             Now, we toggle <K>directedEdgesActive</K> off and we get
@@ -777,8 +777,8 @@ gap> printRecord.directedEdgesActive := false;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_directedEdgesActive_false.png]</Alt>
             <P/>
             Here, we can see that the edges numbered 8 and 1 vanished. That is because we are looking at the undirected
@@ -814,8 +814,8 @@ gap> printRecord := rec(nodesOfFaces := [[1,4,6,7], [1,4,2,3],
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-      <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
-      <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
+      <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph.png">&lt;/img></Alt>
+      <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph.pdf}\end{center}</Alt>
       <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph.png]</Alt>
    
       <List>
@@ -831,8 +831,8 @@ gap> printRecord.nodeLabelsActive := false;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_nodeLabelsActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_nodeLabelsActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_nodeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_nodeLabelsActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_nodeLabelsActive_false.png]</Alt>
          </Item>
          <Item>
@@ -849,8 +849,8 @@ gap> printRecord.nodeLabels := ["I", "II", , "IV"];;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_nodeLabels.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_nodeLabels.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_nodeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_nodeLabels.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_nodeLabels.png]</Alt>
          </Item>
          <Item>
@@ -865,8 +865,8 @@ gap> printRecord.edgeLabelsActive := false;;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_edgeLabelsActive_false.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_edgeLabelsActive_false.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_edgeLabelsActive_false.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_edgeLabelsActive_false.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_edgeLabelsActive_false.png]</Alt>
          </Item>
          <Item>
@@ -883,8 +883,8 @@ gap> printRecord.edgeLabels := ["I", "II", , "IV"];;
 gap> DrawStraightPlanarDigraphToTikz(graph, "graph_embedding",
 > printRecord);;
 ]]></Log>
-            <Alt Only="HTML">&lt;img src="../images/DrawStraightPlanarDigraphToTikz_graph_edgeLabels.png">&lt;/img></Alt>
-            <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawStraightPlanarDigraphToTikz_graph_edgeLabels.pdf}\end{center}</Alt>
+            <Alt Only="HTML">&lt;img src="images/DrawStraightPlanarDigraphToTikz_graph_edgeLabels.png">&lt;/img></Alt>
+            <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawStraightPlanarDigraphToTikz_graph_edgeLabels.pdf}\end{center}</Alt>
             <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawStraightPlanarDigraphToTikz_graph_edgeLabels.png]</Alt>
          </Item>
       </List>
@@ -1056,8 +1056,8 @@ gap> graph := Digraph([[2,3,4],[3,4],[4],[]]);;
 gap> printRecord := rec(scale := 4);;
 gap> DrawStraightPlanarDigraphToTikz(graph, "DrawCycleDoubleCoverToTikz_graph");;
 ]]></Log>
-<Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph.png">&lt;/img></Alt>
-<Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph.pdf}\end{center}</Alt>
+<Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph.png">&lt;/img></Alt>
+<Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph.pdf}\end{center}</Alt>
 <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph.png]</Alt>
          <P/>
          This graph is a planar and connected graph and thus can be drawn with the method <K>DrawStraightPlanarDigraphToTikz</K>.
@@ -1080,8 +1080,8 @@ gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_cover", printRecord);;
 ]]></Log>
-                  <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_cover.png">&lt;/img></Alt>
-                  <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_cover.pdf}\end{center}</Alt>
+                  <Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph_cover.png">&lt;/img></Alt>
+                  <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph_cover.pdf}\end{center}</Alt>
                   <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_cover.png]</Alt>
             </Item>
             <Item>
@@ -1123,8 +1123,8 @@ gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_colour", printRecord);;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_colour.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_colour.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph_colour.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph_colour.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_colour.png]</Alt>
             </Item>
             <Item>
@@ -1137,8 +1137,8 @@ gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_nodes_active.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_nodes_active.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph_nodes_active.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph_nodes_active.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_nodes_active.png]</Alt>
 
             </Item>
@@ -1159,8 +1159,8 @@ gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_closeness_low.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_closeness_low.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph_closeness_low.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph_closeness_low.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_closeness_low.png]</Alt>
 
 <Log><![CDATA[ 
@@ -1170,8 +1170,8 @@ gap> printRecord := rec(cycleDoubleCover := [[1,2,3,4],[1,2,4,3],[1,4,2,3]],
 gap> DrawCycleDoubleCoverToTikz(graph, 
 > "DrawCycleDoubleCoverToTikz_graph_nodes_active", printRecord);;
 ]]></Log>
-               <Alt Only="HTML">&lt;img src="../images/DrawCycleDoubleCoverToTikz_graph_closeness_high.png">&lt;/img></Alt>
-               <Alt Only="LaTeX">\begin{center}\includegraphics{../images/DrawCycleDoubleCoverToTikz_graph_closeness_high.pdf}\end{center}</Alt>
+               <Alt Only="HTML">&lt;img src="images/DrawCycleDoubleCoverToTikz_graph_closeness_high.png">&lt;/img></Alt>
+               <Alt Only="LaTeX">\begin{center}\includegraphics{images/DrawCycleDoubleCoverToTikz_graph_closeness_high.pdf}\end{center}</Alt>
                <Alt Only="Text">[Image omitted in text manual. Check doc/images/DrawCycleDoubleCoverToTikz_graph_closeness_high.png]</Alt>
             </Item>
          </List>
