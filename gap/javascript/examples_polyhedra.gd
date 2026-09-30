@@ -2,7 +2,7 @@ DeclareOperation( "CubeEmbedding",[] );
 DeclareOperation( "TetrahedronEmbedding",[] );
 DeclareOperation( "IcosahedronEmbedding",[] );
 DeclareOperation( "DodecahedronEmbedding",[] );
-DeclareOperation( "OctahedronEmbedding",[] );
+DeclareOperation( "OctahedronEmbedding",[IsBool] );
 DeclareOperation( "TruncatedTetrahedronEmbedding",[] );
 DeclareOperation( "CuboctahedronEmbedding",[] );
 DeclareOperation( "TruncatedCubeEmbedding",[] );
