@@ -544,7 +544,33 @@ gap> JohnsonSolidEmbedding();
 </ManSection>
 
 
+<ManSection Label="DoubleGonEmbedding">   
+  <Oper Arg=" [n,draw]" Name="DoubleGonEmbedding" Label=" "/>
+  <Returns>
+    a list          
+  </Returns>   
+  <Description>
 
+  Returns a List where the first entry is the DoubleGon
+  and the second entry are the coordinates of a parameterized
+  embedding with isoceles triangles.
+  The embedding has <K>n</K> vertices forming a regular <K>n</K>-gon and the other two 
+  vertices are positioned at the center with height given by the parameter <K>z</K>.
+   <Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "octahedron_parameterized" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
+<Log><![CDATA[
+gap> DoubleGonEmbedding(6,true);
+[ simplicial surface (8 vertices, 18 edges, and 12 faces)
+    , 
+  [ [ 1., 0., 0 ], [ 0.5, 0.866025, 0 ], [ -0.5, 0.866025, 0 ], 
+      [ -1., 1.22465e-16, 0 ], [ -0.5, -0.866025, 0 ], [ 0.5, -0.866025, 0 ], 
+      [ 0, 0, "z" ], [ 0, 0, "-z" ] ] ]
+]]></Log>
+
+</ManSection>
 
 </Section>
 </Chapter>

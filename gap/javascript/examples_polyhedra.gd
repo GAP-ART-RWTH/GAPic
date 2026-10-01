@@ -20,3 +20,4 @@ DeclareOperation( "HexagonalPrismEmbedding",[] );
 DeclareOperation( "JohnsonSolidEmbedding",[] );
 DeclareOperation( "ElongatedDodecahedronEmbedding",[] );
 DeclareOperation( "TriangulatePolyhedron",[IsList] );
+DeclareOperation( "DoubleGonEmbedding",[IsInt,IsBool] );
