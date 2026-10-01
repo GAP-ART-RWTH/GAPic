@@ -17,6 +17,7 @@ InstallMethod(TetrahedronEmbedding,
         return [Tetrahedron(),vertexCoordinates3D];
     end
 );
+
 InstallOtherMethod(OctahedronEmbedding,
     " ", [],
     function()
@@ -25,6 +26,29 @@ InstallOtherMethod(OctahedronEmbedding,
     end
 );
 InstallMethod(OctahedronEmbedding,
+    " for a boolean", [IsBool],
+    function(draw)
+        local vertexCoordinates3D,pr,params;
+        vertexCoordinates3D:=[[0,-1,0],[ 0, 0, -1 ], [ 1, 0, 0 ],[ 0, 0, 1 ], [ -1, 0, 0 ],[ 0, 1, 0 ]];
+        
+		if draw then
+			pr:= SetVertexCoordinates3D(Octahedron(),vertexCoordinates3D, rec());
+			
+			DrawComplexToJavaScript(Octahedron(),"octahedron",pr);
+		fi;
+		return [Octahedron(),vertexCoordinates3D];
+
+    end
+);
+
+InstallOtherMethod(OctahedronParameterizedEmbedding,
+    " ", [],
+    function()
+        return OctahedronParameterizedEmbedding(false);
+
+    end
+);
+InstallMethod(OctahedronParameterizedEmbedding,
     " for a boolean", [IsBool],
     function(draw)
         local vertexCoordinates3D,pr,params;

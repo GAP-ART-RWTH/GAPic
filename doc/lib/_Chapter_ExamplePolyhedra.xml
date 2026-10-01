@@ -140,6 +140,29 @@ gap> IcosahedronEmbedding();
   </Returns>   
   <Description>
   Returns a List where the first entry is the octahedron
+  and the second entry are the coordinates of the regular octahedron embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "octahedron_parameterized" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
+<Log><![CDATA[
+gap> OctahedronEmbedding();
+[ simplicial surface (6 vertices, 12 edges, and 8 faces), 
+  [[0,-1,0],[ 0, 0, -1 ], [ 1, 0, 0 ],
+  [ 0, 0, 1 ], [ -1, 0, 0 ],[ 0, 1, 0 ]]
+]]></Log>
+
+
+  </Description>
+</ManSection>
+
+<ManSection Label="OcthahedronParameterizedEmbedding">   
+  <Oper Arg=" [draw]" Name="OctahedronParameterizedEmbedding" Label=" "/>
+  <Returns>
+    a list          
+  </Returns>   
+  <Description>
+  Returns a List where the first entry is the octahedron
   and the second entry are the coordinates of a parameterized
   embedding with isoceles triangles.
   The embedding has four vertices forming a square and the other two 
@@ -150,7 +173,7 @@ gap> IcosahedronEmbedding();
   "octahedron_parameterized" is generated or not.
   The parameter <K>draw</K> is by default <K>false</K>. 
 <Log><![CDATA[
-gap> OctahedronEmbedding();
+gap> OctahedronParameterizedEmbedding();
 [ simplicial surface (6 vertices, 12 edges, and 8 faces), 
   [[0,-1,0],[ 0, 0, "-z" ], [ 1, 0, 0 ],
   [ 0, 0, "z" ], [ -1, 0, 0 ],[ 0, 1, 0 ]]
