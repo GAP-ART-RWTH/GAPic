@@ -64,6 +64,35 @@ InstallMethod(OctahedronParameterizedEmbedding,
 
     end
 );
+InstallOtherMethod(EmbeddingOfTwistedIsoscelesOctahedronParameterized,
+    " ", [],
+    function()
+        return EmbeddingOfTwistedIsoscelesOctahedronParameterized(false);
+
+    end
+);
+InstallMethod(EmbeddingOfTwistedIsoscelesOctahedronParameterized,
+    " for a boolean", [IsBool],
+    function(draw)
+        local vertexCoordinates3D,pr,params;
+        vertexCoordinates3D:=[[0, 0, "( ((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2)) *1.0)**(1/2)"], 
+    	["( ((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2)) *1.0)**(1/2)", "( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2)+(-1)*(1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))", 0], [0, "-1*(1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))", 0], 
+    	["-1*( ((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2)) *1.0)**(1/2)", "( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2)+(-1)*(1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))", 0], 
+    	[0, "(l-1)/(1/2*1/ (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2)) *1.0 )**(1/2)-( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))+(-1)*(1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))", 0], 
+    	[0, "1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2)+(-1)*(1/2*1/( (1-((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2))) *1.0 )**(1/2))", "-1*( ((l+1)/2-( (l**2/4-1/2*l+1/2) *1.0 )**(1/2)) *1.0)**(1/2)"]];
+    
+	
+		if draw then
+			pr:= SetVertexCoordinatesParameterized(Octahedron(),vertexCoordinates3D, rec());
+			params:=[["l",1.01,[0.5,10]]];
+			SetVertexParameters(Octahedron(),params,pr);
+	
+			DrawComplexToJavaScript(Octahedron(),"EmbeddingOfTwistedIsoscelesOctahedronParameterized",pr);
+		fi;
+		return [Octahedron(),vertexCoordinates3D];
+
+    end
+);
 
   
 InstallMethod(IcosahedronEmbedding,
