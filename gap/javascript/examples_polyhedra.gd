@@ -4,6 +4,7 @@ DeclareOperation( "EmbeddingOfIcosahedron",[] );
 DeclareOperation( "EmbeddingOfDodecahedron",[] );
 DeclareOperation( "EmbeddingOfOctahedron",[IsBool] );
 DeclareOperation( "EmbeddingOfOctahedronParameterized",[IsBool] );
+DeclareOperation( "EmbeddingOfTwistedIsoscelesOctahedronParameterized",[IsBool] );
 DeclareOperation( "EmbeddingOfTruncatedTetrahedron",[] );
 DeclareOperation( "EmbeddingOfCuboctahedron",[] );
 DeclareOperation( "EmbeddingOfTruncatedCube",[] );

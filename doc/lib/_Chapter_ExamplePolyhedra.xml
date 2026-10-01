@@ -183,6 +183,28 @@ gap> EmbeddingOfOctahedronParameterized();
   </Description>
 </ManSection>
 
+<ManSection Label="EmbeddingOfTwistedIsoscelesOctahedronParameterized">   
+  <Oper Arg=" [draw]" Name="EmbeddingOfTwistedIsoscelesOctahedronParameterized" Label=" "/>
+  <Returns>
+    a list          
+  </Returns>   
+  <Description>
+  Returns a List where the first entry is the octahedron
+  and the second entry are the coordinates of a parameterized
+  embedding with isoceles triangles.
+  In this embedding, there are two pairs of base edges where the edges 
+  within each pair are adjacent to each other, while edges from different pairs are not adjacent.
+  The parameter <K>l</K> indicates the length of the legs.
+  For the regular octahedron define <K>l</K> as 1. <Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "EmbeddingOfTwistedIsoscelesOctahedronParameterized" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
+
+
+  </Description>
+</ManSection>
+
 
 </Section>
 
