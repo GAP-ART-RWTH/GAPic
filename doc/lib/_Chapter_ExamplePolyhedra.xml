@@ -544,8 +544,8 @@ gap> JohnsonSolidEmbedding();
 </ManSection>
 
 
-<ManSection Label="DoubleGonEmbedding">   
-  <Oper Arg=" [n,draw]" Name="DoubleGonEmbedding" Label=" "/>
+<ManSection Label="EmbeddingOfDoubleGon">   
+  <Oper Arg=" [n,draw]" Name="EmbeddingOfDoubleGon" Label=" "/>
   <Returns>
     a list          
   </Returns>   
@@ -562,7 +562,7 @@ gap> JohnsonSolidEmbedding();
   "octahedron_parameterized" is generated or not.
   The parameter <K>draw</K> is by default <K>false</K>. 
 <Log><![CDATA[
-gap> DoubleGonEmbedding(6,true);
+gap> EmbeddingOfDoubleGon(6,true);
 [ simplicial surface (8 vertices, 18 edges, and 12 faces)
     , 
   [ [ 1., 0., 0 ], [ 0.5, 0.866025, 0 ], [ -0.5, 0.866025, 0 ], 

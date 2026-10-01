@@ -588,15 +588,15 @@ InstallMethod(TriangulatePolyhedron,
     end
 );
 
-InstallOtherMethod(DoubleGonEmbedding,
+InstallOtherMethod(EmbeddingOfDoubleGon,
     " ", [IsInt],
     function(n)
         
-        return DoubleGonEmbedding(n,false);
+        return EmbeddingOfDoubleGon(n,false);
 
     end
 );
-InstallMethod(DoubleGonEmbedding,
+InstallMethod(EmbeddingOfDoubleGon,
     " for an integer and a boolean", [IsInt,IsBool],
     function(n,draw)
         local vertexCoordinates3D,doubleNVerticesOfFaces,surf,pr,params,name;
