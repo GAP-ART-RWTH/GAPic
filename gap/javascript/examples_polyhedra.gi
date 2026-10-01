@@ -1,5 +1,5 @@
 
-InstallMethod(CubeEmbedding,
+InstallMethod(EmbeddingOfCube,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -9,7 +9,7 @@ InstallMethod(CubeEmbedding,
     end
 );
 
-InstallMethod(TetrahedronEmbedding,         
+InstallMethod(EmbeddingOfTetrahedron,         
     " ", [],                                                       
     function() 
         local vertexCoordinates3D;
@@ -18,14 +18,14 @@ InstallMethod(TetrahedronEmbedding,
     end
 );
 
-InstallOtherMethod(OctahedronEmbedding,
+InstallOtherMethod(EmbeddingOfOctahedron,
     " ", [],
     function()
-        return OctahedronEmbedding(false);
+        return EmbeddingOfOctahedron(false);
 
     end
 );
-InstallMethod(OctahedronEmbedding,
+InstallMethod(EmbeddingOfOctahedron,
     " for a boolean", [IsBool],
     function(draw)
         local vertexCoordinates3D,pr,params;
@@ -41,14 +41,14 @@ InstallMethod(OctahedronEmbedding,
     end
 );
 
-InstallOtherMethod(OctahedronParameterizedEmbedding,
+InstallOtherMethod(EmbeddingOfOctahedronParameterized,
     " ", [],
     function()
-        return OctahedronParameterizedEmbedding(false);
+        return EmbeddingOfOctahedronParameterized(false);
 
     end
 );
-InstallMethod(OctahedronParameterizedEmbedding,
+InstallMethod(EmbeddingOfOctahedronParameterized,
     " for a boolean", [IsBool],
     function(draw)
         local vertexCoordinates3D,pr,params;
@@ -66,7 +66,7 @@ InstallMethod(OctahedronParameterizedEmbedding,
 );
 
   
-InstallMethod(IcosahedronEmbedding,
+InstallMethod(EmbeddingOfIcosahedron,
     " ", [],
     function()
         local vertexCoordinates3D,vof,phi;
@@ -79,7 +79,7 @@ InstallMethod(IcosahedronEmbedding,
     end
 );
 
-InstallMethod(DodecahedronEmbedding,
+InstallMethod(EmbeddingOfDodecahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -100,7 +100,7 @@ InstallMethod(DodecahedronEmbedding,
 ####                 Archimedian solids
 ####
 
-InstallMethod(TruncatedTetrahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedTetrahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -112,7 +112,7 @@ InstallMethod(TruncatedTetrahedronEmbedding,
 );
 
 
-InstallMethod(CuboctahedronEmbedding,
+InstallMethod(EmbeddingOfCuboctahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -126,7 +126,7 @@ InstallMethod(CuboctahedronEmbedding,
 );
 
 #Truncted Cube
-InstallMethod(TruncatedCubeEmbedding,
+InstallMethod(EmbeddingOfTruncatedCube,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -146,7 +146,7 @@ InstallMethod(TruncatedCubeEmbedding,
     end
 );
 
-InstallMethod(TruncatedOctahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedOctahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -163,7 +163,7 @@ InstallMethod(TruncatedOctahedronEmbedding,
 );
 
 #Rhombicuboctahedron
-InstallMethod(RhombicuboctahedronEmbedding,
+InstallMethod(EmbeddingOfRhombicuboctahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -185,7 +185,7 @@ InstallMethod(RhombicuboctahedronEmbedding,
     end
 );
 
-InstallMethod(TruncatedCuboctahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedCuboctahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -210,7 +210,7 @@ InstallMethod(TruncatedCuboctahedronEmbedding,
     end
 );
 #Snub cube
-InstallMethod(SnubCubeEmbedding,
+InstallMethod(EmbeddingOfSnubCube,
     " ", [],
     function()
         local vof,t,vertexCoordinates3D;
@@ -236,7 +236,7 @@ InstallMethod(SnubCubeEmbedding,
 );
 
 
-InstallMethod(IcosidodecahedronEmbedding,
+InstallMethod(EmbeddingOfIcosidodecahedron,
     " ", [],
     function()
         local phi,vof,vertexCoordinates3D;
@@ -263,7 +263,7 @@ InstallMethod(IcosidodecahedronEmbedding,
     end
 );
 
-InstallMethod(TruncatedDodecahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedDodecahedron,
     " ", [],  
     function()
         local vof,phi,vertexCoordinates3D;
@@ -305,7 +305,7 @@ InstallMethod(TruncatedDodecahedronEmbedding,
     end
 );
 
-InstallMethod(TruncatedIcosahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedIcosahedron,
     " ", [],
     function()
         local vof,phi,vertexCoordinates3D;
@@ -349,7 +349,7 @@ InstallMethod(TruncatedIcosahedronEmbedding,
 );
 
 # Rhombicosidodecahedron
-InstallMethod(RhombicosidodecahedronEmbedding,
+InstallMethod(EmbeddingOfRhombicosidodecahedron,
     " ", [],
     function()
         local vof,phi,vertexCoordinates3D;
@@ -395,7 +395,7 @@ InstallMethod(RhombicosidodecahedronEmbedding,
 
 
 #Truncated icosidodecahedron#
-InstallMethod(TruncatedIcosidodecahedronEmbedding,
+InstallMethod(EmbeddingOfTruncatedIcosidodecahedron,
     " ", [],
     function()
         local phi,vof,vertexCoordinates3D;
@@ -475,7 +475,7 @@ InstallMethod(TruncatedIcosidodecahedronEmbedding,
     end
 );
 
-InstallMethod(SnubDodecahedronEmbedding,
+InstallMethod(EmbeddingOfSnubDodecahedron,
     " ", [],
     function()
         local vof,vertexCoordinates3D;
@@ -535,7 +535,7 @@ InstallMethod(SnubDodecahedronEmbedding,
 );
 
 
-InstallMethod(JohnsonSolidEmbedding,
+InstallMethod(EmbeddingOfJohnsonSolid,
     " ", [],
     function()
         local vertexCoordinates3D,vof;
@@ -547,7 +547,7 @@ InstallMethod(JohnsonSolidEmbedding,
 ); 
 
 
-InstallMethod(HexagonalPrismEmbedding,
+InstallMethod(EmbeddingOfHexagonalPrism,
     " ", [],
     function()
         local vertexCoordinates3D,vof;
@@ -560,7 +560,7 @@ InstallMethod(HexagonalPrismEmbedding,
 );
 
     
-InstallMethod(ElongatedDodecahedronEmbedding,
+InstallMethod(EmbeddingOfElongatedDodecahedron,
     " ", [],
     function()
         local vertexCoordinates3D,vof;
