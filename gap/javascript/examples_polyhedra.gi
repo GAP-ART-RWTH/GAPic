@@ -1,19 +1,72 @@
 
+
 InstallMethod(EmbeddingOfCube,
     " ", [],
     function()
-        local vof,vertexCoordinates3D;
-        vof:=[[1,2,3,4],[5,6,7,8],[5,6,2,1],[6,7,3,2],[7,8,4,3],[1,4,8,5]];
-        vertexCoordinates3D:=[[0,0,0],[ 1, 0, 0 ], [ 1, 1, 0 ],[ 0, 1, 0 ], [0,0,1],[ 1, 0, 1 ], [ 1, 1, 1 ],[ 0, 1, 1 ]];
-        return [PolygonalComplexByVerticesInFaces(vof),vertexCoordinates3D];
+        
+		return EmbeddingOfCube(false);
+    end
+);
+InstallMethod(EmbeddingOfCube,
+    " for a boolean", [IsBool],
+    function(draw)
+        local vof,vertexCoordinates3D,pr,poly,vof2,poly2,i;
+		vof2:=[[1,2,3,4],[5,6,7,8],[5,6,2,1],[6,7,3,2],[7,8,4,3],[1,4,8,5]];
+        poly2:=PolygonalComplexByVerticesInFaces(vof2);
+        vof:=[[1,2,3],[1,3,4],[6,7,8],[5,6,8],[5,6,2],[5,2,1],[6,7,2],[7,3,2],[7,8,4],[7,4,3],[1,4,5],[4,8,5]];
+        poly:=PolygonalComplexByVerticesInFaces(vof);
+		vertexCoordinates3D:=[[-0.5,-0.5,-0.5],[ 0.5, -0.5, -0.5 ], [ 0.5, 0.5, -0.5 ],[ -0.5, 0.5, -0.5 ], [-0.5,-0.5,0.5],[ 0.5, -0.5, 0.5 ], [ 0.5, 0.5, 0.5 ],[ -0.5, 0.5, 0.5 ]];
+        if draw then
+			pr:= SetVertexCoordinates3D(poly,vertexCoordinates3D, rec());
+			for i in [2,6,8,11,12,17] do
+				DeactivateEdge(poly,i,pr );
+			od;
+			DrawComplexToJavaScript(poly,"cube",pr);
+		fi;
+		return [poly2,vertexCoordinates3D];
+    end
+);
+InstallMethod(EmbeddingOfTriangulizedCube,
+    " ", [],
+    function()
+        
+		return EmbeddingOfTriangulizedCube(false);
+    end
+);
+InstallMethod(EmbeddingOfTriangulizedCube,
+    " for a boolean", [IsBool],
+    function(draw)
+        local vof,vertexCoordinates3D,pr,poly;
+        vof:=[[1,2,3],[1,3,4],[6,7,8],[5,6,8],[5,6,2],[5,2,1],[6,7,2],[7,3,2],[7,8,4],[7,4,3],[1,4,5],[4,8,5]];
+        poly:=PolygonalComplexByVerticesInFaces(vof);
+		vertexCoordinates3D:=[[-0.5,-0.5,-0.5],[ 0.5, -0.5, -0.5 ], [ 0.5, 0.5, -0.5 ],[ -0.5, 0.5, -0.5 ], [-0.5,-0.5,0.5],[ 0.5, -0.5, 0.5 ], [ 0.5, 0.5, 0.5 ],[ -0.5, 0.5, 0.5 ]];
+        if draw then
+			pr:= SetVertexCoordinates3D(poly,vertexCoordinates3D, rec());
+			
+			DrawComplexToJavaScript(poly,"cube_triangulized",pr);
+		fi;
+		return [poly,vertexCoordinates3D];
     end
 );
 
 InstallMethod(EmbeddingOfTetrahedron,         
     " ", [],                                                       
     function() 
-        local vertexCoordinates3D;
-        vertexCoordinates3D:=[[2,0,0],[2,1,1],[1,0,1],[1,1,0]];
+        
+        return EmbeddingOfTetrahedron(false);
+    end
+);
+
+InstallMethod(EmbeddingOfTetrahedron,         
+    "for a boolean ", [IsBool],                                                       
+    function(draw) 
+        local vertexCoordinates3D,pr;
+        vertexCoordinates3D:=[[0.5,-0.5,-0.5],[0.5,0.5,0.5],[-0.5,-0.5,0.5],[-0.5,0.5,-0.5]];
+		if draw then
+			pr:= SetVertexCoordinates3D(Tetrahedron(),vertexCoordinates3D, rec());
+			
+			DrawComplexToJavaScript(Tetrahedron(),"tetrahedron",pr);
+		fi;
         return [Tetrahedron(),vertexCoordinates3D];
     end
 );
@@ -69,23 +122,79 @@ InstallMethod(EmbeddingOfOctahedronParameterized,
 InstallMethod(EmbeddingOfIcosahedron,
     " ", [],
     function()
-        local vertexCoordinates3D,vof,phi;
+        return EmbeddingOfIcosahedron(false);
+    end
+);
+InstallMethod(EmbeddingOfIcosahedron,
+    " for a bool", [IsBool],
+    function(draw)
+        local vertexCoordinates3D,vof,phi,poly,pr;
         phi:=(1+Sqrt(5.))/2;
+		
         vof:=[[1,2,9],[1,2,10],[1,5,6],[1,5,9],[1,6,10],[2,7,8],[2,7,9],[2,8,10],[3,4,11],[3,4,12],
               [3,5,6],[3,5,11],[3,6,12],[4,7,8],[4,7,11],[4,8,12],[5,9,11],[6,10,12],[7,9,11],[8,10,12]];
-        vertexCoordinates3D:=[[0,1,phi],[0,-1,phi],[0,1,-phi],[0,-1,-phi],[1,phi,0],[-1,phi,0],[1,-phi,0],
+        poly:=PolygonalComplexByVerticesInFaces(vof);
+		vertexCoordinates3D:=[[0,1,phi],[0,-1,phi],[0,1,-phi],[0,-1,-phi],[1,phi,0],[-1,phi,0],[1,-phi,0],
                               [-1,-phi,0],[phi,0,1],[-phi,0,1],[phi,0,-1],[-phi,0,-1]];
-        return [PolygonalComplexByVerticesInFaces(vof),vertexCoordinates3D];
+		if draw then
+			pr:= SetVertexCoordinates3D(poly,vertexCoordinates3D, rec());
+			
+			DrawComplexToJavaScript(poly,"icosahedron",pr);
+		fi;
+        return [poly,vertexCoordinates3D];
     end
 );
 
 InstallMethod(EmbeddingOfDodecahedron,
     " ", [],
     function()
-        local vof,vertexCoordinates3D;
+        return EmbeddingOfDodecahedron(false);
+    end
+);
+InstallMethod(EmbeddingOfDodecahedron,
+    " for a bool", [IsBool],
+    function(draw)
+        local vof,vertexCoordinates3D,pr,poly,surf,i;
         vof:=[[1,4,3,5,2],[1,7,6,8,2],[9,12,11,13,10],[9,15,14,16,10],[3,11,12,17,4],[3,11,13,18,5],[6,14,15,19,7],[6,14,16,20,8],[1,7,19,17,4],[2,8,20,18,5],[9,15,19,17,12],[10,16,20,18,13]];
         vertexCoordinates3D:=[[0.539345,0,1.41202],[-0.539345,0,1.41202],[0,1.41202,0.539345],[0.872678,0.872678,0.872678],[-0.872678,0.872678,0.872678],[0,-1.41202,0.539345],[0.872678,-0.872678,0.872678],[-0.872678,-0.872678,0.872678],[0.539345,0,-1.41202],[-0.539345,0,-1.41202],[0,1.41202,-0.539345],[0.872678,0.872678,-0.872678],[-0.872678,0.872678,-0.872678],[0,-1.41202,-0.539345],[0.872678,-0.872678,-0.872678],[-0.872678,-0.872678,-0.872678],[1.41202,0.539345,0],[-1.41202,0.539345,0],[1.41202,-0.539345,0],[-1.41202,-0.539345,0]];
-        return [PolygonalComplexByVerticesInFaces(vof),vertexCoordinates3D];
+        
+		poly:=PolygonalComplexByVerticesInFaces(vof);
+		surf:=TriangulatePolyhedron([poly,vertexCoordinates3D]);
+		if draw then
+			
+			pr:= SetVertexCoordinates3D(surf[1],surf[2], rec());
+			for i in [21..32] do
+				DeactivateVertex(surf[1],i,pr);
+			od;
+			for i in [4,5,6,9,10,11,15,16,17,19,20,21,23,24,25,29,30,31,33,34,35,37,38,39,43,44,45,48,49,50,53,54,55,57,58,59,61,62,63,66,67,68,70,71,72,74,75,76,78,79,80,82,83,84,85,86,87,88,89,90] do
+				DeactivateEdge(surf[1],i,pr);
+			od;
+			DrawComplexToJavaScript(surf[1],"dodecahedron",pr);
+		fi;
+		return [poly,vertexCoordinates3D];
+    end
+);
+InstallMethod(EmbeddingOfTriangulizedDodecahedron,
+    " ", [],
+    function()
+        return EmbeddingOfTriangulizedDodecahedron(false);
+    end
+);
+InstallMethod(EmbeddingOfTriangulizedDodecahedron,
+    " for a bool", [IsBool],
+    function(draw)
+        local vof,vertexCoordinates3D,pr,poly,surf;
+        vof:=[[1,4,3,5,2],[1,7,6,8,2],[9,12,11,13,10],[9,15,14,16,10],[3,11,12,17,4],[3,11,13,18,5],[6,14,15,19,7],[6,14,16,20,8],[1,7,19,17,4],[2,8,20,18,5],[9,15,19,17,12],[10,16,20,18,13]];
+        vertexCoordinates3D:=[[0.539345,0,1.41202],[-0.539345,0,1.41202],[0,1.41202,0.539345],[0.872678,0.872678,0.872678],[-0.872678,0.872678,0.872678],[0,-1.41202,0.539345],[0.872678,-0.872678,0.872678],[-0.872678,-0.872678,0.872678],[0.539345,0,-1.41202],[-0.539345,0,-1.41202],[0,1.41202,-0.539345],[0.872678,0.872678,-0.872678],[-0.872678,0.872678,-0.872678],[0,-1.41202,-0.539345],[0.872678,-0.872678,-0.872678],[-0.872678,-0.872678,-0.872678],[1.41202,0.539345,0],[-1.41202,0.539345,0],[1.41202,-0.539345,0],[-1.41202,-0.539345,0]];
+        
+		poly:=PolygonalComplexByVerticesInFaces(vof);
+		surf:=TriangulatePolyhedron([poly,vertexCoordinates3D]);
+		if draw then
+			pr:= SetVertexCoordinates3D(surf[1],surf[2], rec());
+			
+			DrawComplexToJavaScript(surf[1],"dodecahedron_triangulized",pr);
+		fi;
+		return surf;
     end
 );
 
@@ -637,7 +746,7 @@ InstallOtherMethod(EmbeddingOfDoubleGon,
 InstallMethod(EmbeddingOfDoubleGon,
     " for an integer and a boolean", [IsInt,IsBool],
     function(n,draw)
-        local vertexCoordinates3D,doubleNVerticesOfFaces,surf,pr,params,name;
+        local vertexCoordinates3D,doubleNVerticesOfFaces,surf,pr,params,name,i;
         vertexCoordinates3D:=[];
         
         doubleNVerticesOfFaces:=[];

@@ -64,11 +64,19 @@ in real 3-space whose faces all form congruent regular polygons. We can access t
     a list
   </Returns>
   <Description>
+  Returns a List where the first entry is the tetrahedron
+  and the second entry are the coordinates of the regular tetrahedron embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "tetrahedron" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
 
 <Log><![CDATA[
 gap> EmbeddingOfTetrahedron();
 [ simplicial surface (4 vertices, 6 edges, and 4 faces), 
-  [ [ 2, 0, 0 ], [ 2, 1, 1 ], [ 1, 0, 1 ], [ 1, 1, 0 ] ] ]
+    [ [ 0.5, -0.5, -0.5 ], [ 0.5, 0.5, 0.5 ], [ -0.5, -0.5, 0.5 ], 
+      [ -0.5, 0.5, -0.5 ] ] ]
+
 ]]></Log>
 
   </Description>
@@ -80,13 +88,43 @@ gap> EmbeddingOfTetrahedron();
     a list          
   </Returns>   
   <Description>
-
+  Returns a List where the first entry is the cube
+  and the second entry are the coordinates of the regular cube embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "cube" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
 <Log><![CDATA[
 gap> EmbeddingOfCube();
 [ polygonal surface (8 vertices, 12 edges, and 6 faces), 
-  [ [ 0, 0, 0 ], [ 1, 0, 0 ], [ 1, 1, 0 ], [ 0, 1, 0 ], 
-    [ 0, 0, 1 ], [ 1, 0, 1 ], [ 1, 1, 1 ], [ 0, 1, 1 ] ] ]
+  [ [ -0.5, -0.5, -0.5 ], [ 0.5, -0.5, -0.5 ], [ 0.5, 0.5, -0.5 ], 
+      [ -0.5, 0.5, -0.5 ], [ -0.5, -0.5, 0.5 ], [ 0.5, -0.5, 0.5 ], 
+      [ 0.5, 0.5, 0.5 ], [ -0.5, 0.5, 0.5 ] ] ]
 ]]></Log>
+
+  </Description>
+</ManSection>
+
+<ManSection Label="EmbeddingOfTriangulizedCube">   
+  <Oper Arg=" [draw]" Name="EmbeddingOfTriangulizedCube" Label=" "/>
+  <Returns>
+    a list          
+  </Returns>   
+  <Description>
+  Returns a List where the first entry is the triangulized cube
+  and the second entry are the coordinates of the triangulized cube embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "cube" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
+<Log><![CDATA[
+gap> EmbeddingOfTriangulizedCube();
+[ simplicial surface (8 vertices, 18 edges, and 12 faces)
+    , [ [ -0.5, -0.5, -0.5 ], [ 0.5, -0.5, -0.5 ], [ 0.5, 0.5, -0.5 ], 
+      [ -0.5, 0.5, -0.5 ], [ -0.5, -0.5, 0.5 ], [ 0.5, -0.5, 0.5 ], 
+      [ 0.5, 0.5, 0.5 ], [ -0.5, 0.5, 0.5 ] ] ]
+]]></Log>
+
 
   </Description>
 </ManSection>
@@ -97,6 +135,12 @@ gap> EmbeddingOfCube();
     a list          
   </Returns>   
   <Description>
+  Returns a List where the first entry is the dodecahedron
+  and the second entry are the coordinates of the regular dodecahedron embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "dodecahedron" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>.
 
 <Log><![CDATA[
 gap> EmbeddingOfDodecahedron();
@@ -116,12 +160,59 @@ gap> EmbeddingOfDodecahedron();
   </Description>
 </ManSection>
 
+<ManSection Label="EmbeddingOfTriangulizedDodecahedron">   
+  <Oper Arg=" " Name="EmbeddingOftriangulizedDodecahedron" Label=" "/>
+  <Returns>
+    a list          
+  </Returns>   
+  <Description>
+  Returns a List where the first entry is the triangulized dodecahedron
+  and the second entry are the coordinates of the triangulized dodecahedron embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "dodecahedron" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>.
+
+<Log><![CDATA[
+gap> EmbeddingOfTriangulizedDodecahedron();
+[ simplicial surface (32 vertices, 90 edges, and 60 faces)
+    , 
+  [ [ 0.539345, 0, 1.41202 ], [ -0.539345, 0, 1.41202 ], 
+      [ 0, 1.41202, 0.539345 ], [ 0.872678, 0.872678, 0.872678 ], 
+      [ -0.872678, 0.872678, 0.872678 ], [ 0, -1.41202, 0.539345 ], 
+      [ 0.872678, -0.872678, 0.872678 ], 
+      [ -0.872678, -0.872678, 0.872678 ], [ 0.539345, 0, -1.41202 ], 
+      [ -0.539345, 0, -1.41202 ], [ 0, 1.41202, -0.539345 ], 
+      [ 0.872678, 0.872678, -0.872678 ], 
+      [ -0.872678, 0.872678, -0.872678 ], [ 0, -1.41202, -0.539345 ], 
+      [ 0.872678, -0.872678, -0.872678 ], 
+      [ -0.872678, -0.872678, -0.872678 ], [ 1.41202, 0.539345, 0 ], 
+      [ -1.41202, 0.539345, 0 ], [ 1.41202, -0.539345, 0 ], 
+      [ -1.41202, -0.539345, 0 ], [ 0., 0.631475, 1.02175 ], 
+      [ 0., -0.631475, 1.02175 ], [ 0., 0.631475, -1.02175 ], 
+      [ 0., -0.631475, -1.02175 ], [ 0.631475, 1.02175, 2.22045e-17 ], 
+      [ -0.631475, 1.02175, 2.22045e-17 ], 
+      [ 0.631475, -1.02175, 2.22045e-17 ], 
+      [ -0.631475, -1.02175, 2.22045e-17 ], [ 1.02175, 0., 0.631475 ], 
+      [ -1.02175, 0., 0.631475 ], [ 1.02175, 0., -0.631475 ], 
+      [ -1.02175, 0., -0.631475 ] ] ]
+]]></Log>
+
+  </Description>
+</ManSection>
+
 <ManSection Label="EmbeddingOfIcosahedron">   
   <Oper Arg=" " Name="EmbeddingOfIcosahedron" Label=" "/>
   <Returns>
     a list          
   </Returns>   
   <Description>
+  Returns a List where the first entry is the icosahedron
+  and the second entry are the coordinates of the regular icosahedron embedding.<Br/>
+  
+  The parameter <K>draw</K> indicates whether <A>.html</A> file named
+  "icosahedron" is generated or not.
+  The parameter <K>draw</K> is by default <K>false</K>. 
 <Log><![CDATA[
 gap> EmbeddingOfIcosahedron();
 [ simplicial surface (12 vertices, 30 edges, and 20 faces), 
