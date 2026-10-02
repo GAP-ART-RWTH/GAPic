@@ -1,7 +1,15 @@
 DeclareOperation( "EmbeddingOfCube",[] );
+DeclareOperation( "EmbeddingOfCube",[IsBool] );
+DeclareOperation( "EmbeddingOfTriangulizedCube",[] );
+DeclareOperation( "EmbeddingOfTriangulizedCube",[IsBool] );
 DeclareOperation( "EmbeddingOfTetrahedron",[] );
+DeclareOperation( "EmbeddingOfTetrahedron",[IsBool] );
 DeclareOperation( "EmbeddingOfIcosahedron",[] );
+DeclareOperation( "EmbeddingOfIcosahedron",[IsBool] );
 DeclareOperation( "EmbeddingOfDodecahedron",[] );
+DeclareOperation( "EmbeddingOfDodecahedron",[IsBool] );
+DeclareOperation( "EmbeddingOfTriangulizedDodecahedron",[] );
+DeclareOperation( "EmbeddingOfTriangulizedDodecahedron",[IsBool] );
 DeclareOperation( "EmbeddingOfOctahedron",[IsBool] );
 DeclareOperation( "EmbeddingOfOctahedronParameterized",[IsBool] );
 DeclareOperation( "EmbeddingOfTruncatedTetrahedron",[] );
