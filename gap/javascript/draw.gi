@@ -76,7 +76,7 @@ InstallOtherMethod( SetVertexCoordinates3DNC,
     "for a simplicial surface and a list of coordinates",
     [IsTriangularComplex, IsList],
     function(surface, coordinates)
-	return SetVertexCoordinates3DNC(coordinates, rec());
+	return SetVertexCoordinates3DNC(surface, coordinates, rec());
     end
 );
 RedispatchOnCondition( SetVertexCoordinates3DNC, true, 
