@@ -625,3 +625,45 @@ InstallMethod(TriangulatePolyhedron,
   	return [s,tempcoor];
     end
 );
+
+InstallOtherMethod(EmbeddingOfDoubleGon,
+    " ", [IsInt],
+    function(n)
+        
+        return EmbeddingOfDoubleGon(n,false);
+
+    end
+);
+InstallMethod(EmbeddingOfDoubleGon,
+    " for an integer and a boolean", [IsInt,IsBool],
+    function(n,draw)
+        local vertexCoordinates3D,doubleNVerticesOfFaces,surf,pr,params,name;
+        vertexCoordinates3D:=[];
+        
+        doubleNVerticesOfFaces:=[];
+        for i in [1..n] do
+			
+            vertexCoordinates3D[i]:=[Cos(2*FLOAT.PI*(i-1)/n),Sin(2*FLOAT.PI*(i-1)/n),0];
+            doubleNVerticesOfFaces[i]:=[i,i+1,n+1];
+            doubleNVerticesOfFaces[n+i]:=[i,i+1,n+2];
+			
+        od;
+		
+        vertexCoordinates3D[n+1]:=[0,0,"z"];
+        vertexCoordinates3D[n+2]:=[0,0,"-z"];
+        doubleNVerticesOfFaces[n]:=[n,1,n+1];
+        doubleNVerticesOfFaces[2*n]:=[n,1,n+2];
+        surf:= SimplicialSurfaceByVerticesInFaces(doubleNVerticesOfFaces);
+        if draw then
+			pr:= SetVertexCoordinatesParameterized(surf,vertexCoordinates3D, rec());
+            params:=[["z",1,[0,10]]];
+			SetVertexParameters(surf,params,pr);
+			name:=Concatenation("double",String(n),"Gon_parameterized");
+			DrawComplexToJavaScript(surf,name,pr);
+		fi;
+        
+
+
+        return [surf,vertexCoordinates3D];
+    end
+);

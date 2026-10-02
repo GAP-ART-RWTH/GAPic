@@ -21,3 +21,4 @@ DeclareOperation( "EmbeddingOfHexagonalPrism",[] );
 DeclareOperation( "EmbeddingOfJohnsonSolid",[] );
 DeclareOperation( "EmbeddingOfElongatedDodecahedron",[] );
 DeclareOperation( "TriangulatePolyhedron",[IsList] );
+DeclareOperation( "EmbeddingOfDoubleGon",[IsInt,IsBool] );
