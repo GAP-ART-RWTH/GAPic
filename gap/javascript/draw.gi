@@ -773,7 +773,7 @@ InstallMethod( IsParameterizedVertices,
         return false;
     fi;
  
-	return true;
+	return printRecord.parameterVertices;
     end
 );
 
