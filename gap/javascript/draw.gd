@@ -83,12 +83,3 @@ DeclareOperation( "IsLineWidth", [IsTriangularComplex, IsRecord]);
 DeclareOperation( "ActivatePerformanceOverlay", [IsTriangularComplex, IsRecord]);
 DeclareOperation( "DeactivatePerformanceOverlay", [IsTriangularComplex, IsRecord]);
 DeclareOperation( "IsPerformanceOverlay", [IsTriangularComplex, IsRecord]);
-
-
-DeclareOperation( "SetTransparencyJava", [IsTriangularComplex, IsPosInt, IsFloat, IsRecord] );
-
-DeclareOperation( "RemoveTransparencyJava", [IsTriangularComplex, IsPosInt, IsRecord] );
-
-DeclareOperation( "GetTransparencyJava", [IsTriangularComplex, IsPosInt, IsRecord] );
-
-DeclareOperation( "CalculateParametersOfInnerCircle", [IsTriangularComplex, IsRecord] );
