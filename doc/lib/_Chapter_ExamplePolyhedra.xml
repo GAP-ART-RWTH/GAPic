@@ -23,7 +23,7 @@ triangulation of <A>emb</A>.<Br/>
 As an example we consider the hexagonal prism, i.e. the convex polyhedron with two
 regular hexagons and six regular squares as faces.
 <Log><![CDATA[
-gap> hexa:=HexagonalPrismEmbedding();
+gap> hexa:=EmbeddingOfHexagonalPrism();
 [ polygonal surface (12 vertices, 18 edges, and 8 faces), 
   [ [ 0.5, 0.866025, 0. ], [ -0.5, 0.866025, 0. ], [ -1., 0., 0. ], 
     [ -0.5, -0.866025, 0. ], [ 1/2, -0.866025, 0 ], [ 1., 0, 0 ], 
