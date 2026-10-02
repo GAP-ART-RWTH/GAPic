@@ -19,4 +19,4 @@ The package is currently under development and will as a first step gain the fun
 Feel free to contact us via the given contacts in the ```PackageInfo.g``` or write an Issue in that tab
 
 ## License
-GAPic is released under GNU General Public License v3.0. 
+GAPic is released under the GNU General Public License, version 2 or (at your option) any later version (GPL-2.0-or-later). See the [LICENSE](LICENSE) file for details. 
